@@ -15,10 +15,11 @@
 
 | # | Operador | Agente / IDE | Modelo | Rol en el proyecto |
 |---|---|---|---|---|
-| A | Andy Aquino | Claude Code (desktop) | Claude Opus 5 | Arquitectura, modelo de datos, autorización, integración de PRs |
-| B | Carlos | Codex | `<modelo>` | Controladores, servicios, validación, pruebas |
-| C | Andy Aquino | Antigravity | Gemini | Interfaz, Blade, Tailwind, responsividad |
-| D | Carlos | Antigravity | Gemini | Documentación, seguridad, despliegue, presentación |
+| A | Carlos | Claude Code | Claude 3.7 Sonnet / Opus | Arquitectura, modelo de datos, rutas, policies, integrador principal |
+| B | Carlos | Codex | Codex / GPT-4o | Controladores, servicios, validación, pruebas |
+| C | Andy Aquino | Antigravity | Gemini | Interfaz, vistas Blade, Tailwind CSS, responsividad |
+| D | Carlos | Antigravity | Gemini | DevOps, despliegue, seguridad, tareas operativas de soporte |
+| E | Andy Aquino | Claude Code | Claude 3.7 Sonnet / Opus | Co-arquitecto (rol Agente A), documentación técnica, QA y corrección de detalles |
 
 ## 2. MCP Servers activos
 

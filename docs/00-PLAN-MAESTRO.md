@@ -3,7 +3,7 @@
 **Equipo:** Andy Aquino · Carlos
 **Reto publicado:** viernes 11/09, 17:00
 **Presentación:** sábado 12/09, ~16:00
-**Agentes disponibles:** 4 (Claude Code, Codex, Antigravity×2)
+**Agentes disponibles:** 5 (Claude Code ×2, Codex, Antigravity ×2)
 
 ---
 
@@ -13,9 +13,9 @@
 |---|---|---|---|
 | Funcionalidad y cumplimiento | 25% | Agente B (backend) | Demo en vivo + criterios de aceptación del ERS |
 | Originalidad y profesionalismo | 20% | Todos | Repo con PRs, ramas, ERS, diagramas |
-| **Uso de IA** | **20%** | Agente D | Bitácora de prompts + captura de MCP activo + commits incrementales |
+| **Uso de IA** | **20%** | Agentes D y E | Bitácora de prompts + captura de MCP activo + commits incrementales |
 | UI/UX | 15% | Agente C | Sistema de diseño consistente, responsivo |
-| Documentación | 10% | Agente D | ERS, diagrama ER, manual, roles por integrante |
+| Documentación | 10% | Agentes D y E | ERS, diagrama ER, manual, roles por integrante |
 | Presentación | 10% | Andy + Carlos | Guion ensayado + demo en vivo |
 
 > **Regla de oro:** el 20% de "Uso de IA" se gana con disciplina, no con código.
@@ -30,13 +30,14 @@ Si necesitás un cambio en zona ajena, se pide por comentario en el PR o por cha
 
 | Agente | Operador | Rol | Carpetas de su propiedad |
 |---|---|---|---|
-| **A — Claude Code** | Andy | Arquitecto e integrador. Dueño del repo. | `database/migrations/`, `database/seeders/`, `app/Models/`, `app/Policies/`, `routes/`, `config/`, revisión de todos los PR |
+| **A — Claude Code** | Carlos | Arquitecto e integrador principal | `database/migrations/`, `database/seeders/`, `app/Models/`, `app/Policies/`, `routes/`, `config/`, revisión de todos los PR |
 | **B — Codex** | Carlos | Backend / lógica de negocio | `app/Http/Controllers/`, `app/Http/Requests/`, `app/Services/`, `tests/` |
 | **C — Antigravity** | Andy | Frontend / UI-UX | `resources/views/`, `resources/css/`, `resources/js/`, `tailwind.config.js` |
-| **D — Antigravity** | Carlos | Documentación, seguridad, DevOps, presentación | `docs/`, `README.md`, despliegue, bitácora de prompts, diapositivas |
+| **D — Antigravity** | Carlos | DevOps, seguridad, tareas operativas de soporte | `docs/`, `README.md`, despliegue, bitácora de prompts, tareas auxiliares |
+| **E — Claude Code** | Andy | Co-arquitecto / Integración / Documentación y correcciones | Comparte rol de Agente A (`database/`, `app/Models/`, `routes/`, revisión PR) + documentación técnica y corrección de detalles |
 
-**Regla anti-conflicto:** `routes/web.php`, migraciones y `app/Models/` los toca **solo el Agente A**.
-Si B necesita una ruta nueva, la pide; A la agrega en un commit de 30 segundos.
+**Regla anti-conflicto:** `routes/web.php`, migraciones y `app/Models/` los tocan **solo los Agentes A y E (Claude Code)**.
+Si B necesita una ruta nueva, la pide; A o E la agregan en un commit de 30 segundos.
 
 ---
 
@@ -47,12 +48,12 @@ Si B necesita una ruta nueva, la pide; A la agrega en un commit de 30 segundos.
 | Hora | Actividad | Quién | Entregable |
 |---|---|---|---|
 | 16:45 | Check-in en Google Meet (obligatorio por bases) | Ambos | — |
-| **17:00–18:00** | **Hora 1 — Cero código.** Leer el reto, ERS express, modelo de datos, contratos de interfaz | Ambos + Agente A | `docs/ERS.md`, `docs/06-CONTRATOS.md` lleno, diagrama ER |
-| 18:00–18:20 | Scaffolding: `laravel new`, migraciones, seeders, primer deploy vacío a producción | Agente A + D | Repo vivo + URL pública funcionando |
-| 18:20–21:30 | **Bloque paralelo 1** — 4 agentes trabajando a la vez | Todos | Módulo core funcional |
-| 21:30–22:00 | **Integración 1**: merge de todos los PR, deploy, smoke test | A + D | Rama `main` verde y desplegada |
+| **17:00–18:00** | **Hora 1 — Cero código.** Leer el reto, ERS express, modelo de datos, contratos de interfaz | Ambos + Agentes A / E | `docs/ERS.md`, `docs/06-CONTRATOS.md` lleno, diagrama ER |
+| 18:00–18:20 | Scaffolding: `laravel new`, migraciones, seeders, primer deploy vacío a producción | Agentes A / E + D | Repo vivo + URL pública funcionando |
+| 18:20–21:30 | **Bloque paralelo 1** — Agentes trabajando a la vez en paralelo | Todos | Módulo core funcional |
+| 21:30–22:00 | **Integración 1**: merge de todos los PR, deploy, smoke test | A / E + D | Rama `main` verde y desplegada |
 | 22:00–23:30 | **Bloque paralelo 2** — funciones secundarias + pulido UI | Todos | Funciones secundarias |
-| 23:30–00:30 | **Integración 2 + hardening OWASP** (ver `02-SEGURIDAD-OWASP-2025.md`) | A + D | Checklist de seguridad firmado, deploy estable |
+| 23:30–00:30 | **Integración 2 + hardening OWASP** (ver `02-SEGURIDAD-OWASP-2025.md`) | A / E + D | Checklist de seguridad firmado, deploy estable |
 | 00:30 | **Dormir.** No negociable. | Ambos | — |
 
 ### Sábado 12/09

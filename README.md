@@ -35,10 +35,10 @@ Plantilla de Pull Request: [`.github/pull_request_template.md`](.github/pull_req
 |---|---|---|
 | Funcionalidad y cumplimiento | 25 % | Agente B |
 | Originalidad y profesionalismo | 20 % | Todos |
-| **Uso de IA** (requiere **MCP Server** + prompts documentados) | 20 % | Agente D |
+| **Uso de IA** (requiere **MCP Server** + prompts documentados) | 20 % | Agentes D / E |
 | UI/UX | 15 % | Agente C |
-| Documentación (incluye **diagrama de base de datos**) | 10 % | Agente D |
-| Presentación | 10 % | Ambos |
+| Documentación (incluye **diagrama de base de datos**) | 10 % | Agentes D / E |
+| Presentación | 10 % | Ambos (Andy y Carlos) |
 
 ---
 

@@ -1,6 +1,6 @@
 # Reglas del Proyecto — Lectura obligatoria para todo agente de IA
 
-> Este archivo lo leen **los cuatro agentes** (Claude Code, Codex, Antigravity ×2).
+> Este archivo lo leen **los agentes del equipo** (Claude Code ×2 [Andy y Carlos], Codex [Carlos], Antigravity ×2 [Andy y Carlos]).
 > `AGENTS.md` y `GEMINI.md` apuntan a este mismo contenido.
 > Copiar este archivo a la raíz del repositorio de la competencia apenas se cree.
 
@@ -9,7 +9,7 @@
 ## Contexto
 
 Competencia de Programación con IA — Día del Programador, Universidad Mariano Gálvez,
-sede Puerto Barrios. Equipo de 2 personas (Andy y Carlos) operando 4 agentes en paralelo
+sede Puerto Barrios. Equipo de 2 personas (Andy y Carlos) operando 5 agentes en paralelo/coordinados
 durante ~12 horas. La evaluación es por rúbrica; ver `docs/05-CHECKLIST-RUBRICA.md`.
 
 **Stack:** PHP 8.3 · Laravel · MySQL 8 · Blade + Tailwind CSS v4 · Vite · Laragon (local)
@@ -25,7 +25,7 @@ durante ~12 horas. La evaluación es por rúbrica; ver `docs/05-CHECKLIST-RUBRIC
    Si necesitás un cambio fuera de tu zona, pedilo — no lo hagas.
 
 3. **Nunca toques el esquema de base de datos, `routes/` ni `app/Models/`**
-   salvo que seas el Agente A. Están congelados desde las 18:00.
+   salvo que seas el Agente A / E (Claude Code). Están congelados desde las 18:00.
 
 4. **Commiteá cada 20–30 minutos** con Conventional Commits en español.
    El desarrollo incremental es un criterio evaluado, no una preferencia.

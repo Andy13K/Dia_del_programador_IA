@@ -159,10 +159,11 @@ para que todos maqueten igual:**
 
 | Agente | Bloque 1 (18:20–21:30) | Bloque 2 (22:00–23:30) |
 |---|---|---|
-| **A — Claude (Andy)** | Migraciones, modelos, roles/permisos, auth, rutas, Policies, deploy inicial | Integración, revisión de PRs, hardening OWASP |
-| **B — Codex (Carlos)** | Controladores y FormRequests del módulo principal | Funciones secundarias, reportes |
-| **C — Antigravity (Andy)** | Layout + componentes compartidos + pantallas principales | Pulido visual, responsividad, estados vacíos |
-| **D — Antigravity (Carlos)** | ERS, diagrama ER, seeders, configuración de despliegue | Manual de usuario, bitácora, diapositivas, auditoría de seguridad |
+| **A — Claude (Carlos)** | Migraciones, modelos, roles/permisos, auth, rutas, Policies, integrador | Integración de PRs, hardening OWASP, revisión técnica |
+| **B — Codex (Carlos)** | Controladores y FormRequests del módulo principal | Funciones secundarias, reportes, API REST |
+| **C — Antigravity (Andy)** | Layout + componentes compartidos + pantallas principales | Pulido visual, responsividad, mapa interactivo, estados vacíos |
+| **D — Antigravity (Carlos)** | DevOps, despliegue, soporte en tareas operativas | Manual de usuario, bitácora, diapositivas, auditoría de seguridad |
+| **E — Claude (Andy)** | Co-arquitecto (apoyo a A en modelos/rutas/migraciones), ERS y contratos | Documentación técnica, QA fino, corrección de detalles y PRs |
 
 ---
 
