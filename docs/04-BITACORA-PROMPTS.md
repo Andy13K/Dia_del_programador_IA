@@ -1378,6 +1378,23 @@ API y el diagnóstico de la rúbrica.
 
 ---
 
+### [15:05] Claude Code (Andy) — Presentación oficial en PowerPoint editable, 16 diapositivas alternando tema oscuro/claro
+
+**Objetivo:** entregar la presentación en formato `.pptx` real (no HTML ni PDF) para que el equipo pueda abrirla y editarla directamente en PowerPoint, alternando cada diapositiva entre tema oscuro y tema claro siguiendo el diseño del sistema, e incorporando explícitamente detalles que Andy señaló como "fáciles de olvidar" en vivo: el origen del nombre, las normas ISO/IEEE aplicadas, la estructura completa de la documentación y cómo se trabajó el repositorio (ramas, PRs, commits).
+
+1. **Generador a medida (`docs/export/build-presentacion-pptx.js`):** script Node con la librería `pptxgenjs` (instalada en una carpeta de trabajo separada, no en el proyecto Laravel) que construye 16 diapositivas en formato 16:9, alternando explícitamente entre una paleta oscura y una clara construidas con los valores hexadecimales reales de `resources/css/app.css` (`--kin-bg`, `--kin-ink`, `--kin-accent`, etc.), con el logo correspondiente (blanco sobre oscuro, negro sobre claro) en cada una.
+2. **3 diapositivas nuevas** respecto a la versión HTML: "Estándares y Normas que Rigen el Proyecto" (IEEE 830-1998, ISO/IEC/IEEE 29148:2018, ISO/IEC 25010:2011, OWASP Top 10:2025, PSR-12, Conventional Commits, UML 2.5), "Estructura Completa de la Documentación (docs/)" (los 13 documentos del proyecto con una línea de descripción cada uno) y "Cómo Trabajamos el Repositorio: Ramas, PRs y Commits" (las 10 reglas del proyecto, ejemplos reales de Conventional Commits con trailer de coautoría de IA, y la plantilla de Pull Request obligatoria).
+3. **Verificación real:** el `.pptx` generado se abrió con PowerPoint por automatización COM, se exportó a PDF, y se revisaron las 16 diapositivas una por una para confirmar que el texto no se desbordaba, que el patrón oscuro/claro alternaba correctamente y que las tres diapositivas nuevas (las más densas en texto) no tenían overflow.
+
+**Prompt clave:**
+> "Dame tú la presentación en archivo PowerPoint [...] quiero que la presentación vayas alternando diapositivas en color oscuro y en color blanco [...] necesito que en la presentación pongas detalles importantes que se me pueden olvidar, como [...] el nombre de dónde surge [...] las pruebas de OWASP, todas las normas y estándares ISO que ocupamos, la documentación que tenemos, cómo trabajamos el tema del repositorio, la documentación, las reglas, cómo hicimos los commits, todos los MDs que están en el proyecto, su estructura."
+
+**Resultado:** `docs/export/Presentacion-Kin-Solar-Guatemala.pptx`, 16 diapositivas editables, alternancia oscuro/claro verificada visualmente diapositiva por diapositiva, con las tres diapositivas de "detalles que se olvidan" añadidas y verificadas sin overflow.
+
+**Intervención humana:** Andy especificó que necesitaba el archivo en formato PowerPoint real (no HTML ni PDF) explícitamente para poder abrirlo y editarlo él mismo antes de presentar, y enumeró de memoria la lista completa de detalles de proceso/documentación que temía olvidar en vivo.
+
+---
+
 ## 4. Evidencia visual
 
 Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:
