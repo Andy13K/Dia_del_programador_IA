@@ -30,9 +30,48 @@ class ForecastGenerationTest extends TestCase
 
         // SMA = 300*0.50 + 200*0.30 + 100*0.20 = 230.0 → 230 * 1.20 = 276.0 (abril=seco)
         $this->actingAs($user)->post('/forecasts/generate', ['solar_farm_id' => $farm->id, 'target_period' => '2026-04'])
-            ->assertRedirect(route('forecasts.index'))->assertSessionHas('success');
+            ->assertRedirect(route('forecasts.index', ['period' => '2026-04']))
+            ->assertSessionHas('forecast_period', '2026-04')
+            ->assertSessionHas('success', fn (string $msg) => str_contains($msg, 'abril de 2026') && str_contains($msg, '1.20'));
         $this->assertDatabaseHas('generation_forecasts', ['solar_farm_id' => $farm->id, 'forecasted_kwh' => 276]);
         $this->assertDatabaseHas('audit_logs', ['user_id' => $user->id, 'action' => 'forecast_generated']);
+    }
+
+    public function test_generated_period_is_kept_in_the_form_and_highlighted_in_the_table(): void
+    {
+        $user = $this->operator();
+        $farm = $this->farm($user);
+        $this->history($farm);
+
+        // Regresión: antes de este fix, tras guardar diciembre el selector volvía a "mes siguiente"
+        // y la tabla no dejaba claro qué período se acababa de generar.
+        $response = $this->actingAs($user)
+            ->post('/forecasts/generate', ['solar_farm_id' => $farm->id, 'target_period' => '2026-12'])
+            ->assertRedirect(route('forecasts.index', ['period' => '2026-12']));
+
+        $page = $this->followRedirects($response);
+        $page->assertOk()
+            ->assertSee('value="2026-12"', false)
+            ->assertSee('Diciembre de 2026')
+            ->assertSee('nueva')
+            ->assertSee('factor 1.20');
+    }
+
+    public function test_index_can_filter_by_period_and_show_all(): void
+    {
+        $user = $this->operator();
+        $farm = $this->farm($user);
+        $farm->generationForecasts()->create(['target_period' => '2026-08', 'forecasted_kwh' => 100, 'method' => 'SMA-SF (ponderado)']);
+        $farm->generationForecasts()->create(['target_period' => '2026-12', 'forecasted_kwh' => 200, 'method' => 'SMA-SF (ponderado)']);
+
+        // Sin parámetro: muestra solo el período más reciente.
+        $this->actingAs($user)->get('/forecasts')->assertOk()->assertSee('200.00 kWh')->assertDontSee('100.00 kWh');
+        // Filtro explícito.
+        $this->get('/forecasts?period=2026-08')->assertOk()->assertSee('100.00 kWh')->assertDontSee('200.00 kWh');
+        // Todos.
+        $this->get('/forecasts?period=all')->assertOk()->assertSee('100.00 kWh')->assertSee('200.00 kWh');
+        // Un valor inválido no rompe: cae al más reciente.
+        $this->get('/forecasts?period=<script>')->assertOk()->assertSee('200.00 kWh');
     }
 
     public function test_existing_empty_form_generates_next_month(): void
@@ -70,7 +109,7 @@ class ForecastGenerationTest extends TestCase
 
         // Sin historial suficiente → fallback nominal (capacity=0 → forecast=0)
         $this->actingAs($user)->post('/forecasts/generate', ['solar_farm_id' => $farm->id, 'target_period' => '2026-04'])
-            ->assertRedirect(route('forecasts.index'))->assertSessionHas('success');
+            ->assertRedirect(route('forecasts.index', ['period' => '2026-04']))->assertSessionHas('success');
         $this->assertDatabaseHas('generation_forecasts', [
             'solar_farm_id' => $farm->id,
             'method' => 'SMA-SF (nominal)',

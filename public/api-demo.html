@@ -1,246 +1,548 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cliente Externo de Prueba — API K'in Solar</title>
+<meta name="color-scheme" content="dark light">
+<title>Cliente externo de prueba — API REST K'in Solar Guatemala</title>
 <style>
+    /* Página autocontenida: sin Vite, sin Laravel, sin CDN. Funciona desde file:// */
     :root {
-        --bg: #f4f6f9;
+        --bg: #0b0f17;
+        --bg-2: #0f1522;
+        --surface: #121a29;
+        --surface-2: #171f30;
+        --line: rgba(148, 163, 184, .14);
+        --line-strong: rgba(148, 163, 184, .28);
+        --ink: #f1f5f9;
+        --ink-2: #cbd5e1;
+        --muted: #8493a7;
+        --amber: #f59e0b;
+        --amber-2: #fbbf24;
+        --amber-ink: #1a1200;
+        --sky: #38bdf8;
+        --ok: #34d399;
+        --warn: #fbbf24;
+        --err: #fb7185;
+        --code-bg: #0a0e16;
+        --key: #7dd3fc;
+        --str: #fcd34d;
+        --num: #a5b4fc;
+        --bool: #f9a8d4;
+        --shadow: 0 18px 50px -20px rgba(0, 0, 0, .65);
+        --radius: 18px;
+    }
+    [data-theme="light"] {
+        --bg: #f6f7fb;
+        --bg-2: #eef1f7;
         --surface: #ffffff;
-        --line: #e2e8f0;
-        --ink: #1a2338;
+        --surface-2: #f8fafc;
+        --line: rgba(15, 23, 42, .09);
+        --line-strong: rgba(15, 23, 42, .18);
+        --ink: #0f172a;
+        --ink-2: #334155;
         --muted: #64748b;
-        --accent: #2563eb;
-        --accent-ink: #ffffff;
+        --amber: #d97706;
+        --amber-2: #f59e0b;
+        --amber-ink: #ffffff;
+        --sky: #0284c7;
         --ok: #059669;
-        --err: #dc2626;
+        --warn: #b45309;
+        --err: #e11d48;
+        --code-bg: #0f172a;
+        --shadow: 0 18px 50px -24px rgba(15, 23, 42, .25);
     }
     * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
         margin: 0;
-        background: var(--bg);
+        min-height: 100vh;
+        background:
+            radial-gradient(1100px 520px at 12% -10%, rgba(245, 158, 11, .16), transparent 60%),
+            radial-gradient(900px 480px at 95% 0%, rgba(56, 189, 248, .10), transparent 60%),
+            var(--bg);
         color: var(--ink);
-        font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        padding: 28px 20px 60px;
+        font-family: "Instrument Sans", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
     }
-    .wrap { max-width: 920px; margin: 0 auto; }
-    header {
-        background: var(--surface);
-        border: 1px solid var(--line);
-        border-radius: 16px;
-        padding: 22px 26px;
-        margin-bottom: 20px;
+    code, pre, .mono { font-family: ui-monospace, "Cascadia Code", "JetBrains Mono", Consolas, "Liberation Mono", monospace; }
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 28px 20px 80px; }
+    a { color: var(--sky); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Top bar */
+    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 26px; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-mark {
+        width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center;
+        background: linear-gradient(135deg, rgba(245, 158, 11, .25), rgba(245, 158, 11, .06));
+        border: 1px solid rgba(245, 158, 11, .35);
+        box-shadow: inset 0 0 24px rgba(245, 158, 11, .15);
     }
-    header h1 { margin: 0 0 6px; font-size: 20px; }
-    header p { margin: 0; color: var(--muted); font-size: 13.5px; line-height: 1.6; }
-    .badge {
-        display: inline-block;
-        font-size: 10.5px;
-        font-weight: 700;
-        letter-spacing: .04em;
-        text-transform: uppercase;
-        background: #eef2ff;
-        color: #4338ca;
-        padding: 3px 9px;
-        border-radius: 999px;
-        margin-bottom: 10px;
+    .brand-mark svg { width: 24px; height: 24px; color: var(--amber-2); }
+    .brand strong { display: block; font-size: 16px; letter-spacing: -.01em; }
+    .brand span { display: block; font-size: 12px; color: var(--muted); }
+    .top-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+    .pill {
+        display: inline-flex; align-items: center; gap: 6px;
+        font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+        padding: 6px 11px; border-radius: 999px;
+        background: rgba(52, 211, 153, .12); color: var(--ok); border: 1px solid rgba(52, 211, 153, .3);
     }
-    .base-url {
-        display: flex;
-        gap: 8px;
-        margin-top: 14px;
-        flex-wrap: wrap;
+    .pill .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; box-shadow: 0 0 0 4px rgba(52, 211, 153, .18); }
+    .icon-btn {
+        width: 38px; height: 38px; border-radius: 12px; border: 1px solid var(--line-strong);
+        background: var(--surface); color: var(--ink-2); cursor: pointer; display: grid; place-items: center;
+        transition: transform .15s ease, border-color .15s ease;
     }
-    .base-url input {
-        flex: 1;
-        min-width: 240px;
-        padding: 9px 12px;
-        border: 1px solid var(--line);
-        border-radius: 10px;
-        font-size: 13px;
+    .icon-btn:hover { transform: translateY(-1px); border-color: var(--amber); color: var(--amber-2); }
+    .icon-btn svg { width: 18px; height: 18px; }
+
+    /* Hero */
+    .hero {
+        position: relative; overflow: hidden;
+        background: linear-gradient(180deg, var(--surface), var(--bg-2));
+        border: 1px solid var(--line); border-radius: 24px; padding: 34px 32px 30px;
+        box-shadow: var(--shadow);
+    }
+    .hero::after {
+        content: ""; position: absolute; inset: auto -120px -160px auto; width: 380px; height: 380px; border-radius: 50%;
+        background: radial-gradient(circle, rgba(245, 158, 11, .22), transparent 62%); pointer-events: none;
+    }
+    .eyebrow { font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--amber-2); }
+    .hero h1 { margin: 10px 0 12px; font-size: clamp(24px, 3.4vw, 36px); line-height: 1.12; letter-spacing: -.02em; }
+    .hero h1 em { font-style: normal; color: var(--amber-2); }
+    .hero p { margin: 0; max-width: 720px; color: var(--ink-2); font-size: 15px; }
+    .hero p code { background: rgba(148, 163, 184, .14); padding: 1px 6px; border-radius: 6px; font-size: 13px; }
+    .hero-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 28px; align-items: end; position: relative; z-index: 1; }
+    .toolbar { margin-top: 22px; display: flex; gap: 10px; flex-wrap: wrap; }
+    .field {
+        flex: 1; min-width: 260px; display: flex; align-items: center; gap: 10px;
+        background: var(--code-bg); border: 1px solid var(--line-strong); border-radius: 14px; padding: 0 12px 0 14px;
+    }
+    .field span { color: var(--muted); font-size: 12px; font-weight: 700; letter-spacing: .08em; }
+    .field input {
+        flex: 1; border: 0; outline: 0; background: transparent; color: #e2e8f0; font-size: 13.5px; padding: 12px 0;
         font-family: ui-monospace, Consolas, monospace;
     }
-    .base-url button {
-        padding: 9px 16px;
-        border: none;
-        border-radius: 10px;
-        background: var(--ink);
-        color: #fff;
-        font-size: 13px;
-        font-weight: 600;
-        cursor: pointer;
+    .btn {
+        display: inline-flex; align-items: center; gap: 8px; padding: 12px 18px; border-radius: 14px; border: 0; cursor: pointer;
+        font-weight: 700; font-size: 14px; letter-spacing: -.005em;
+        background: linear-gradient(180deg, var(--amber-2), var(--amber)); color: var(--amber-ink);
+        box-shadow: 0 10px 30px -12px rgba(245, 158, 11, .8); transition: transform .15s ease, filter .15s ease;
     }
-    .grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-        gap: 14px;
+    .btn:hover { transform: translateY(-1px); filter: brightness(1.05); }
+    .btn:disabled { opacity: .6; cursor: wait; transform: none; }
+    .btn svg { width: 16px; height: 16px; }
+    .kpis { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .kpi {
+        background: rgba(148, 163, 184, .06); border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px;
     }
+    .kpi small { display: block; font-size: 10.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+    .kpi strong { display: block; margin-top: 6px; font-size: 22px; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+    .kpi strong.amber { color: var(--amber-2); }
+    .kpi strong.ok { color: var(--ok); }
+
+    /* Section headings */
+    .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 34px 0 14px; }
+    .section-head h2 { margin: 0; font-size: 18px; letter-spacing: -.01em; }
+    .section-head p { margin: 0; color: var(--muted); font-size: 13px; }
+
+    /* Endpoint cards */
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 16px; }
     .card {
-        background: var(--surface);
-        border: 1px solid var(--line);
-        border-radius: 14px;
-        padding: 18px;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
+        background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+        display: flex; flex-direction: column; overflow: hidden; box-shadow: var(--shadow);
+        transition: border-color .2s ease, transform .2s ease;
     }
-    .card h2 {
-        margin: 0;
-        font-size: 14px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
+    .card:hover { border-color: var(--line-strong); transform: translateY(-2px); }
+    .card-head { padding: 18px 18px 14px; display: flex; flex-direction: column; gap: 8px; }
+    .card-title { display: flex; align-items: center; gap: 10px; }
+    .method {
+        font-size: 10.5px; font-weight: 800; letter-spacing: .08em; padding: 4px 8px; border-radius: 7px;
+        background: rgba(56, 189, 248, .14); color: var(--sky); border: 1px solid rgba(56, 189, 248, .3);
     }
-    .card .method {
-        font-size: 10px;
-        font-weight: 700;
-        background: #dbeafe;
-        color: var(--accent);
-        padding: 2px 7px;
-        border-radius: 6px;
+    .card h3 { margin: 0; font-size: 15px; letter-spacing: -.01em; }
+    .path { font-size: 12px; color: var(--ink-2); word-break: break-all; }
+    .path b { color: var(--amber-2); font-weight: 600; }
+    .desc { font-size: 12.5px; color: var(--muted); }
+    .card-actions { display: flex; align-items: center; gap: 8px; padding: 0 18px 14px; flex-wrap: wrap; }
+    .btn-ghost {
+        display: inline-flex; align-items: center; gap: 7px; padding: 8px 13px; border-radius: 11px; cursor: pointer;
+        border: 1px solid var(--line-strong); background: var(--surface-2); color: var(--ink); font-weight: 700; font-size: 12.5px;
+        transition: border-color .15s ease, background .15s ease;
     }
-    .card .path {
-        font-family: ui-monospace, Consolas, monospace;
-        font-size: 11.5px;
-        color: var(--muted);
-        word-break: break-all;
+    .btn-ghost:hover { border-color: var(--amber); }
+    .btn-ghost.primary { border-color: rgba(245, 158, 11, .5); color: var(--amber-2); }
+    .btn-ghost:disabled { opacity: .55; cursor: wait; }
+    .btn-ghost svg { width: 14px; height: 14px; }
+    .status-row {
+        display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 0 18px 14px; min-height: 22px; font-size: 12px; color: var(--muted);
     }
-    .card button {
-        align-self: flex-start;
-        padding: 7px 14px;
-        border: 1px solid var(--accent);
-        background: var(--surface);
-        color: var(--accent);
-        border-radius: 8px;
-        font-size: 12.5px;
-        font-weight: 600;
-        cursor: pointer;
+    .chip { display: inline-flex; align-items: center; gap: 5px; padding: 3px 8px; border-radius: 999px; font-weight: 700; font-size: 11px; border: 1px solid transparent; }
+    .chip.ok { color: var(--ok); background: rgba(52, 211, 153, .12); border-color: rgba(52, 211, 153, .3); }
+    .chip.warn { color: var(--warn); background: rgba(251, 191, 36, .12); border-color: rgba(251, 191, 36, .3); }
+    .chip.err { color: var(--err); background: rgba(251, 113, 133, .12); border-color: rgba(251, 113, 133, .3); }
+    .chip.neutral { color: var(--ink-2); background: rgba(148, 163, 184, .1); border-color: var(--line); }
+    .spinner { width: 12px; height: 12px; border-radius: 50%; border: 2px solid rgba(148, 163, 184, .3); border-top-color: var(--amber-2); animation: spin .7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .out {
+        display: none; margin: 0; background: var(--code-bg); color: #e2e8f0; padding: 14px 16px;
+        font-size: 11.5px; line-height: 1.6; max-height: 260px; overflow: auto; white-space: pre; tab-size: 2;
+        border-top: 1px solid var(--line);
     }
-    .card button:hover { background: var(--accent); color: var(--accent-ink); }
-    .card button:disabled { opacity: .5; cursor: wait; }
-    .status { font-size: 11.5px; font-weight: 600; min-height: 16px; }
-    .status.ok { color: var(--ok); }
-    .status.err { color: var(--err); }
-    pre {
-        margin: 0;
-        background: #0f172a;
-        color: #e2e8f0;
-        padding: 12px;
-        border-radius: 10px;
-        font-size: 11px;
-        line-height: 1.55;
-        max-height: 220px;
-        overflow: auto;
-        white-space: pre-wrap;
-        word-break: break-word;
-        display: none;
+    .out.show { display: block; }
+    .out .k { color: var(--key); }
+    .out .s { color: var(--str); }
+    .out .n { color: var(--num); }
+    .out .b { color: var(--bool); }
+    .out .z { color: #94a3b8; }
+
+    /* Snippets */
+    .tabs { display: inline-flex; gap: 4px; padding: 4px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; }
+    .tab { border: 0; background: transparent; color: var(--muted); font-weight: 700; font-size: 12.5px; padding: 7px 12px; border-radius: 9px; cursor: pointer; }
+    .tab[aria-selected="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 0 var(--line); }
+    .snippet { display: none; margin: 12px 0 0; background: var(--code-bg); color: #e2e8f0; border: 1px solid var(--line); border-radius: 16px; padding: 16px 18px; font-size: 12.5px; line-height: 1.6; overflow: auto; white-space: pre; }
+    .snippet.show { display: block; }
+    .snippet .c { color: #64748b; }
+
+    .note {
+        margin-top: 28px; padding: 16px 18px; border-radius: 16px;
+        background: rgba(245, 158, 11, .08); border: 1px solid rgba(245, 158, 11, .3); color: var(--ink-2); font-size: 13px;
     }
-    pre.show { display: block; }
-    footer {
-        margin-top: 26px;
-        padding: 16px 20px;
-        background: #fffbeb;
-        border: 1px solid #fde68a;
-        border-radius: 12px;
-        font-size: 12.5px;
-        color: #78350f;
-        line-height: 1.7;
+    .note code { background: rgba(245, 158, 11, .16); padding: 1px 6px; border-radius: 6px; color: var(--amber-2); }
+    .foot { margin-top: 28px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; color: var(--muted); font-size: 12px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+    @media (max-width: 860px) {
+        .hero-grid { grid-template-columns: 1fr; }
+        .hero { padding: 26px 20px; }
+        .kpis { grid-template-columns: repeat(2, 1fr); }
     }
-    footer code { background: #fef3c7; padding: 1px 5px; border-radius: 4px; }
+    @media (max-width: 480px) {
+        .kpis { grid-template-columns: 1fr 1fr; }
+        .grid { grid-template-columns: 1fr; }
+        .topbar { align-items: flex-start; }
+    }
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 </style>
 </head>
 <body>
 <div class="wrap">
 
-    <header>
-        <span class="badge">Cliente independiente · no forma parte del sistema</span>
-        <h1>Prueba de consumo externo — API REST de K'in Solar Guatemala</h1>
-        <p>
-            Esta página es un archivo HTML autocontenido, sin backend propio y sin ninguna
-            dependencia del proyecto Laravel. Solo usa <code>fetch()</code> de JavaScript
-            para consultar la API pública en vivo, igual que lo haría cualquier sistema externo
-            del MINEM, una municipalidad o una ONG. Se puede abrir directamente como archivo
-            local (doble clic, sin servidor) y seguirá funcionando.
-        </p>
-        <div class="base-url">
-            <input id="baseUrl" type="text" value="https://kin-solar-guatemala.duckdns.org/api/v1" spellcheck="false">
-            <button onclick="testAll()">Probar todos los endpoints</button>
+    <div class="topbar">
+        <div class="brand">
+            <div class="brand-mark" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+            </div>
+            <div>
+                <strong>K'in Solar Guatemala</strong>
+                <span>API REST v1 · cliente externo de prueba</span>
+            </div>
         </div>
-    </header>
+        <div class="top-actions">
+            <span class="pill" id="livePill"><span class="dot"></span> API pública · solo lectura</span>
+            <button class="icon-btn" id="themeBtn" type="button" aria-label="Cambiar tema" title="Cambiar tema">
+                <svg id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+                <svg id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+            </button>
+        </div>
+    </div>
 
+    <section class="hero">
+        <div class="hero-grid">
+            <div>
+                <div class="eyebrow">Cliente independiente · no forma parte del sistema</div>
+                <h1>Cualquier sistema externo puede <em>consumir la API</em> sin credenciales.</h1>
+                <p>
+                    Esta página es un archivo HTML autocontenido: sin backend propio, sin Vite y sin ninguna
+                    dependencia de Laravel. Solo usa <code>fetch()</code> del navegador para consultar la API en vivo,
+                    igual que lo haría el MINEM, una municipalidad o una ONG. Podés abrirla con doble clic desde tu
+                    computadora (<code>file://</code>) y seguirá funcionando.
+                </p>
+                <div class="toolbar">
+                    <label class="field">
+                        <span>BASE</span>
+                        <input id="baseUrl" type="text" value="https://kin-solar-guatemala.duckdns.org/api/v1" spellcheck="false" autocomplete="off" aria-label="URL base de la API">
+                    </label>
+                    <button class="btn" id="testAllBtn" type="button" onclick="testAll()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+                        Probar los 6 endpoints
+                    </button>
+                </div>
+            </div>
+            <div class="kpis" aria-live="polite">
+                <div class="kpi"><small>Endpoints OK</small><strong class="ok" id="kpiOk">0 / 6</strong></div>
+                <div class="kpi"><small>Latencia media</small><strong id="kpiLatency">—</strong></div>
+                <div class="kpi"><small>Granjas registradas</small><strong class="amber" id="kpiFarms">—</strong></div>
+                <div class="kpi"><small>kWh acumulados</small><strong class="amber" id="kpiKwh">—</strong></div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-head">
+        <h2>Endpoints en vivo</h2>
+        <p>Respuesta uniforme <code>{ "success": true, "data": … }</code> · JSON · CORS habilitado</p>
+    </div>
     <div class="grid" id="grid"></div>
 
-    <footer>
-        <strong>Por qué esto es prueba real de consumo externo:</strong> el servidor responde con
-        la cabecera <code>Access-Control-Allow-Origin: *</code>, así que cualquier origen —
-        incluyendo <code>null</code> (un archivo abierto localmente) — puede leer la respuesta.
-        No se envía ninguna cookie de sesión ni token: la API es pública y de solo lectura.
-    </footer>
+    <div class="section-head">
+        <h2>Cómo consumirla desde tu sistema</h2>
+        <p>Sin token, sin cookies: una petición GET basta.</p>
+    </div>
+    <div class="tabs" role="tablist" aria-label="Lenguaje del ejemplo">
+        <button class="tab" role="tab" aria-selected="true" data-tab="curl" type="button">curl</button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="js" type="button">JavaScript</button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="php" type="button">PHP</button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="py" type="button">Python</button>
+    </div>
+    <pre class="snippet show" id="snip-curl"></pre>
+    <pre class="snippet" id="snip-js"></pre>
+    <pre class="snippet" id="snip-php"></pre>
+    <pre class="snippet" id="snip-py"></pre>
 
+    <div class="note">
+        <strong>Por qué esto es prueba real de consumo externo:</strong> el servidor responde con
+        <code>Access-Control-Allow-Origin: *</code>, así que cualquier origen — incluido <code>null</code>
+        (un archivo abierto localmente) — puede leer la respuesta. No se envía ninguna cookie de sesión ni
+        token. La API es pública, de solo lectura y limitada a 60 peticiones por minuto por IP.
+    </div>
+
+    <div class="foot">
+        <span>K'in Solar Guatemala · Plataforma Nacional de Monitoreo Fotovoltaico</span>
+        <span><a href="/api-docs">Documentación completa de la API →</a></span>
+    </div>
 </div>
 
 <script>
+// ---------- Tema (persistido solo en este navegador) ----------
+(function () {
+    const root = document.documentElement;
+    let saved = null;
+    try { saved = localStorage.getItem('api-demo-theme'); } catch (e) {}
+    const theme = saved || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+    apply(theme);
+    document.getElementById('themeBtn').addEventListener('click', () => {
+        const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        apply(next);
+        try { localStorage.setItem('api-demo-theme', next); } catch (e) {}
+    });
+    function apply(t) {
+        root.setAttribute('data-theme', t);
+        document.getElementById('iconSun').style.display = t === 'dark' ? '' : 'none';
+        document.getElementById('iconMoon').style.display = t === 'dark' ? 'none' : '';
+    }
+})();
+
+// ---------- Endpoints (datos fijos definidos en este archivo, no provienen de la red) ----------
 const endpoints = [
-    { name: 'Estadísticas nacionales', method: 'GET', path: '/statistics' },
-    { name: 'Catálogo de departamentos', method: 'GET', path: '/departments' },
-    { name: 'Detalle de un departamento', method: 'GET', path: '/departments/1' },
-    { name: 'Listado de granjas solares', method: 'GET', path: '/farms' },
-    { name: 'Mediciones de generación', method: 'GET', path: '/generations?solar_farm_id=1' },
-    { name: 'Alertas activas', method: 'GET', path: '/alerts' },
+    { name: 'Estadísticas nacionales', method: 'GET', path: '/statistics', desc: 'Totales del país: granjas, paneles, kW, kWh, familias, CO₂ evitado y alertas activas.' },
+    { name: 'Catálogo de departamentos', method: 'GET', path: '/departments', desc: 'Los 22 departamentos con coordenadas y conteo de granjas.' },
+    { name: 'Detalle de un departamento', method: 'GET', path: '/departments/1', desc: 'Un departamento con sus granjas y los paneles de cada una.' },
+    { name: 'Listado de granjas solares', method: 'GET', path: '/farms', desc: 'Granjas con ubicación GPS, capacidad calculada y familias beneficiadas.' },
+    { name: 'Mediciones de generación', method: 'GET', path: '/generations?solar_farm_id=1', desc: 'Real vs. estimada por período, paginado. Filtros: solar_farm_id, period.' },
+    { name: 'Alertas de déficit', method: 'GET', path: '/alerts', desc: 'Alertas automáticas cuando la real es ≤ 80 % de la esperada.' },
 ];
 
+const results = new Array(endpoints.length).fill(null);
 const grid = document.getElementById('grid');
 
+const ICON_PLAY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg>';
+const ICON_COPY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+
+// Las tarjetas se construyen solo con los valores fijos de `endpoints` (definidos arriba).
+// Todo lo que venga de la red se inserta con textContent, nunca con innerHTML.
 endpoints.forEach((ep, i) => {
-    const card = document.createElement('div');
+    const card = document.createElement('article');
     card.className = 'card';
+    const [pathOnly, query] = ep.path.split('?');
     card.innerHTML = `
-        <h2><span class="method">${ep.method}</span> ${ep.name}</h2>
-        <div class="path">${ep.path}</div>
-        <button id="btn-${i}" onclick="callEndpoint(${i})">Consultar en vivo</button>
-        <div class="status" id="status-${i}"></div>
-        <pre id="out-${i}"></pre>
+        <div class="card-head">
+            <div class="card-title"><span class="method">${ep.method}</span><h3>${ep.name}</h3></div>
+            <div class="path mono"><b>/api/v1</b>${pathOnly}${query ? '<span class="z">?' + query + '</span>' : ''}</div>
+            <div class="desc">${ep.desc}</div>
+        </div>
+        <div class="card-actions">
+            <button class="btn-ghost primary" id="btn-${i}" type="button" onclick="callEndpoint(${i})">${ICON_PLAY} Consultar en vivo</button>
+            <button class="btn-ghost" type="button" onclick="copyCurl(${i}, this)" title="Copiar comando curl">${ICON_COPY} curl</button>
+            <button class="btn-ghost" id="copyjson-${i}" type="button" onclick="copyJson(${i}, this)" title="Copiar respuesta JSON" disabled>${ICON_COPY} JSON</button>
+        </div>
+        <div class="status-row" id="status-${i}"><span class="chip neutral">Sin consultar</span></div>
+        <pre class="out" id="out-${i}" tabindex="0" aria-label="Respuesta JSON"></pre>
     `;
     grid.appendChild(card);
 });
 
+function baseUrl() {
+    return document.getElementById('baseUrl').value.trim().replace(/\/+$/, '');
+}
+
+function chip(text, kind) {
+    const s = document.createElement('span');
+    s.className = 'chip ' + kind;
+    s.textContent = text;
+    return s;
+}
+
+// Resaltado seguro: primero se escapa TODO el texto; los <span> solo envuelven tokens ya escapados.
+function highlightJson(text) {
+    const esc = text.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    return esc.replace(/(&quot;(?:[^&]|&(?!quot;))*?&quot;)(\s*:)?|\b(true|false|null)\b|(-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)/g,
+        (m, str, colon, bool, num) => {
+            if (str) return colon ? `<span class="k">${str}</span>${colon}` : `<span class="s">${str}</span>`;
+            if (bool) return `<span class="b">${bool}</span>`;
+            if (num) return `<span class="n">${num}</span>`;
+            return m;
+        });
+}
+
 async function callEndpoint(i) {
     const ep = endpoints[i];
-    const base = document.getElementById('baseUrl').value.replace(/\/$/, '');
     const btn = document.getElementById(`btn-${i}`);
     const status = document.getElementById(`status-${i}`);
     const out = document.getElementById(`out-${i}`);
+    const copyBtn = document.getElementById(`copyjson-${i}`);
 
     btn.disabled = true;
-    status.textContent = 'Consultando...';
-    status.className = 'status';
+    copyBtn.disabled = true;
+    status.replaceChildren();
+    const sp = document.createElement('span'); sp.className = 'spinner'; status.appendChild(sp);
+    const t = document.createElement('span'); t.textContent = 'Consultando…'; status.appendChild(t);
     out.classList.remove('show');
 
     const started = performance.now();
     try {
-        const res = await fetch(base + ep.path, { method: ep.method });
+        const res = await fetch(baseUrl() + ep.path, { method: ep.method, headers: { Accept: 'application/json' } });
         const elapsed = Math.round(performance.now() - started);
-        const json = await res.json();
+        const raw = await res.text();
+        let json = null;
+        try { json = JSON.parse(raw); } catch (e) {}
 
-        status.textContent = `HTTP ${res.status} · ${elapsed} ms · CORS: ${res.headers.get('access-control-allow-origin') || '(no visible desde JS, pero la respuesta llegó)'}`;
-        status.className = 'status ' + (res.ok ? 'ok' : 'err');
+        status.replaceChildren();
+        status.appendChild(chip(`HTTP ${res.status}`, res.ok ? 'ok' : (res.status === 429 ? 'warn' : 'err')));
+        status.appendChild(chip(`${elapsed} ms`, elapsed < 300 ? 'ok' : (elapsed < 1000 ? 'warn' : 'err')));
+        // Cross-origin, el navegador no deja leer la cabecera ACAO, pero si la respuesta llegó es porque CORS la permitió.
+        const cors = res.headers.get('access-control-allow-origin');
+        const crossOrigin = new URL(baseUrl(), location.href).origin !== location.origin;
+        status.appendChild(chip(cors ? `CORS ${cors}` : (crossOrigin ? 'CORS ✓ cross-origin' : 'CORS mismo origen'), 'ok'));
+        const remaining = res.headers.get('x-ratelimit-remaining');
+        if (remaining !== null) status.appendChild(chip(`quedan ${remaining}/60`, 'neutral'));
+        status.appendChild(chip(`${raw.length.toLocaleString('es-GT')} bytes`, 'neutral'));
+        if (json && json.data) {
+            const n = Array.isArray(json.data) ? json.data.length : (Array.isArray(json.data.data) ? json.data.data.length : null);
+            if (n !== null) status.appendChild(chip(`${n} registros`, 'neutral'));
+        }
 
-        out.textContent = JSON.stringify(json, null, 2);
+        const pretty = json ? JSON.stringify(json, null, 2) : raw;
+        // innerHTML aquí recibe SOLO texto previamente escapado por highlightJson().
+        out.innerHTML = highlightJson(pretty);
         out.classList.add('show');
+
+        results[i] = { ok: res.ok, elapsed, json };
+        copyBtn.disabled = !json;
+        updateKpis();
     } catch (err) {
-        status.textContent = 'Error de red: ' + err.message;
-        status.className = 'status err';
+        status.replaceChildren(chip('Error de red', 'err'));
+        const m = document.createElement('span'); m.textContent = err.message; status.appendChild(m);
+        results[i] = { ok: false, elapsed: null, json: null };
+        updateKpis();
     } finally {
         btn.disabled = false;
     }
 }
 
-async function testAll() {
-    for (let i = 0; i < endpoints.length; i++) {
-        await callEndpoint(i);
+function updateKpis() {
+    const done = results.filter(Boolean);
+    const ok = done.filter(r => r.ok);
+    document.getElementById('kpiOk').textContent = `${ok.length} / ${endpoints.length}`;
+    const lat = ok.map(r => r.elapsed).filter(v => typeof v === 'number');
+    document.getElementById('kpiLatency').textContent = lat.length ? Math.round(lat.reduce((a, b) => a + b, 0) / lat.length) + ' ms' : '—';
+    const stats = results[0] && results[0].json && results[0].json.data;
+    if (stats) {
+        if (typeof stats.total_farms === 'number') document.getElementById('kpiFarms').textContent = stats.total_farms.toLocaleString('es-GT');
+        if (typeof stats.total_kwh === 'number') document.getElementById('kpiKwh').textContent = Math.round(stats.total_kwh).toLocaleString('es-GT');
+    }
+    const pill = document.getElementById('livePill');
+    if (done.length) {
+        pill.replaceChildren();
+        const d = document.createElement('span'); d.className = 'dot'; pill.appendChild(d);
+        pill.appendChild(document.createTextNode(ok.length === done.length ? ' API en línea' : ' Con errores'));
+        pill.style.color = ok.length === done.length ? '' : 'var(--err)';
     }
 }
+
+async function testAll() {
+    const b = document.getElementById('testAllBtn');
+    b.disabled = true;
+    try {
+        for (let i = 0; i < endpoints.length; i++) await callEndpoint(i);
+    } finally {
+        b.disabled = false;
+    }
+}
+
+async function copyText(text, btn) {
+    try {
+        await navigator.clipboard.writeText(text);
+        const prev = btn.innerHTML;
+        btn.textContent = '✓ Copiado';
+        setTimeout(() => { btn.innerHTML = prev; }, 1400);
+    } catch (e) {
+        window.prompt('Copiá manualmente:', text);
+    }
+}
+function copyCurl(i, btn) { copyText(`curl -s "${baseUrl()}${endpoints[i].path}" -H "Accept: application/json"`, btn); }
+function copyJson(i, btn) {
+    const r = results[i];
+    if (r && r.json) copyText(JSON.stringify(r.json, null, 2), btn);
+}
+
+// ---------- Ejemplos de consumo (texto estático, insertado con textContent) ----------
+const snippets = {
+    curl: `# Totales nacionales
+curl -s "https://kin-solar-guatemala.duckdns.org/api/v1/statistics" | jq .
+
+# Granjas con GPS (útil para un mapa propio)
+curl -s "https://kin-solar-guatemala.duckdns.org/api/v1/farms" | jq '.data[] | {name, latitude, longitude}'
+
+# Mediciones de una granja en un período
+curl -s "https://kin-solar-guatemala.duckdns.org/api/v1/generations?solar_farm_id=1&period=2026-08"`,
+    js: `// Navegador o Node 18+: sin token, sin cookies
+const base = 'https://kin-solar-guatemala.duckdns.org/api/v1';
+
+const res  = await fetch(\`\${base}/statistics\`, { headers: { Accept: 'application/json' } });
+const body = await res.json();        // { success: true, data: { ... } }
+
+if (body.success) {
+  const d = body.data;
+  console.log(\`\${d.total_farms} granjas · \${d.total_kwh} kWh · \${d.total_co2_tons} t CO₂ evitadas\`);
+}`,
+    php: `<?php
+// Laravel u otro proyecto PHP (Http facade o Guzzle)
+$base = 'https://kin-solar-guatemala.duckdns.org/api/v1';
+
+$response = Http::acceptJson()->get("{$base}/farms");
+
+foreach ($response->json('data') as $farm) {
+    echo "{$farm['name']} — {$farm['calculated_capacity_kw']} kW\\n";
+}`,
+    py: `import requests
+
+BASE = "https://kin-solar-guatemala.duckdns.org/api/v1"
+
+alerts = requests.get(f"{BASE}/alerts", headers={"Accept": "application/json"}, timeout=10).json()
+
+for a in alerts["data"]:
+    print(a["period"], a["solar_farm"]["name"], f'{a["deviation_percentage"]} %')`,
+};
+Object.entries(snippets).forEach(([k, v]) => { document.getElementById(`snip-${k}`).textContent = v; });
+document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', String(t === tab)));
+        document.querySelectorAll('.snippet').forEach(s => s.classList.toggle('show', s.id === `snip-${tab.dataset.tab}`));
+    });
+});
 </script>
 </body>
 </html>
