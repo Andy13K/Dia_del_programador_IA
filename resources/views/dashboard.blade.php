@@ -22,12 +22,12 @@
                 </p>
             </div>
 
-            <div class="flex flex-wrap gap-3">
-                <a href="{{ route('map.index') }}" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-sm transition shadow-lg shadow-amber-500/20">
+            <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                <a href="{{ route('map.index') }}" class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-sm transition shadow-lg shadow-amber-500/20 active:scale-95">
                     <i data-lucide="map" class="w-4 h-4"></i>
                     <span>Ver Mapa en Vivo</span>
                 </a>
-                <a href="{{ route('reports.index') }}" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm transition border border-slate-700">
+                <a href="{{ route('reports.index') }}" class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm transition border border-slate-700 active:scale-95">
                     <i data-lucide="file-text" class="w-4 h-4"></i>
                     <span>Reportes Departamentales</span>
                 </a>
@@ -38,14 +38,14 @@
     <!-- SECCIÓN 1: 6 TARJETAS KPI OBLIGATORIAS (RF-11) -->
     <div>
         <div class="flex items-center justify-between mb-4">
-            <h3 class="text-sm font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
+            <h3 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
                 <i data-lucide="bar-chart-2" class="w-4 h-4 text-amber-500"></i>
                 <span>Indicadores Macro Nacionales (RF-11)</span>
             </h3>
-            <span class="text-xs text-slate-400">Actualizado en tiempo real</span>
+            <span class="text-[10px] sm:text-xs text-slate-400">Actualizado en tiempo real</span>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+        <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3 sm:gap-4">
             
             <!-- 1. Total Granjas -->
             <x-kpi-card 
