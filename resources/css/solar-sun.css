@@ -1,0 +1,82 @@
+.kin-solar {
+    position: relative;
+    width: min(100%, 440px, 46dvh);
+    aspect-ratio: 1;
+    margin: 20px 0 28px;
+    isolation: isolate;
+}
+
+.kin-solar-art { position: absolute; inset: 0; pointer-events: none; }
+.kin-solar-art > :is(div, svg) { position: absolute; border-radius: 50%; }
+.kin-solar-halo {
+    inset: -15%;
+    background: radial-gradient(circle, #ffbe5520 15%, #ff9d222b 27%, #ff8a1212 43%, transparent 65%);
+    animation: kin-solar-breathe 8s ease-in-out infinite alternate;
+}
+
+.kin-solar-rays {
+    inset: 13%;
+    background: repeating-conic-gradient(from 12deg, #ffc65a00 0deg 7deg, #ffcc716b 8deg, #ffc65a00 10deg 18deg);
+    mask-image: radial-gradient(circle, transparent 33%, #000 40%, #0008 48%, transparent 68%);
+    filter: blur(2px);
+    animation: kin-solar-turn 100s linear infinite;
+}
+.kin-solar-rays-soft {
+    inset: 4%;
+    opacity: .55;
+    filter: blur(5px);
+    animation-duration: 140s;
+    animation-direction: reverse;
+}
+
+.kin-solar-orbit {
+    inset: 8%;
+    border: 1px solid #ffd58b24;
+    border-top-color: #ffd58b80;
+    border-right-color: #ffd58b45;
+    transform: rotate(-32deg);
+    animation: kin-solar-turn 55s linear infinite;
+}
+.kin-solar-orbit > span {
+    position: absolute;
+    top: 14%;
+    right: 14%;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #ffedbf;
+    box-shadow: 0 0 8px #ffd58b, 0 0 18px #ffa52f;
+}
+.kin-solar-orbit-inner {
+    inset: 18%;
+    border-color: #ffd58b12;
+    border-bottom-color: #ffd58b50;
+    animation-duration: 38s;
+    animation-direction: reverse;
+}
+.kin-solar-orbit-inner > span { width: 3px; height: 3px; opacity: .7; }
+.kin-solar-star { inset: 0; width: 100%; height: 100%; overflow: visible; }
+.kin-solar-texture { transform-origin: 50% 50%; animation: kin-solar-turn 160s linear infinite reverse; }
+
+.kin-solar-spark {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: #ffdb97;
+    box-shadow: 0 0 9px #ffb52e;
+    animation: kin-solar-drift 9s ease-in-out infinite alternate;
+}
+.kin-solar-spark-one { top: 24%; left: 25%; }
+.kin-solar-spark-two { top: 64%; right: 16%; animation-delay: -5s; }
+.kin-solar-spark-three { bottom: 18%; left: 40%; animation-delay: -3s; }
+
+@keyframes kin-solar-turn { to { transform: rotate(360deg); } }
+@keyframes kin-solar-breathe { to { opacity: .65; transform: scale(1.06); } }
+@keyframes kin-solar-drift { from { opacity: .25; } to { opacity: .8; transform: translate(6px, -9px); } }
+
+/* El login móvil conserva su cabecera compacta y prioriza el formulario. */
+@media (max-width: 1023px) { .kin-solar { display: none; } }
+@media (prefers-reduced-motion: reduce) {
+    .kin-solar-art * { animation: none !important; }
+}

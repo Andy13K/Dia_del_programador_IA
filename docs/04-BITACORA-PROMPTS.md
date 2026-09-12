@@ -1003,6 +1003,55 @@ API y el diagnóstico de la rúbrica.
 
 ---
 
+### Codex (Carlos), Agente B — Sol del login con corona y plasma animados
+
+**Fecha:** 12/09/2026. **Rama:** `style/carlos-codex/login-sol-vivo`, worktree aislado desde `origin/master` (`cbdd180`).
+
+**Objetivo:** dar más presencia y movimiento al sol del login, conservando el backend y la composición de la página. Cubre RNF-04 (UI) y RNF-05 (responsividad).
+
+**Prompt clave del humano (extractos literales):**
+> sabes que eres el Agente B, hoy tu tarea sera revolucionar visualmente este sol del Login
+> Quiero algo que llame la atencion del jurado al ver ese sol cuando esten en el login por favor
+> Aclaro que los cambios no deben de porque afectar el backend ni crear conflictos en nada
+
+**Intervención humana:** el humano señaló que el sol anterior era demasiado simple, pidió más impacto visual y autorizó expresamente al Agente B este ajuste del frontend, con la restricción de no afectar el backend. No hubo correcciones adicionales del humano durante esta iteración.
+
+**Resultado:** componente Blade `solar-sun` con textura de plasma SVG, borde incandescente, corona, arcos luminosos, órbitas y partículas. Movimiento lento mediante CSS, control de pausa accesible por teclado y desactivación con `prefers-reduced-motion`. En móvil se conserva la cabecera compacta existente. Estilos propios en `resources/css/solar-sun.css`, sin paquetes ni JavaScript nuevos. Solo se reemplaza el elemento decorativo de la vista de login; no se alteran el formulario, sus nombres, CSRF, rutas, controladores, modelos, servicios ni base de datos. Se versionan los assets compilados siguiendo la práctica actual del repositorio.
+
+**Iteraciones de revisión del agente:** se ajustó la textura para evitar tonos grises, se limitó el tamaño según la altura disponible y se corrigió un desplazamiento interno del fondo al enfocar el control de pausa, mediante `overflow: clip` limitado al panel que contiene el sol.
+
+**Verificación:** `php artisan test`: 58 pruebas, 334 aserciones, todas correctas. `php artisan view:cache`, `npm run build` y `git diff --check` correctos. Navegador local en 360×800, 768×1024, 1024×768, 1366×768 y 1440×900: sin desbordamientos de página y botón de login visible. Se verificaron ambos temas, pausa de las 10 capas animadas, reanudación por teclado y permanencia del fondo al enfocar el control. Consola local sin errores ni advertencias. El modo de movimiento reducido está implementado en CSS; no se emuló la preferencia del sistema en esta sesión. Capturas en `docs/evidencias/login-sol-*.png`.
+
+**Estado público:** se abrió y volvió a comprobar `https://kin-solar-guatemala.duckdns.org/login`; responde con el sol anterior. La validación pública del nuevo componente queda pendiente de revisión, integración y despliegue por los responsables. No se declara desplegado ni se modifica producción.
+
+---
+
+### Codex (Carlos), Agente B — Ajuste del sol tras revisión humana
+
+**Fecha:** 12/09/2026. **PR:** #35, misma rama `style/carlos-codex/login-sol-vivo`.
+
+**Corrección literal del humano:**
+> unicamente amigo quita las orejitas que le salen al sol, lo demas en general me gusta
+
+**Cambio:** se retiran únicamente los arcos exteriores que parecían orejas, su degradado y la regla de animación asociada. Se conservan la textura, corona, órbitas, partículas, brillo, pausa y diseño adaptable. Se recompilan los assets y se actualizan las capturas del PR.
+
+**Verificación del ajuste:** build, caché de vistas y revisión del diff correctos. Login local comprobado en navegador: sin arcos exteriores, con las otras nueve capas animadas presentes. Capturas de escritorio claro y oscuro actualizadas; pendiente de integración y despliegue del PR.
+
+---
+
+### Codex (Carlos), Agente B — Sol continuo sin control de pausa
+
+**Fecha:** 12/09/2026. **PR:** #35, misma rama `style/carlos-codex/login-sol-vivo`.
+
+**Corrección literal del humano:**
+> Ok me gusta, ahora el boton de pausar y de reanudar quitalo, que siempre este en movimiento el sol mejor amigo
+
+**Cambio:** se elimina el control de pausa/reanudación, sus estilos y la corrección de foco que requería. Las nueve capas decorativas siguen animándose continuamente. Se conserva la preferencia de movimiento reducido del sistema y no se modifica el formulario ni el backend.
+
+**Verificación:** build, caché de vistas y revisión del diff correctos. En el navegador local no quedan controles dentro del sol y las nueve capas muestran animación activa con repetición infinita. Página sin desbordamiento a 1440×900 y capturas de ambos temas actualizadas. La versión pública sigue pendiente del despliegue del PR.
+
+---
+
 ### [10:05] Antigravity (Agente D) — Optimización responsive para móvil de plantilla ejecutiva de reportes — PR #35
 
 **Objetivo:** corregir la visualización en teléfonos móviles de la plantilla ejecutiva de reportes (`resources/views/reports/print.blade.php`), evitando solapamiento en encabezados institucionales y asegurando legibilidad sin alterar el diseño de escritorio ni el formato de impresión PDF oficial.
@@ -1019,6 +1068,17 @@ API y el diagnóstico de la rúbrica.
 - Recompilación de assets con Vite (`npm run build`).
 
 **Intervención humana:** Andy identificó mediante capturas reales en smartphone que los textos del encabezado institucional colisionaban en pantallas móviles y solicitó un ajuste estricto que corrigiera la experiencia móvil sin afectar el diseño en pantallas de escritorio.
+
+---
+
+### Codex (Carlos), Agente B — Integración de conflictos del PR #35
+
+**Fecha:** 12/09/2026. **Solicitud del humano:**
+> Me gusta, gracias amigo, pero fijate que mi compañero dice que le salen conflictos, resuelvelos
+
+**Resolución:** se incorpora `origin/master` (`0c5531a`, merge del PR #36) en la rama del sol. Se conservan las entradas de ambos agentes en esta bitácora. El conflicto en `public/build/manifest.json` se resuelve recompilando Vite con ambas funcionalidades presentes. La plantilla móvil de reportes se conserva idéntica a la versión de `origin/master`; el sol aprobado mantiene su animación continua, sin orejitas ni controles de pausa. La integración no requiere reescribir el historial remoto.
+
+**Verificación:** 58 pruebas y 334 aserciones correctas sobre la integración. Caché de vistas, build y revisión del diff correctos. Navegador local cargando el CSS combinado `app-DWU-UR-K.css`, con las nueve capas del sol animándose y sin controles ni arcos exteriores. Comparación de la plantilla de reportes contra `origin/master` sin diferencias.
 
 ---
 
