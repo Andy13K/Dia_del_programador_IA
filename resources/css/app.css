@@ -149,7 +149,7 @@ button { cursor:pointer; }
 .leaflet-container { font-family:var(--font-sans)!important; }
 .leaflet-bar { box-shadow:0 3px 16px #0b0f1726!important; border:1px solid #d5dce6!important; border-radius:10px!important; overflow:hidden; }
 .kin-modal-panel { animation:kin-dialog .24s var(--kin-ease); }
-.kin-login { min-height:100dvh; display:grid; grid-template-columns:1fr 1fr; background:var(--kin-bg); color:var(--kin-ink); }
+.kin-login { min-height:100dvh; display:grid; grid-template-columns:3fr 2fr; background:var(--kin-bg); color:var(--kin-ink); }
 /* El panel izquierdo del login es siempre oscuro: se fijan sus variables de tema
    localmente para que alternar modo claro/oscuro no le cambie absolutamente nada
    (fondo, badge, texto), solo afecta el formulario del lado derecho. */
@@ -174,9 +174,9 @@ button { cursor:pointer; }
 
 /* Rayos sutiles: nacen lejos del sol (no pegados a su borde) y viajan en
    diagonal invertida hacia donde estan los paneles de la foto. */
-.kin-ray { position:absolute; width:2px; height:210px; border-radius:2px; background:linear-gradient(180deg,#ffd68500,#ffd685a0 45%,#ffd68500); opacity:0; animation:kin-ray-travel 4.5s ease-in-out infinite; }
-.kin-ray-a { top:58%; left:38%; transform:rotate(-24deg); animation-delay:0s; }
-.kin-ray-b { top:64%; left:58%; height:180px; transform:rotate(-38deg); animation-delay:1.6s; }
+.kin-ray { position:absolute; top:64%; left:50%; width:2px; height:210px; border-radius:2px; background:linear-gradient(180deg,#ffe8a0cc,#ffd68550 40%,#ffd68500); opacity:0; transform-origin:top center; animation:kin-ray-travel 4.5s ease-in-out infinite; }
+.kin-ray-a { transform:translateX(-50%) rotate(-16deg); animation-delay:0s; }
+.kin-ray-b { transform:translateX(-50%) rotate(-32deg); height:175px; animation-delay:1.6s; }
 @keyframes kin-ray-travel { 0%,100% { opacity:0; } 35% { opacity:.4; } 65% { opacity:.4; } 100% { opacity:0; } }
 .kin-login-story h1 { max-width:none; line-height:1.14; }
 .kin-hero-sub { display:block; font-size:clamp(15px,4.4cqw,24px); font-weight:500; letter-spacing:-.3px; color:var(--kin-muted); white-space:nowrap; }
