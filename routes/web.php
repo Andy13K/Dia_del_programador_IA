@@ -167,9 +167,7 @@ Route::get('/reports/export', function () {
 
 // Proyecciones Predictivas SMA-SF (RF-15)
 Route::get('/forecasts', fn () => view('forecasts.index'))->middleware('auth')->name('forecasts.index');
-Route::post('/forecasts/generate', function () {
-    return redirect()->route('forecasts.index')->with('success', 'Modelo predictivo SMA-SF ejecutado satisfactoriamente.');
-})->middleware(['auth', 'can:manage-forecasts'])->name('forecasts.generate');
+Route::post('/forecasts/generate', [\App\Http\Controllers\ForecastController::class, 'generate'])->middleware(['auth', 'can:manage-forecasts'])->name('forecasts.generate');
 
 // Documentación de API REST (RF-16)
 Route::get('/api-docs', fn () => view('api-docs.index'))->name('api.docs');
