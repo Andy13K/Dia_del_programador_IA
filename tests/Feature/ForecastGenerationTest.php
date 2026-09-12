@@ -76,4 +76,45 @@ class ForecastGenerationTest extends TestCase
             'method' => 'SMA-SF (nominal)',
         ]);
     }
+
+    public function test_index_requires_authentication(): void
+    {
+        $this->get('/forecasts')->assertRedirect(route('login'));
+    }
+
+    public function test_index_displays_forecasts_and_compares_with_actual_generation(): void
+    {
+        $user = $this->operator();
+        $farm = $this->farm($user);
+
+        // Crear medición real para 2026-08
+        $farm->energyGenerations()->create([
+            'period' => '2026-08',
+            'record_date' => '2026-08-31',
+            'estimated_kwh' => 50000,
+            'real_kwh' => 48500,
+            'co2_kg' => 19400,
+            'created_by' => $user->id,
+        ]);
+
+        // Crear forecast para 2026-08 sin actual_kwh inicial
+        $forecast = $farm->generationForecasts()->create([
+            'target_period' => '2026-08',
+            'forecasted_kwh' => 49000,
+            'method' => 'SMA-SF (ponderado)',
+            'actual_kwh' => null,
+            'notes' => 'Test forecast',
+        ]);
+
+        $response = $this->actingAs($user)->get('/forecasts');
+        $response->assertOk();
+        $response->assertViewHas('forecasts');
+        $response->assertSee('Proyecciones registradas');
+        $response->assertSee('48,500.00 kWh');
+
+        $this->assertDatabaseHas('generation_forecasts', [
+            'id' => $forecast->id,
+            'actual_kwh' => 48500,
+        ]);
+    }
 }
