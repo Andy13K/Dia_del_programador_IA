@@ -10,6 +10,10 @@
         ['label' => 'Proyecciones', 'route' => 'forecasts.index', 'match' => ['forecasts.*'], 'icon' => 'sparkles', 'group' => null],
         ['label' => 'API y documentación', 'route' => 'api.docs', 'match' => ['api.docs'], 'icon' => 'braces', 'group' => 'DESARROLLADORES'],
     ];
+
+    if (auth()->check() && auth()->user()->can('manage-users')) {
+        $navigation[] = ['label' => 'Usuarios y roles', 'route' => 'users.index', 'match' => ['users.*'], 'icon' => 'users', 'group' => 'ADMINISTRAR'];
+    }
 @endphp
 <nav class="kin-navigation" aria-label="Navegación principal">
     @foreach($navigation as $item)
