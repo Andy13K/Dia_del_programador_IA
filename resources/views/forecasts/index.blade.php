@@ -16,7 +16,7 @@
             @can('manage-forecasts')
                 <form method="POST" action="{{ route('forecasts.generate') }}" class="mt-6">
                     @csrf
-                    <x-input name="target_period" label="Período objetivo" type="month" :value="now()->startOfMonth()->addMonth()->format('Y-m')" :error="$errors->first('target_period')" required/>
+                    <x-input name="target_period" label="Período objetivo" type="month" :value="$defaultPeriod" :error="$errors->first('target_period')" hint="La proyección se calcula para el mes que elijas aquí y aparece resaltada en la tabla de abajo." required/>
                     @error('solar_farm_id')<p role="alert" class="text-xs text-rose-600 mt-3">{{ $message }}</p>@enderror
                     <x-button type="submit" class="w-full mt-5" icon="sparkles">Calcular proyecciones</x-button>
                 </form>
@@ -30,20 +30,42 @@
         <div class="relative h-64 mt-6"><canvas id="forecastChart" role="img" aria-label="Factor 1.20 de noviembre a abril y 0.88 de mayo a octubre"></canvas></div>
         <div class="mt-5 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 text-xs leading-relaxed" style="color:var(--kin-muted)">Las proyecciones son estimaciones, no garantías de producción. Su precisión se evalúa al compararlas con mediciones reales del mismo período.</div>
     </section>
-    @if(isset($forecasts) && $forecasts->count())
-        <section class="kin-panel p-5 sm:p-6">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
-                <div>
-                    <h2 class="text-base font-semibold">Proyecciones registradas</h2>
-                    <p class="text-xs mt-0.5" style="color:var(--kin-muted)">Comparación directa entre el modelo predictivo SMA-SF y las mediciones reales del período (§8).</p>
-                </div>
-                <div class="flex items-center gap-3 text-[11px]" style="color:var(--kin-muted)">
+    <section class="kin-panel p-5 sm:p-6" id="proyecciones-registradas">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-4">
+            <div>
+                <h2 class="text-base font-semibold">Proyecciones registradas</h2>
+                @if($summary)
+                    <p class="text-xs mt-1" style="color:var(--kin-muted)">
+                        <strong class="text-slate-900 dark:text-white">{{ ucfirst($summary['label']) }}</strong>
+                        · {{ $summary['count'] }} {{ $summary['count'] === 1 ? 'granja' : 'granjas' }}
+                        · época {{ $summary['season'] }} (factor {{ number_format($summary['factor'], 2) }}×)
+                        · total proyectado <strong class="text-amber-600 dark:text-amber-400">{{ number_format($summary['total_kwh'], 2) }} kWh</strong>
+                    </p>
+                @else
+                    <p class="text-xs mt-1" style="color:var(--kin-muted)">Comparación directa entre el modelo predictivo SMA-SF y las mediciones reales del período (§8). Todos los períodos, del más reciente al más antiguo.</p>
+                @endif
+                <div class="flex flex-wrap items-center gap-3 text-[11px] mt-2" style="color:var(--kin-muted)">
                     <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Precisión óptima (&le;5%)</span>
                     <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-500"></span> Aceptable (&le;15%)</span>
                     <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-rose-500"></span> Desvío (&gt;15%)</span>
                 </div>
             </div>
+            @if(count($periodOptions))
+                <form method="GET" action="{{ route('forecasts.index') }}#proyecciones-registradas" class="flex items-end gap-2">
+                    <div class="min-w-[200px]">
+                        <label for="period" class="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">Ver período</label>
+                        <select name="period" id="period" onchange="this.form.submit()" class="w-full px-4 py-2.5 rounded-xl border bg-white dark:bg-slate-950 text-slate-900 dark:text-white text-sm border-slate-300 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500">
+                            <option value="all" @selected($selectedPeriod === null)>Todos los períodos</option>
+                            @foreach($periodOptions as $value => $label)
+                                <option value="{{ $value }}" @selected($selectedPeriod === $value)>{{ ucfirst($label) }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </form>
+            @endif
+        </div>
 
+        @if($forecasts->count())
             <x-table>
                 <thead>
                     <tr>
@@ -57,6 +79,7 @@
                 <tbody>
                     @foreach($forecasts as $forecast)
                         @php
+                            $isNew = $justGenerated !== null && $forecast->target_period === $justGenerated;
                             $hasActual = $forecast->actual_kwh !== null && (float)$forecast->forecasted_kwh > 0;
                             $badgeClass = '';
                             $devFormatted = '—';
@@ -74,8 +97,11 @@
                                 }
                             }
                         @endphp
-                        <tr>
-                            <td class="font-medium text-slate-900 dark:text-slate-100">{{ $forecast->solarFarm?->name }}</td>
+                        <tr @class(['bg-amber-500/10' => $isNew])>
+                            <td class="font-medium text-slate-900 dark:text-slate-100">
+                                {{ $forecast->solarFarm?->name }}
+                                @if($isNew)<span class="ml-2 text-[10px] font-bold uppercase tracking-wider text-amber-700 dark:text-amber-300">nueva</span>@endif
+                            </td>
                             <td><span class="font-mono text-xs">{{ $forecast->target_period }}</span></td>
                             <td class="text-right font-mono">{{ number_format((float)$forecast->forecasted_kwh, 2) }} kWh</td>
                             <td class="text-right font-mono">
@@ -101,8 +127,10 @@
             <div class="mt-4">
                 {{ $forecasts->links() }}
             </div>
-        </section>
-    @endif
+        @else
+            <p class="text-sm py-6 text-center" style="color:var(--kin-muted)">Todavía no hay proyecciones registradas{{ $selectedPeriod ? ' para este período' : '' }}.</p>
+        @endif
+    </section>
 </div>
 @endsection
 @push('scripts')
