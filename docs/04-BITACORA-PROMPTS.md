@@ -94,6 +94,49 @@
 
 ---
 
+### [18:20] Claude Code (Agente A) — Scaffolding inicial de Laravel — PR #2
+
+**Objetivo:** instalar la última versión de Laravel sobre PHP 8.3, crear las 8 migraciones
+congeladas, los modelos Eloquent con `$fillable` y relaciones, el seeder de los 22
+departamentos y registrar las rutas nombradas de `docs/06-CONTRATOS-HORA-1.md`, sin tocar
+`docs/`, `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `README.md` ni `.git/`.
+
+**Prompt:**
+> Actúa como el Agente A (Arquitecto e Integrador) en Claude Code [...] Debes inicializar el
+> proyecto base instalando LA ÚLTIMA VERSIÓN DISPONIBLE DE LARAVEL sobre PHP 8.3 [...] crear
+> las 8 migraciones congeladas, los modelos Eloquent con relaciones y $fillable explícito, el
+> seeder con los 22 departamentos de Guatemala y el registro de rutas. (prompt completo con los
+> 7 pasos detallados — instalación, migraciones exactas, modelos, seeder, rutas, verificación y PR)
+
+**Resultado:** Laravel 13.31.0 instalado sobre PHP 8.3.30 (Laragon); 8 migraciones en orden de
+dependencia; 7 modelos nuevos (`Department`, `SolarPanel`, `SolarFarm`, `EnergyGeneration`,
+`GenerationAlert`, `GenerationForecast`, `AuditLog`) con `$fillable` explícito y relaciones
+según el contrato, más el accessor `getCalculatedCapacityKwAttribute()`; `DepartmentSeeder` con
+los 22 departamentos; 39 rutas nombradas registradas en `web.php`/`api.php`. Verificado con
+`migrate:fresh --seed` (22 filas en `departments`) y en el navegador contra
+`php artisan serve`.
+
+**Intervención humana / autocorrección durante la ejecución:**
+- El primer intento de mover los archivos de `temp_laravel/` a la raíz con `Move-Item -Force`
+  hubiera sobreescrito `AGENTS.md`, `CLAUDE.md` y `README.md` del proyecto (Laravel trae sus
+  propios stubs con esos nombres). Se excluyeron explícitamente antes de mover.
+- Al probar `/dashboard` en el navegador, el middleware `auth` devolvía **500**
+  (`RouteNotFoundException: Route [login] not defined`) en vez de simplemente redirigir,
+  porque aún no existe andamiaje de autenticación (Breeze/Fortify no está instalado — fuera de
+  alcance de este PR). Se agregó una ruta `login` placeholder para que la redirección no rompa
+  a los Agentes B/C mientras prueban sus propias rutas; se documentó como pendiente en el PR.
+- Se decidió usar `protected $fillable = [...]` clásico en vez del nuevo atributo
+  `#[Fillable(...)]` de Laravel 13/PHP 8.3, para que el checklist OWASP ("`$fillable`
+  explícito") sea inequívoco a simple vista para el jurado y el resto del equipo.
+- MySQL de Laragon no estaba inicializado/corriendo en el entorno; se detectó el binario
+  (`C:\laragon\bin\mysql\mysql-8.4.3-winx64`) y se arrancó manualmente `mysqld` para poder
+  correr las migraciones y verificar el seeder.
+
+**Iteraciones:** 1 (sin retrabajo del contrato; los ajustes anteriores se resolvieron dentro de
+la misma pasada, antes de commitear).
+
+---
+
 ## 4. Evidencia visual
 
 Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:
