@@ -156,69 +156,13 @@ Route::get('/users/{user}/edit', [\App\Http\Controllers\UserController::class, '
 Route::put('/users/{user}', [\App\Http\Controllers\UserController::class, 'update'])->middleware(['auth', 'can:manage-users'])->name('users.update');
 Route::delete('/users/{user}', [\App\Http\Controllers\UserController::class, 'destroy'])->middleware(['auth', 'can:manage-users'])->name('users.destroy');
 
-// Reportes Departamentales y Exportación CSV (RF-12)
-Route::get('/reports', function () {
-    // OWASP A10: fallar cerrado (ver nota en el handler del dashboard más arriba).
-    $departments = Department::with(['solarFarms.solarPanels', 'solarFarms.energyGenerations'])->orderBy('name')->get();
-    $deptStats = $departments->map(function ($dept) {
-        $farmsCount = $dept->solarFarms->count();
-        $panelsCount = $dept->solarFarms->sum(fn ($f) => $f->solarPanels->sum('pivot.quantity'));
-        $capacityKw = (float) $dept->solarFarms->sum(fn ($f) => $f->calculated_capacity_kw);
-        $totalKwh = (float) $dept->solarFarms->sum(fn ($f) => $f->energyGenerations->sum('real_kwh'));
-        $co2Kg = $totalKwh * 0.40;
-        $families = (int) $dept->solarFarms->sum('benefited_families');
-
-        return [
-            'id' => $dept->id,
-            'name' => $dept->name,
-            'code' => $dept->code,
-            'farms' => $farmsCount,
-            'panels' => $panelsCount,
-            'kw' => $capacityKw,
-            'kwh' => $totalKwh,
-            'co2_kg' => $co2Kg,
-            'co2_ton' => $co2Kg / 1000,
-            'families' => $families,
-        ];
-    })->all();
-
-    return view('reports.index', compact('deptStats'));
-})->middleware('auth')->name('reports.index');
-
+// Reportes Departamentales y Exportación Profesional (RF-12)
+Route::get('/reports', [\App\Http\Controllers\ReportController::class, 'index'])->middleware('auth')->name('reports.index');
+Route::get('/reports/export/excel', [\App\Http\Controllers\ReportController::class, 'exportExcel'])->middleware('auth')->name('reports.export.excel');
+Route::get('/reports/export/csv', [\App\Http\Controllers\ReportController::class, 'exportCsv'])->middleware('auth')->name('reports.export.csv');
+Route::get('/reports/export', [\App\Http\Controllers\ReportController::class, 'exportCsv'])->middleware('auth')->name('reports.export');
+Route::get('/reports/print', [\App\Http\Controllers\ReportController::class, 'printPdf'])->middleware('auth')->name('reports.print');
 Route::get('/reports/department/{department}', fn (string $department) => redirect()->route('reports.index'))->middleware('auth')->name('reports.department');
-Route::get('/reports/export', function () {
-    $headers = [
-        'Content-Type' => 'text/csv; charset=utf-8',
-        'Content-Disposition' => 'attachment; filename="reporte_solar_guatemala_'.date('Ymd_His').'.csv"',
-    ];
-    $callback = function () {
-        $file = fopen('php://output', 'w');
-        fputs($file, "\xEF\xBB\xBF"); // BOM UTF-8 para compatibilidad Excel
-        fputcsv($file, ['Departamento', 'Granjas Registradas', 'Capacidad Instalada (kW)', 'Generación Acumulada (kWh)', 'CO2 Evitado (Ton)', 'Familias Beneficiadas']);
-
-        // OWASP A10: fallar cerrado (ver nota en el handler del dashboard más arriba).
-        // Antes, un error a mitad de la exportación quedaba en silencio y el archivo
-        // se descargaba incompleto sin ningún aviso de que los datos son parciales.
-        $departments = Department::with(['solarFarms.energyGenerations'])->orderBy('name')->get();
-        foreach ($departments as $dept) {
-            $farmsCount = $dept->solarFarms->count();
-            $capKw = $dept->solarFarms->sum(fn ($f) => $f->calculated_capacity_kw);
-            $genKwh = $dept->solarFarms->sum(fn ($f) => $f->energyGenerations->sum('real_kwh'));
-            $co2Ton = ($genKwh * 0.40) / 1000;
-            $families = $dept->solarFarms->sum('benefited_families');
-            fputcsv($file, [
-                $dept->name,
-                $farmsCount,
-                number_format((float) $capKw, 2, '.', ''),
-                number_format((float) $genKwh, 2, '.', ''),
-                number_format((float) $co2Ton, 2, '.', ''),
-                $families,
-            ]);
-        }
-        fclose($file);
-    };
-    return response()->stream($callback, 200, $headers);
-})->middleware('auth')->name('reports.export');
 
 // Proyecciones Predictivas SMA-SF (RF-15)
 Route::get('/forecasts', [\App\Http\Controllers\ForecastController::class, 'index'])->middleware('auth')->name('forecasts.index');
