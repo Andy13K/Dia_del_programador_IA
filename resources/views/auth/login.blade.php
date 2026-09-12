@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>Iniciar sesión — K'in Solar Guatemala</title>
+    <link rel="icon" type="image/png" href="{{ asset('images/kin-icon-dorado.png') }}">
     <script>document.documentElement.classList.toggle('dark',localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && matchMedia('(prefers-color-scheme: dark)').matches));</script>
     @vite(['resources/css/app.css','resources/js/app.js'])
     <script src="https://unpkg.com/lucide@latest"></script>
