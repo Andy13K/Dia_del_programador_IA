@@ -196,6 +196,27 @@
     let panelIndex = 1;
     let pickerMap, pickerMarker;
 
+    // OWASP A03: los datos de panel (marca/modelo, texto libre del operador) se pasan como
+    // JSON real vía el directivo Blade de JS, nunca interpolados con el escape normal de Blade
+    // dentro de un string de JS — ese escape solo protege contexto HTML y permite romper el
+    // string con comilla invertida o llaves de interpolación.
+    const panelsData = @js($panels->map(fn ($panel) => [
+        'id' => $panel->id,
+        'kw' => (float) $panel->nominal_power_kw,
+        'label' => $panel->brand.' '.$panel->model.' ('.number_format((float) $panel->nominal_power_kw, 3).' kW)',
+    ])->values());
+    const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, character => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    })[character]);
+
+    function buildPanelOptionsHtml() {
+        let html = '<option value="">Seleccione panel fotovoltaico...</option>';
+        panelsData.forEach(panel => {
+            html += `<option value="${escapeHtml(panel.id)}" data-kw="${escapeHtml(panel.kw)}">${escapeHtml(panel.label)}</option>`;
+        });
+        return html;
+    }
+
     function initPickerMap() {
         const latInput = document.getElementById('latInput');
         const lngInput = document.getElementById('lngInput');
@@ -299,11 +320,8 @@
         const container = document.getElementById('panelsContainer');
         const newRow = document.createElement('div');
         newRow.className = 'panel-row grid grid-cols-1 sm:grid-cols-12 gap-3 items-end p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60';
-        
-        let optionsHtml = '<option value="">Seleccione panel fotovoltaico...</option>';
-        @foreach($panels as $panel)
-            optionsHtml += `<option value="{{ $panel->id }}" data-kw="{{ $panel->nominal_power_kw }}">{{ $panel->brand }} {{ $panel->model }} ({{ number_format((float)$panel->nominal_power_kw, 3) }} kW)</option>`;
-        @endforeach
+
+        const optionsHtml = buildPanelOptionsHtml();
 
         newRow.innerHTML = `
             <div class="sm:col-span-7">
