@@ -814,7 +814,13 @@ documentación).
 
 **Hallazgos corregidos en esta sesión (4 commits, más crítico primero):**
 
-1. **`database/seeders/DatabaseSeeder.php` (A02/A07):** las 3 contraseñas de usuarios semilla (`admin@solarguatemala.gob.gt` incluido) vivían en texto plano, commiteadas en git — cualquiera con acceso al repositorio obtenía el login real de administrador de la URL pública. Se movieron a `SEED_ADMIN_PASSWORD` / `SEED_OPERADOR_PASSWORD` / `SEED_EVALUADOR_PASSWORD` (con respaldo solo para desarrollo local) y se documentó en `.env.example` que producción debe definir valores propios y distintos a los ya expuestos en el historial.
+1. **`database/seeders/DatabaseSeeder.php` (A02/A07):** las 3 contraseñas de usuarios semilla (`admin@solarguatemala.gob.gt` incluido) vivían en texto plano, commiteadas en git — cualquiera con acceso al repositorio obtenía el login real de administrador de la URL pública. Se movieron a `SEED_ADMIN_PASSWORD` / `SEED_OPERADOR_PASSWORD` / `SEED_EVALUADOR_PASSWORD`.
+   > ⚠️ **Corrección posterior (ver entrada siguiente):** este primer intento dejó las mismas
+   > contraseñas ([CREDENCIAL REDACTADA], las mismas credenciales antiguas comprometidas) como
+   > valor de *respaldo* de `env()` — seguían en el
+   > código versionado, solo que como segundo argumento en vez de como valor principal. La
+   > afirmación original de que "ya NO viven en texto plano en el código" era falsa. Corregido
+   > en la entrada de abajo tras la auditoría del Agente B sobre este mismo PR.
 2. **`routes/api.php` + `bootstrap/app.php` (A04):** los 5 endpoints de `/api/v1/*` no tenían ningún límite de peticiones — confirmado en vivo (`GET /api/v1/statistics` respondía datos reales sin login). RF-16 pide una API pública, así que no se le exigió autenticación, pero se activó `throttleApi()` + `RateLimiter::for('api', ...)` (60 req/min por IP). Probado con una ráfaga de 60 peticiones: las primeras 54 en 200, el resto en 429.
 3. **`resources/views/farms/create.blade.php` y `farms/edit.blade.php` (A03):** `addPanelRow()` interpolaba `{{ $panel->brand }}`/`{{ $panel->model }}` dentro de un template literal de JS — el escape de Blade solo protege contexto HTML, no JS, así que una marca de panel con comilla invertida rompía el script. Se pasaron los datos del panel como JSON real (directivo Blade de JS) y se renderiza con una función de escape HTML explícita. Probado inyectando `` Evil`);alert(document.cookie);// `` como `brand` de un panel real: antes rompía el script, ahora aparece como texto plano en ambos formularios (con `window.alert` sobrescrito para confirmar que nunca se disparó).
 4. **`resources/views/layouts/app.blade.php` (A03/A08):** `lucide@latest` y la URL de `chart.js` sin versión se cargaban desde CDN sin `integrity`. Se resolvió primero qué versión exacta servía cada URL sin fijar (lucide 1.45.0, chart.js 4.5.1) para no cambiar de comportamiento, se calculó el hash SHA-384 real descargando esos archivos exactos, y se fijaron ambos scripts con el mismo patrón que ya usaba Leaflet.
@@ -824,6 +830,29 @@ documentación).
 **Verificación:** `php artisan test` (24/24, 132 aserciones) después de cada commit; navegador local contra una base de datos aislada (`solar_guatemala_claude_hardening2`) sembrada desde cero con el seeder corregido — login con la contraseña de respaldo, formularios de crear/editar granja (incluida la prueba de inyección real descrita arriba), dashboard y mapa con Chart.js/Lucide/Leaflet cargando correctamente con `integrity` activo, `/reports/export` descargando el CSV, y la API con rate limiting real. Se comparó además la URL pública (`https://kin-solar-guatemala.duckdns.org/`) antes de tocar código: mismos assets compilados que `master`, cabeceras de seguridad activas, `/.env` en 403, HTTP→HTTPS en 301, CSRF exigido (419 sin token) — confirmando que el análisis aplicaba directamente a lo desplegado.
 
 **Trabajo en curso:** por instrucción explícita en `docs/01-REGLAS-DE-TRABAJO.md`/`project_shared_working_dir`, se usó un worktree nuevo (`feat/carlos-claude/hardening-owasp-fase2`, basado en `origin/master` actualizado) en vez de reutilizar el worktree de la auditoría anterior (`feat/carlos-claude/hardening-owasp-auditoria`), que había quedado desactualizado tras el merge de esa rama.
+
+---
+
+### Claude Code (Agente A) — Corrección tras auditoría del Agente B sobre el PR #24
+
+**Objetivo:** el PR #24 (arriba) ya estaba abierto y pendiente de fusión cuando el humano puso al Agente B (Codex) a auditar específicamente el fix #1 (credenciales del seeder). El hallazgo fue correcto y bloqueante: el fix dejó las contraseñas reales como valor de respaldo de `env()`, lo cual (a) seguía siendo un secreto en el código versionado y (b) es un bug real de Laravel — `env()` fuera de `config/*.php` devuelve `null` en cuanto se corre `php artisan config:cache`, que el propio `docs/07-PLAN-DESPLIEGUE.md` ejecuta después de cada despliegue. El humano pidió aplicar la lista de 10 correcciones del Agente B tal cual, sin reescribir historial ni forzar push.
+
+**Prompt del humano (extracto literal, reenviando la auditoría del Agente B):**
+> Puse al agente B a auditar lo que realizaste amigo y esto me dijo: Revisa el PR #24 y agrega nuevos commits de corrección; no reescribas historial ni hagas force-push. Hallazgo bloqueante: la eliminación de credenciales quedó incompleta... [lista de 10 puntos]
+
+**Resultado:**
+1. Nuevo `config/seed.php` centraliza las 3 variables (`SEED_ADMIN_PASSWORD`, etc.) — es el único lugar del código que llama a `env()` para ellas.
+2. `DatabaseSeeder::seedUsers()` lee vía `config('seed.*')`, nunca `env()` directamente, y lanza `RuntimeException` con un mensaje explícito **antes** de tocar la tabla `users` si falta cualquiera de las tres — sin valor por defecto, ni en local.
+3. `.env.example` quedó con las 3 variables vacías y un comentario que explica que son obligatorias y por qué (sin `config:cache`, `env()` fuera de config ya no lee el archivo real).
+4. Se quitaron las contraseñas en texto plano de `README.md`, `docs/06-CONTRATOS-HORA-1.md`, `docs/08-GUION-PRESENTACION.md` y `docs/09-MANUAL-USUARIO.md` — los 4 archivos que aún las citaban (`grep` confirmó que no queda ninguna ocurrencia en el árbol de trabajo). Se reemplazaron por una nota de que las credenciales de demo se entregan por un canal separado del equipo, sin publicar ninguna contraseña nueva.
+5. Se corrigió la entrada anterior de esta bitácora (arriba) en vez de borrarla, dejando explícito qué se afirmó mal y por qué.
+6. **No se tocó el historial de git** (sin `rebase`/`force-push`); las **credenciales antiguas comprometidas** siguen existiendo en commits anteriores de este repositorio y **deben tratarse como comprometidas permanentemente**. Si esas contraseñas llegaron a usarse alguna vez en la URL pública, deben rotarse ahí — este PR no lo hace por sí solo, solo lo vuelve posible de forma segura hacia adelante.
+7. Se agregaron pruebas automatizadas nuevas (`tests/Feature/DatabaseSeederCredentialsTest.php`, `tests/Feature/ApiRateLimitTest.php`, `tests/Feature/PanelOptionsEscapingTest.php`): el seeder falla sin las 3 variables (o con solo una faltante), crea los 3 usuarios con las contraseñas hasheadas cuando sí están, el limitador de la API devuelve 429 al superar 60 req/min, y un payload con comilla invertida / `${...}` / etiqueta `<script>` no aparece sin escapar en el HTML que generan las vistas de crear/editar granja.
+8. Se restauraron `package-lock.json` y `public/build/*` a su estado commiteado (se habían modificado localmente por mi propio `npm install`/`npm run build` de verificación, sin ser parte intencional de ningún PR).
+
+**Verificación ejecutada antes de actualizar el PR:** `git diff --check` (sin conflictos ni espacios en blanco problemáticos), Pint solo sobre los `.php` tocados, `php artisan test`, `php artisan config:cache` (para confirmar que `config('seed.*')` sigue resolviendo tras cachear, a diferencia del `env()` directo que tenía el intento anterior), `npm run build`, y `git status --short` para confirmar que no queda ningún archivo generado fuera de lo intencional.
+
+**No se marca como completada la rotación de credenciales en producción** — eso requiere acceso al panel de la plataforma donde corre `https://kin-solar-guatemala.duckdns.org/`, fuera del alcance de este agente. Pendiente explícito para el equipo (ver sección 8 del PR).
 
 ---
 
