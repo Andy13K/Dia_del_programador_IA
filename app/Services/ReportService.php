@@ -213,7 +213,12 @@ class ReportService
                 'id' => $farm->id,
                 'name' => $farm->name,
                 'department' => $farm->department ? $farm->department->name : 'N/A',
-                'status' => ucfirst((string) $farm->status),
+                'status' => match ($farm->status) {
+                    'active' => 'Activa',
+                    'maintenance' => 'Mantenimiento',
+                    'inactive' => 'Inactiva',
+                    default => ucfirst((string) $farm->status),
+                },
                 'panels_count' => $panelsCount,
                 'capacity_kw' => $capacityKw,
                 'estimated_kwh' => $estimatedKwh,
