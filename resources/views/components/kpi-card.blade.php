@@ -52,9 +52,9 @@
             <div class="text-lg sm:text-2xl lg:text-3xl font-semibold text-slate-900 dark:text-white tracking-tight truncate">
                 {{ $value }}
             </div>
-            @if($subtitle)
-                <div class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5 sm:mt-1 flex items-center gap-1 font-medium truncate">
-                    {{ $subtitle }}
+            @if($subtitle || isset($info))
+                <div class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5 sm:mt-1 flex items-center gap-1 font-medium min-w-0">
+                    <span class="truncate">{{ $subtitle }}</span>{{ $info ?? '' }}
                 </div>
             @endif
         </div>

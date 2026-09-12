@@ -166,7 +166,7 @@
         <!-- Tasa de Mitigación CO2 -->
         <article class="col-span-2 lg:col-span-1 bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
             <div class="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
-                <span class="font-medium">Tasa CO₂ Evitada</span>
+                <span class="font-medium">Tasa CO₂ Evitada<x-co2-info /></span>
                 <i data-lucide="leaf" class="w-4 h-4 text-emerald-600 dark:text-emerald-400"></i>
             </div>
             <div class="mt-2 flex items-baseline gap-1">

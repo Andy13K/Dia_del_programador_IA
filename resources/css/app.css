@@ -147,6 +147,29 @@ button { cursor:pointer; }
 .dark .leaflet-popup-tip { background:#1e293b!important; }
 .dark .leaflet-popup-close-button { color:#94a3b8!important; }
 .dark .leaflet-popup-close-button:hover { color:#f1f5f9!important; }
+
+/* Desplegables nativos: Chrome pinta la lista de <option> con el fondo del <select>; si es
+   transparente cae a blanco y el texto hereda el blanco del tema oscuro. Fondo explícito siempre. */
+select option { background-color:var(--kin-surface); color:var(--kin-ink); }
+.dark select option { background-color:#0f172a; color:#edf2fa; }
+
+/* Botón "!" de explicación del CO₂ evitado (componente <x-co2-info>) */
+.kin-co2 { position:relative; display:inline-flex; align-items:center; vertical-align:middle; margin-left:.35rem; flex-shrink:0; }
+.kin-co2-btn { width:1.05rem; height:1.05rem; border-radius:999px; border:1px solid #10b98166; background:#10b98114; color:#047857; font:800 .7rem/1 ui-monospace,monospace; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; padding:0; transition:background .15s var(--kin-ease), transform .15s var(--kin-ease); }
+.kin-co2-btn:hover, .kin-co2-btn[aria-expanded="true"] { background:#10b981; color:#fff; transform:scale(1.08); }
+.kin-co2-btn:focus-visible { outline:2px solid #f59e0b; outline-offset:2px; }
+.dark .kin-co2-btn { color:#6ee7b7; border-color:#34d39966; background:#34d39918; }
+.dark .kin-co2-btn:hover, .dark .kin-co2-btn[aria-expanded="true"] { background:#34d399; color:#052e1c; }
+/* El panel se mueve al <body> con position:fixed al abrirse (ver app.js), así no lo recortan
+   tarjetas con overflow-hidden, tablas con scroll ni los popups de Leaflet. */
+.kin-co2-panel { position:fixed; z-index:120; width:min(22rem, calc(100vw - 2rem)); padding:.9rem 1rem; border-radius:.9rem; background:var(--kin-surface); color:var(--kin-ink); border:1px solid var(--kin-line); box-shadow:0 18px 40px -18px rgb(0 0 0 / .45); text-align:left; font-weight:400; text-transform:none; letter-spacing:normal; white-space:normal; line-height:1.45; cursor:auto; font-size:.8rem; }
+.kin-co2-title { font-size:.8rem; font-weight:700; color:#047857; margin-bottom:.4rem; }
+.dark .kin-co2-title { color:#6ee7b7; }
+.kin-co2-formula { font:600 .74rem/1.5 ui-monospace,monospace; background:#10b9810f; border:1px solid #10b98133; border-radius:.5rem; padding:.3rem .5rem; margin-bottom:.3rem; color:var(--kin-ink); }
+.kin-co2-example { font-size:.74rem; margin:.45rem 0; color:var(--kin-ink); }
+.kin-co2-example span { display:block; font-size:.68rem; text-transform:uppercase; letter-spacing:.06em; color:var(--kin-muted); margin-bottom:.15rem; }
+.kin-co2-text { font-size:.74rem; color:var(--kin-muted); margin:.45rem 0 0; }
+.kin-co2-text strong { color:var(--kin-ink); }
 .leaflet-container { font-family:var(--font-sans)!important; }
 .leaflet-bar { box-shadow:0 3px 16px #0b0f1726!important; border:1px solid #d5dce6!important; border-radius:10px!important; overflow:hidden; }
 .kin-modal-panel { animation:kin-dialog .24s var(--kin-ease); }

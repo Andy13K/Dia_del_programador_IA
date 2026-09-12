@@ -94,7 +94,7 @@
                 <!-- Panel de Cálculo en Tiempo Real y Alerta -->
                 <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200/80 dark:border-slate-700/80 space-y-2 text-xs">
                     <div class="flex items-center justify-between">
-                        <span class="text-slate-500 font-semibold">CO₂ Evitado (Factor: 0.40 kg / kWh):</span>
+                        <span class="text-slate-500 font-semibold">CO₂ Evitado (Factor: {{ number_format((float) config('solar.co2_kg_per_kwh'), 2) }} kg / kWh):<x-co2-info /></span>
                         <span class="font-extrabold text-emerald-600 dark:text-emerald-400 text-sm font-mono" id="previewCo2">
                             58,000.00 kg (58.00 Ton)
                         </span>
