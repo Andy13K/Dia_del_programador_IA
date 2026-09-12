@@ -7,11 +7,11 @@
 ])
 
 @php
-    $base = 'inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none shadow-sm cursor-pointer';
+    $base = 'inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 active:scale-[0.98] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none shadow-sm cursor-pointer';
     
     $sizes = [
-        'sm' => 'px-3 py-1.5 text-xs gap-1.5',
-        'md' => 'px-4 py-2 text-sm gap-2',
+        'sm' => 'min-h-10 px-3 py-1.5 text-xs gap-1.5',
+        'md' => 'min-h-11 px-4 py-2 text-sm gap-2',
         'lg' => 'px-6 py-3 text-base gap-2.5',
     ];
 

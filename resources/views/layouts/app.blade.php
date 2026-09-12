@@ -1,571 +1,80 @@
 <!DOCTYPE html>
-<html lang="es" class="h-full bg-slate-50 text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-100">
+<html lang="es" class="h-full antialiased">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ $title ?? 'Monitoreo Solar' }} — Sistema Nacional de Generación Solar Guatemala</title>
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23F59E0B'><path d='M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41M12 7a5 5 0 100 10 5 5 0 000-10z'/></svg>">
-
-    <!-- Tipografía Inter y Plus Jakarta Sans -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
-    <!-- Leaflet CSS (Mapa Interactivo) -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-
-    <!-- Lucide Icons -->
+    <meta name="theme-color" content="#0B0F17">
+    <title>{{ $title ?? 'Panorama nacional' }} — K'in Solar Guatemala</title>
+    <script>
+        const savedTheme = localStorage.getItem('theme');
+        document.documentElement.classList.toggle('dark', savedTheme ? savedTheme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches);
+    </script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <script src="https://unpkg.com/lucide@latest"></script>
-
-    <!-- Chart.js para Dashboard -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <!-- Vite Assets (Tailwind CSS v4 & JS) -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
-    <style>
-        body { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; }
-        [x-cloak] { display: none !important; }
-        /* Transición suave para modo oscuro */
-        * { transition: background-color 0.15s ease, border-color 0.15s ease; }
-
-        /* SCROLLBAR ESTÉTICO PERSONALIZADO SOLARGT */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(148, 163, 184, 0.25);
-            border-radius: 9999px;
-            transition: background-color 0.2s ease;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(245, 158, 11, 0.65); /* Ámbar solar en hover */
-        }
-        .dark ::-webkit-scrollbar-thumb {
-            background: rgba(100, 116, 139, 0.35);
-        }
-        .dark ::-webkit-scrollbar-thumb:hover {
-            background: rgba(245, 158, 11, 0.75);
-        }
-        * {
-            scrollbar-width: thin;
-            scrollbar-color: rgba(148, 163, 184, 0.25) transparent;
-        }
-        .dark * {
-            scrollbar-color: rgba(100, 116, 139, 0.35) transparent;
-        }
-        /* Animaciones globales suaves */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(4px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in {
-            animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-    </style>
+    @stack('styles')
 </head>
-<body class="h-full flex flex-col md:flex-row overflow-hidden">
-
-    <!-- SIDEBAR DE NAVEGACIÓN (Desktop - Espaciado óptimo, animado y confortable) -->
-    <aside id="sidebar" class="hidden md:flex md:w-64 lg:w-72 bg-slate-900 text-slate-300 flex-shrink-0 flex-col z-30 border-r border-slate-800 transition-all duration-200 select-none">
-        
-        <!-- Logo / Marca -->
-        <div class="h-16 px-5 flex items-center justify-between border-b border-slate-800/80 bg-slate-950/40">
-            <a href="{{ route('home') }}" class="flex items-center gap-3 group">
-                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 via-amber-400 to-emerald-400 p-0.5 shadow-md shadow-amber-500/20 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
-                    <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
-                        <i data-lucide="sun" class="w-4.5 h-4.5 text-amber-400 animate-pulse"></i>
-                    </div>
+<body class="kin-app" data-page="{{ request()->route()?->getName() }}">
+    <a href="#main-content" class="kin-skip">Saltar al contenido</a>
+    <aside id="sidebar" class="kin-sidebar">
+        <div class="kin-sidebar-brand"><x-brand /></div>
+        <x-navigation />
+        <div class="kin-sidebar-bottom">
+            <div class="kin-country"><span aria-hidden="true">◧</span> Guatemala <span>22 departamentos</span></div>
+            @auth
+                <div class="kin-profile">
+                    <span class="kin-avatar">{{ mb_strtoupper(mb_substr(auth()->user()->name, 0, 2)) }}</span>
+                    <div><strong>{{ auth()->user()->name }}</strong><span>{{ ['admin' => 'Administrador', 'operador' => 'Operador', 'visualizador' => 'Visualizador'][auth()->user()->role] ?? 'Usuario' }}</span></div>
+                    <form method="POST" action="{{ route('logout') }}">@csrf<button class="kin-icon-button" title="Cerrar sesión" aria-label="Cerrar sesión"><i data-lucide="log-out"></i></button></form>
                 </div>
-                <div>
-                    <span class="text-base font-bold tracking-tight text-white flex items-center gap-1.5">
-                        Solar<span class="text-amber-400">GT</span>
-                        <span class="text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-semibold border border-emerald-500/30">Nube</span>
-                    </span>
-                    <span class="text-[11px] text-slate-400 block -mt-0.5 font-medium">Monitoreo 22 Dptos</span>
-                </div>
-            </a>
-        </div>
-
-        <!-- Menú de Enlaces (Espaciado equilibrado, interactivo y con micro-animaciones) -->
-        <nav class="flex-1 px-3.5 py-2.5 space-y-1 overflow-y-auto">
-            
-            <div class="px-3 pt-2 pb-1 text-[11px] font-bold uppercase tracking-wider text-slate-400 select-none">
-                Principal
-            </div>
-
-            <!-- Dashboard -->
-            <a href="{{ route('dashboard') }}" 
-               class="flex items-center gap-3 px-3.5 py-2 rounded-xl text-[13px] font-semibold transition-all duration-200 hover:translate-x-1 group {{ request()->routeIs('dashboard', 'home') ? 'bg-amber-500/15 text-amber-400 font-bold border-r-2 border-amber-400 shadow-sm' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
-                <i data-lucide="layout-dashboard" class="w-4 h-4 text-amber-400 flex-shrink-0 group-hover:scale-110 transition-transform"></i>
-                <span class="whitespace-nowrap truncate">Dashboard Nacional</span>
-            </a>
-
-            <!-- Mapa Interactivo (En una sola línea garantizada) -->
-            <a href="{{ route('map.index') }}" 
-               class="flex items-center gap-3 px-3.5 py-2 rounded-xl text-[13px] font-semibold transition-all duration-200 hover:translate-x-1 group {{ request()->routeIs('map.*') ? 'bg-amber-500/15 text-amber-400 font-bold border-r-2 border-amber-400 shadow-sm' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
-                <i data-lucide="map-pin" class="w-4 h-4 text-emerald-400 flex-shrink-0 group-hover:scale-110 transition-transform"></i>
-                <span class="flex-1 whitespace-nowrap">Mapa de Guatemala</span>
-                <span class="text-[9px] bg-emerald-500/20 text-emerald-300 font-bold px-1.5 py-0.5 rounded border border-emerald-500/30 flex-shrink-0">GPS</span>
-            </a>
-
-            <div class="px-3 pt-2.5 pb-1 text-[11px] font-bold uppercase tracking-wider text-slate-400 select-none">
-                Gestión de Activos
-            </div>
-
-            <!-- Granjas Solares -->
-            <a href="{{ route('farms.index') }}" 
-               class="flex items-center gap-3 px-3.5 py-2 rounded-xl text-[13px] font-semibold transition-all duration-200 hover:translate-x-1 group {{ request()->routeIs('farms.*') ? 'bg-amber-500/15 text-amber-400 font-bold border-r-2 border-amber-400 shadow-sm' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
-                <i data-lucide="zap" class="w-4 h-4 text-amber-400 flex-shrink-0 group-hover:scale-110 transition-transform"></i>
-                <span class="whitespace-nowrap truncate">Granjas Solares</span>
-            </a>
-
-            <!-- Catálogo de Paneles -->
-            <a href="{{ route('panels.index') }}" 
-               class="flex items-center gap-3 px-3.5 py-2 rounded-xl text-[13px] font-semibold transition-all duration-200 hover:translate-x-1 group {{ request()->routeIs('panels.*') ? 'bg-amber-500/15 text-amber-400 font-bold border-r-2 border-amber-400 shadow-sm' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
-                <i data-lucide="grid" class="w-4 h-4 text-sky-400 flex-shrink-0 group-hover:scale-110 transition-transform"></i>
-                <span class="whitespace-nowrap truncate">Modelos de Panel</span>
-            </a>
-
-            <!-- Generación Energética -->
-            <a href="{{ route('generations.index') }}" 
-               class="flex items-center gap-3 px-3.5 py-2 rounded-xl text-[13px] font-semibold transition-all duration-200 hover:translate-x-1 group {{ request()->routeIs('generations.*') ? 'bg-amber-500/15 text-amber-400 font-bold border-r-2 border-amber-400 shadow-sm' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
-                <i data-lucide="activity" class="w-4 h-4 text-emerald-400 flex-shrink-0 group-hover:scale-110 transition-transform"></i>
-                <span class="whitespace-nowrap truncate">Mediciones kWh & CO₂</span>
-            </a>
-
-            <div class="px-3 pt-2.5 pb-1 text-[11px] font-bold uppercase tracking-wider text-slate-400 select-none">
-                Analítica y Monitoreo
-            </div>
-
-            <!-- Alertas Automáticas (RF-14) -->
-            <a href="{{ route('alerts.index') }}" 
-               class="flex items-center gap-3 px-3.5 py-2 rounded-xl text-[13px] font-semibold transition-all duration-200 hover:translate-x-1 group {{ request()->routeIs('alerts.*') ? 'bg-rose-500/15 text-rose-400 font-bold border-r-2 border-rose-500 shadow-sm' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
-                <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-400 flex-shrink-0 group-hover:scale-110 transition-transform"></i>
-                <span class="flex-1 whitespace-nowrap truncate">Alertas (Déficit ≥20%)</span>
-            </a>
-
-            <!-- Reportes Departamentales (RF-12) -->
-            <a href="{{ route('reports.index') }}" 
-               class="flex items-center gap-3 px-3.5 py-2 rounded-xl text-[13px] font-semibold transition-all duration-200 hover:translate-x-1 group {{ request()->routeIs('reports.*') ? 'bg-amber-500/15 text-amber-400 font-bold border-r-2 border-amber-400 shadow-sm' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
-                <i data-lucide="bar-chart-3" class="w-4 h-4 text-indigo-400 flex-shrink-0 group-hover:scale-110 transition-transform"></i>
-                <span class="whitespace-nowrap truncate">Reportes por Depto</span>
-            </a>
-
-            <!-- Proyecciones Climáticas (RF-15) -->
-            <a href="{{ route('forecasts.index') }}" 
-               class="flex items-center gap-3 px-3.5 py-2 rounded-xl text-[13px] font-semibold transition-all duration-200 hover:translate-x-1 group {{ request()->routeIs('forecasts.*') ? 'bg-amber-500/15 text-amber-400 font-bold border-r-2 border-amber-400 shadow-sm' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
-                <i data-lucide="trending-up" class="w-4 h-4 text-teal-400 flex-shrink-0 group-hover:scale-110 transition-transform"></i>
-                <span class="whitespace-nowrap truncate">Proyecciones Futuras</span>
-            </a>
-
-            <div class="px-3 pt-2.5 pb-1 text-[11px] font-bold uppercase tracking-wider text-slate-400 select-none">
-                Integración
-            </div>
-
-            <!-- API REST Documentada (RF-16) -->
-            <a href="{{ route('api.docs') }}" 
-               class="flex items-center gap-3 px-3.5 py-2 rounded-xl text-[13px] font-semibold transition-all duration-200 hover:translate-x-1 group {{ request()->routeIs('api.docs') ? 'bg-amber-500/15 text-amber-400 font-bold border-r-2 border-amber-400 shadow-sm' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
-                <i data-lucide="code-2" class="w-4 h-4 text-violet-400 flex-shrink-0 group-hover:scale-110 transition-transform"></i>
-                <span class="flex-1 whitespace-nowrap">API REST v1</span>
-                <span class="text-[9px] bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded border border-slate-700 flex-shrink-0">JSON</span>
-            </a>
-        </nav>
-
-        <!-- Footer del Sidebar -->
-        <div class="p-3 border-t border-slate-800/80 bg-slate-950/60">
-            <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3 flex items-center justify-between">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></div>
-                    <div>
-                        <div class="text-xs font-bold text-white leading-none">AWS EC2 Online</div>
-                        <div class="text-[10px] text-slate-400 leading-tight mt-0.5">PHP 8.3 • Nginx • MySQL</div>
-                    </div>
-                </div>
-                <button type="button" onclick="toggleDarkMode()" title="Cambiar tema" class="p-1.5 text-slate-300 hover:text-amber-400 hover:bg-slate-800 rounded-lg transition-transform duration-200 hover:scale-110 active:scale-95">
-                    <i data-lucide="moon" class="w-4 h-4 hidden dark:block"></i>
-                    <i data-lucide="sun" class="w-4 h-4 block dark:hidden"></i>
-                </button>
-            </div>
+            @else
+                <x-button :href="route('login')" variant="primary" class="w-full" icon="log-in">Iniciar sesión</x-button>
+            @endauth
         </div>
     </aside>
-
-    <!-- CONTENIDO PRINCIPAL -->
-    <div class="flex-1 flex flex-col h-full overflow-hidden bg-slate-100 dark:bg-slate-950">
-        
-        <!-- TOPBAR -->
-        <header class="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-3.5 sm:px-6 md:px-8 flex items-center justify-between flex-shrink-0 z-20">
-            
-            <div class="flex items-center gap-2 sm:gap-3 min-w-0">
-                <!-- Botón Drawer Móvil -->
-                <button type="button" class="md:hidden p-2 -ml-1.5 text-slate-600 dark:text-slate-300 hover:text-amber-500 rounded-xl active:scale-95 transition" onclick="openMobileDrawer()" aria-label="Abrir Menú">
-                    <i data-lucide="menu" class="w-5 h-5"></i>
-                </button>
-
-                <!-- Logo Móvil -->
-                <a href="{{ route('home') }}" class="md:hidden flex items-center gap-2 flex-shrink-0">
-                    <div class="w-7 h-7 rounded-lg bg-gradient-to-tr from-amber-500 to-amber-400 p-0.5 flex items-center justify-center shadow-sm">
-                        <div class="w-full h-full bg-slate-950 rounded-[5px] flex items-center justify-center">
-                            <i data-lucide="sun" class="w-3.5 h-3.5 text-amber-400"></i>
-                        </div>
-                    </div>
-                    <span class="text-sm font-bold text-slate-900 dark:text-white">Solar<span class="text-amber-500">GT</span></span>
-                </a>
-
-                <div class="hidden sm:block min-w-0">
-                    <h1 class="text-base md:text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2 truncate">
-                        {{ $title ?? 'Monitoreo Solar' }}
-                    </h1>
-                </div>
-            </div>
-
-            <!-- Indicadores Rápidos en Topbar -->
-            <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
-                
-                <!-- Badge de Cobertura -->
-                <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60 text-xs font-semibold">
-                    <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-500"></i>
-                    <span>22 Deptos</span>
-                </div>
-
-                <!-- Factor CO2 Oficial -->
-                <div class="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60 text-xs font-semibold">
-                    <i data-lucide="leaf" class="w-3.5 h-3.5 text-amber-500"></i>
-                    <span>0.40 kg CO₂/kWh</span>
-                </div>
-
-                <!-- Botón de Modo Oscuro -->
-                <button type="button" onclick="toggleDarkMode()" class="p-2 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition active:scale-95" title="Alternar tema">
-                    <i data-lucide="moon" class="w-4 h-4 sm:w-5 sm:h-5 hidden dark:block"></i>
-                    <i data-lucide="sun" class="w-4 h-4 sm:w-5 sm:h-5 block dark:hidden"></i>
-                </button>
-
-                <!-- Usuario / Rol -->
-                <div class="flex items-center gap-2 sm:gap-2.5 pl-2 sm:pl-3 border-l border-slate-200 dark:border-slate-800">
-                    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-500 to-amber-600 flex items-center justify-center text-white font-bold text-xs shadow-sm flex-shrink-0">
-                        {{ substr(auth()->user()->name ?? 'Andy & Carlos', 0, 2) }}
-                    </div>
-                    <div class="hidden md:block text-left">
-                        <div class="text-xs font-bold text-slate-800 dark:text-white leading-tight truncate max-w-[130px]">
-                            {{ auth()->user()->name ?? 'Andy & Carlos' }}
-                        </div>
-                        <div class="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 leading-tight">
-                            {{ auth()->user()->role ?? 'Equipo Competencia' }}
-                        </div>
-                    </div>
-
-                    <!-- Botón Cerrar Sesión Topbar -->
-                    <form method="POST" action="{{ route('logout') }}" class="inline ml-1">
-                        @csrf
-                        <button type="submit" 
-                                class="p-2 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-all duration-200 hover:scale-105 active:scale-95 flex items-center gap-1" 
-                                title="Cerrar sesión">
-                            <i data-lucide="log-out" class="w-4 h-4 text-rose-500"></i>
-                            <span class="hidden xl:inline text-xs font-bold text-rose-600 dark:text-rose-400">Salir</span>
-                        </button>
-                    </form>
-                </div>
+    <div class="kin-workspace">
+        <header class="kin-topbar">
+            <div class="kin-breadcrumb"><span class="hidden sm:inline">Plataforma nacional</span><span class="hidden sm:inline kin-divider">/</span><strong>{{ $title ?? 'Panorama nacional' }}</strong></div>
+            <div class="kin-topbar-actions">
+                <span class="kin-live"><span aria-hidden="true"></span><span class="hidden sm:inline">Conectado</span></span>
+                <button type="button" class="kin-icon-button kin-theme-toggle" onclick="toggleDarkMode()" aria-label="Cambiar tema" title="Cambiar tema"><i data-lucide="sun" class="hidden dark:block"></i><i data-lucide="moon" class="dark:hidden"></i></button>
+                @auth<a href="{{ route('alerts.index') }}" class="kin-icon-button" aria-label="Ver alertas"><i data-lucide="bell"></i></a>@endauth
+                <span class="kin-avatar kin-top-avatar" title="{{ auth()->user()->name ?? 'Consulta pública' }}">{{ mb_strtoupper(mb_substr(auth()->user()->name ?? 'GT', 0, 2)) }}</span>
             </div>
         </header>
-
-        <!-- ÁREA DE CONTENIDO CON SCROLL Y RESPETO AL BOTTOM NAV -->
-        <main class="flex-1 overflow-y-auto overflow-x-hidden {{ request()->routeIs('map.*') ? 'p-2 sm:p-6 pb-20 md:pb-8 overflow-hidden' : 'p-3.5 sm:p-6 lg:p-8 pb-28 md:pb-8' }} w-full animate-fade-in">
-            
-            <!-- MENSAJES FLASH (Alertas de sesión) -->
-            @if(session('success'))
-                <div class="mb-6 flex items-center gap-3 p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 shadow-sm animate-in fade-in">
-                    <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500 flex-shrink-0"></i>
-                    <div class="text-sm font-medium">{{ session('success') }}</div>
-                </div>
-            @endif
-
-            @if(session('error'))
-                <div class="mb-6 flex items-center gap-3 p-4 rounded-xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-200 shadow-sm">
-                    <i data-lucide="alert-circle" class="w-5 h-5 text-rose-500 flex-shrink-0"></i>
-                    <div class="text-sm font-medium">{{ session('error') }}</div>
-                </div>
-            @endif
-
-            @if(session('warning'))
-                <div class="mb-6 flex items-center gap-3 p-4 rounded-xl bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-200 shadow-sm">
-                    <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-500 flex-shrink-0"></i>
-                    <div class="text-sm font-medium">{{ session('warning') }}</div>
-                </div>
-            @endif
-
-            <!-- Slot principal o Yield -->
+        <main id="main-content" tabindex="-1" @class(['kin-main', 'kin-map-main' => request()->routeIs('map.*')])>
+            @foreach(['success' => 'check-circle', 'error' => 'circle-alert', 'warning' => 'triangle-alert', 'status' => 'info'] as $flash => $icon)
+                @if(session($flash))
+                    <div class="kin-flash kin-flash-{{ $flash }}" role="{{ $flash === 'error' ? 'alert' : 'status' }}"><i data-lucide="{{ $icon }}" aria-hidden="true"></i><span>{{ session($flash) }}</span></div>
+                @endif
+            @endforeach
             {{ $slot ?? '' }}
             @yield('content')
+            @unless(request()->routeIs('map.*'))<footer class="kin-page-footer"><span>K'in Solar Guatemala</span><span>Plataforma Nacional de Monitoreo Fotovoltaico</span></footer>@endunless
         </main>
     </div>
-
-    <!-- NATIVE MOBILE BOTTOM NAVIGATION BAR (md:hidden) -->
-    <nav id="mobileBottomNav" class="fixed bottom-0 inset-x-0 z-40 md:hidden bg-slate-900/95 dark:bg-slate-950/95 backdrop-blur-xl border-t border-slate-800 shadow-2xl select-none transition-transform duration-200" style="padding-bottom: max(0.4rem, env(safe-area-inset-bottom, 0px));">
-        <div class="grid grid-cols-5 h-16 items-center px-1">
-            
-            <!-- 1. Inicio -->
-            <a href="{{ route('dashboard') }}" 
-               class="flex flex-col items-center justify-center py-1 rounded-xl transition-all duration-150 active:scale-90 {{ request()->routeIs('dashboard', 'home') ? 'text-amber-400 font-bold' : 'text-slate-400 hover:text-slate-200' }}">
-                <div class="relative p-1 rounded-lg {{ request()->routeIs('dashboard', 'home') ? 'bg-amber-500/15' : '' }}">
-                    <i data-lucide="layout-dashboard" class="w-5 h-5 {{ request()->routeIs('dashboard', 'home') ? 'text-amber-400' : 'text-slate-400' }}"></i>
-                </div>
-                <span class="text-[10px] tracking-tight mt-0.5">Inicio</span>
-            </a>
-
-            <!-- 2. Mapa -->
-            <a href="{{ route('map.index') }}" 
-               class="flex flex-col items-center justify-center py-1 rounded-xl transition-all duration-150 active:scale-90 {{ request()->routeIs('map.*') ? 'text-amber-400 font-bold' : 'text-slate-400 hover:text-slate-200' }}">
-                <div class="relative p-1 rounded-lg {{ request()->routeIs('map.*') ? 'bg-amber-500/15' : '' }}">
-                    <i data-lucide="map-pin" class="w-5 h-5 {{ request()->routeIs('map.*') ? 'text-emerald-400' : 'text-slate-400' }}"></i>
-                </div>
-                <span class="text-[10px] tracking-tight mt-0.5">Mapa</span>
-            </a>
-
-            <!-- 3. Granjas -->
-            <a href="{{ route('farms.index') }}" 
-               class="flex flex-col items-center justify-center py-1 rounded-xl transition-all duration-150 active:scale-90 {{ request()->routeIs('farms.*') ? 'text-amber-400 font-bold' : 'text-slate-400 hover:text-slate-200' }}">
-                <div class="relative p-1 rounded-lg {{ request()->routeIs('farms.*') ? 'bg-amber-500/15' : '' }}">
-                    <i data-lucide="zap" class="w-5 h-5 {{ request()->routeIs('farms.*') ? 'text-amber-400' : 'text-slate-400' }}"></i>
-                </div>
-                <span class="text-[10px] tracking-tight mt-0.5">Granjas</span>
-            </a>
-
-            <!-- 4. Alertas -->
-            <a href="{{ route('alerts.index') }}" 
-               class="flex flex-col items-center justify-center py-1 rounded-xl transition-all duration-150 active:scale-90 relative {{ request()->routeIs('alerts.*') ? 'text-rose-400 font-bold' : 'text-slate-400 hover:text-slate-200' }}">
-                <div class="relative p-1 rounded-lg {{ request()->routeIs('alerts.*') ? 'bg-rose-500/15' : '' }}">
-                    <i data-lucide="alert-triangle" class="w-5 h-5 {{ request()->routeIs('alerts.*') ? 'text-rose-400' : 'text-slate-400' }}"></i>
-                    <span class="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
-                </div>
-                <span class="text-[10px] tracking-tight mt-0.5">Alertas</span>
-            </a>
-
-            <!-- 5. Más (Drawer Trigger) -->
-            <button type="button" onclick="openMobileDrawer()" 
-                    class="flex flex-col items-center justify-center py-1 rounded-xl transition-all duration-150 active:scale-90 {{ request()->routeIs('panels.*', 'generations.*', 'reports.*', 'forecasts.*', 'api.docs') ? 'text-amber-400 font-bold' : 'text-slate-400 hover:text-slate-200' }}">
-                <div class="relative p-1 rounded-lg {{ request()->routeIs('panels.*', 'generations.*', 'reports.*', 'forecasts.*', 'api.docs') ? 'bg-amber-500/15' : '' }}">
-                    <i data-lucide="grid-2x2" class="w-5 h-5 {{ request()->routeIs('panels.*', 'generations.*', 'reports.*', 'forecasts.*', 'api.docs') ? 'text-amber-400' : 'text-slate-400' }}"></i>
-                </div>
-                <span class="text-[10px] tracking-tight mt-0.5">Más</span>
-            </button>
-
-        </div>
+    <nav id="mobileBottomNav" aria-label="Navegación móvil">
+        @foreach([['home','Inicio','layout-dashboard',['home','dashboard']],['map.index','Mapa','map',['map.*']],['farms.index','Granjas','sun-medium',['farms.*']],['alerts.index','Alertas','bell',['alerts.*']]] as [$route,$label,$icon,$matches])
+            <a href="{{ route($route) }}" @class(['kin-bottom-link','is-active' => request()->routeIs(...$matches)]) @if(request()->routeIs(...$matches)) aria-current="page" @endif><i data-lucide="{{ $icon }}" aria-hidden="true"></i><span>{{ $label }}</span></a>
+        @endforeach
+        <button type="button" class="kin-bottom-link" onclick="openMobileDrawer()" aria-controls="mobileDrawer" aria-expanded="false"><i data-lucide="menu" aria-hidden="true"></i><span>Más</span></button>
     </nav>
-
-    <!-- BACKDROP DEL DRAWER MÓVIL -->
-    <div id="mobileDrawerBackdrop" 
-         onclick="closeMobileDrawer()" 
-         class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 transition-opacity duration-300 opacity-0 pointer-events-none md:hidden">
-    </div>
-
-    <!-- DRAWER LATERAL MÓVIL (Slide-over a la izquierda con animación fluida) -->
-    <div id="mobileDrawer" 
-         class="fixed inset-y-0 left-0 max-w-[310px] w-full bg-slate-900 border-r border-slate-800 z-50 shadow-2xl flex flex-col transform -translate-x-full transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] md:hidden text-slate-300 select-none">
-        
-        <!-- Header Drawer -->
-        <div class="h-16 px-5 flex items-center justify-between border-b border-slate-800 bg-slate-950/60">
-            <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-amber-500 to-amber-400 p-0.5 flex items-center justify-center shadow-md">
-                    <div class="w-full h-full bg-slate-950 rounded-[6px] flex items-center justify-center">
-                        <i data-lucide="sun" class="w-4 h-4 text-amber-400"></i>
-                    </div>
-                </div>
-                <div>
-                    <span class="text-sm font-bold text-white tracking-tight">Solar<span class="text-amber-400">GT</span></span>
-                    <span class="text-[10px] uppercase font-semibold text-emerald-400 block -mt-0.5">Menú Completo</span>
-                </div>
-            </div>
-            <button type="button" onclick="closeMobileDrawer()" class="p-2 text-slate-400 hover:text-white rounded-lg active:scale-95 transition" aria-label="Cerrar Menú">
-                <i data-lucide="x" class="w-5 h-5"></i>
-            </button>
+    <div id="mobileDrawerBackdrop" class="kin-drawer-backdrop" onclick="closeMobileDrawer()" aria-hidden="true"></div>
+    <section id="mobileDrawer" class="kin-drawer" role="dialog" aria-modal="true" aria-label="Menú principal" aria-hidden="true" inert>
+        <div class="kin-drawer-heading"><x-brand :compact="true"/><button type="button" class="kin-icon-button" onclick="closeMobileDrawer()" aria-label="Cerrar menú"><i data-lucide="x"></i></button></div>
+        <x-navigation />
+        <div class="kin-drawer-footer">
+            @auth
+                <div class="kin-profile"><span class="kin-avatar">{{ mb_strtoupper(mb_substr(auth()->user()->name, 0, 2)) }}</span><div><strong>{{ auth()->user()->name }}</strong><span>{{ ['admin'=>'Administrador','operador'=>'Operador','visualizador'=>'Visualizador'][auth()->user()->role] ?? 'Usuario' }}</span></div></div>
+                <form method="POST" action="{{ route('logout') }}">@csrf<x-button type="submit" variant="danger" icon="log-out" class="w-full">Cerrar sesión</x-button></form>
+            @else
+                <x-button :href="route('login')" class="w-full" icon="log-in">Iniciar sesión</x-button>
+            @endauth
         </div>
-
-        <!-- Links de Navegación del Drawer -->
-        <div class="flex-1 overflow-y-auto px-4 py-4 space-y-4">
-            
-            <!-- Perfil / Usuario con botón de cerrar sesión -->
-            <div class="p-3 rounded-2xl bg-slate-950/50 border border-slate-800/90 flex items-center justify-between gap-3">
-                <div class="flex items-center gap-3 min-w-0">
-                    <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-amber-500 to-amber-600 flex items-center justify-center text-white font-bold text-sm shadow-md flex-shrink-0">
-                        {{ substr(auth()->user()->name ?? 'Andy & Carlos', 0, 2) }}
-                    </div>
-                    <div class="min-w-0">
-                        <div class="text-xs font-bold text-white truncate">
-                            {{ auth()->user()->name ?? 'Andy & Carlos' }}
-                        </div>
-                        <div class="text-[10px] text-emerald-400 font-semibold truncate flex items-center gap-1">
-                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse"></span>
-                            {{ auth()->user()->role ?? 'Equipo Competencia' }}
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Botón Salir Móvil -->
-                <form method="POST" action="{{ route('logout') }}" class="inline flex-shrink-0">
-                    @csrf
-                    <button type="submit" 
-                            class="px-2.5 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-400 border border-rose-500/30 text-xs font-bold flex items-center gap-1.5 transition active:scale-95" 
-                            title="Cerrar sesión">
-                        <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
-                        <span>Salir</span>
-                    </button>
-                </form>
-            </div>
-
-            <!-- Navegación Principal -->
-            <div class="space-y-1">
-                <div class="px-2 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">Navegación Principal</div>
-                <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium {{ request()->routeIs('dashboard', 'home') ? 'bg-amber-500/15 text-amber-400 font-bold' : 'text-slate-300 hover:bg-slate-800' }}">
-                    <i data-lucide="layout-dashboard" class="w-4 h-4 text-amber-400"></i>
-                    <span>Dashboard Nacional</span>
-                </a>
-                <a href="{{ route('map.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium {{ request()->routeIs('map.*') ? 'bg-amber-500/15 text-amber-400 font-bold' : 'text-slate-300 hover:bg-slate-800' }}">
-                    <i data-lucide="map-pin" class="w-4 h-4 text-emerald-400"></i>
-                    <span class="flex-1">Mapa de Guatemala</span>
-                    <span class="text-[9px] bg-emerald-500/20 text-emerald-300 font-bold px-1.5 py-0.5 rounded border border-emerald-500/30">GPS</span>
-                </a>
-            </div>
-
-            <!-- Gestión de Activos -->
-            <div class="space-y-1">
-                <div class="px-2 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">Gestión de Activos</div>
-                <a href="{{ route('farms.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium {{ request()->routeIs('farms.*') ? 'bg-amber-500/15 text-amber-400 font-bold' : 'text-slate-300 hover:bg-slate-800' }}">
-                    <i data-lucide="zap" class="w-4 h-4 text-amber-400"></i>
-                    <span>Granjas Solares</span>
-                </a>
-                <a href="{{ route('panels.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium {{ request()->routeIs('panels.*') ? 'bg-amber-500/15 text-amber-400 font-bold' : 'text-slate-300 hover:bg-slate-800' }}">
-                    <i data-lucide="grid" class="w-4 h-4 text-sky-400"></i>
-                    <span>Modelos de Panel</span>
-                </a>
-                <a href="{{ route('generations.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium {{ request()->routeIs('generations.*') ? 'bg-amber-500/15 text-amber-400 font-bold' : 'text-slate-300 hover:bg-slate-800' }}">
-                    <i data-lucide="activity" class="w-4 h-4 text-emerald-400"></i>
-                    <span>Mediciones kWh & CO₂</span>
-                </a>
-            </div>
-
-            <!-- Analítica y Supervisión -->
-            <div class="space-y-1">
-                <div class="px-2 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">Analítica & Supervisión</div>
-                <a href="{{ route('alerts.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium {{ request()->routeIs('alerts.*') ? 'bg-rose-500/15 text-rose-400 font-bold' : 'text-slate-300 hover:bg-slate-800' }}">
-                    <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-400"></i>
-                    <span class="flex-1">Alertas (Déficit ≥20%)</span>
-                </a>
-                <a href="{{ route('reports.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium {{ request()->routeIs('reports.*') ? 'bg-amber-500/15 text-amber-400 font-bold' : 'text-slate-300 hover:bg-slate-800' }}">
-                    <i data-lucide="bar-chart-3" class="w-4 h-4 text-indigo-400"></i>
-                    <span>Reportes por Depto</span>
-                </a>
-                <a href="{{ route('forecasts.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium {{ request()->routeIs('forecasts.*') ? 'bg-amber-500/15 text-amber-400 font-bold' : 'text-slate-300 hover:bg-slate-800' }}">
-                    <i data-lucide="trending-up" class="w-4 h-4 text-teal-400"></i>
-                    <span>Proyecciones Futuras</span>
-                </a>
-            </div>
-
-            <!-- Integración API REST -->
-            <div class="space-y-1">
-                <div class="px-2 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">Integración & API</div>
-                <a href="{{ route('api.docs') }}" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium {{ request()->routeIs('api.docs') ? 'bg-amber-500/15 text-amber-400 font-bold' : 'text-slate-300 hover:bg-slate-800' }}">
-                    <div class="flex items-center gap-3">
-                        <i data-lucide="code-2" class="w-4 h-4 text-violet-400"></i>
-                        <span>API REST v1</span>
-                    </div>
-                    <span class="text-[9px] bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded border border-slate-700">JSON</span>
-                </a>
-            </div>
-
-            <!-- Acciones y Modo Oscuro -->
-            <div class="pt-2 border-t border-slate-800 space-y-2">
-                <button type="button" onclick="toggleDarkMode()" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium bg-slate-950/40 border border-slate-800 hover:bg-slate-800 text-slate-300 transition">
-                    <div class="flex items-center gap-2.5">
-                        <i data-lucide="moon" class="w-4 h-4 hidden dark:block text-amber-400"></i>
-                        <i data-lucide="sun" class="w-4 h-4 block dark:hidden text-amber-400"></i>
-                        <span>Modo Oscuro / Claro</span>
-                    </div>
-                    <span class="text-[10px] text-slate-400">Alternar</span>
-                </button>
-            </div>
-        </div>
-
-        <!-- Footer Drawer -->
-        <div class="p-4 border-t border-slate-800 bg-slate-950/80">
-            <div class="flex items-center justify-between text-[11px] text-slate-300">
-                <div class="flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-                    <span>AWS EC2 Online</span>
-                </div>
-                <span class="font-mono text-[10px] text-slate-400">0.40 kg CO₂/kWh</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- SCRIPTS BASE -->
-    <script>
-        // Inicializar iconos Lucide
-        lucide.createIcons();
-
-        // Modo Oscuro con LocalStorage
-        function initTheme() {
-            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-            }
-        }
-        initTheme();
-
-        function toggleDarkMode() {
-            if (document.documentElement.classList.contains('dark')) {
-                document.documentElement.classList.remove('dark');
-                localStorage.theme = 'light';
-            } else {
-                document.documentElement.classList.add('dark');
-                localStorage.theme = 'dark';
-            }
-            lucide.createIcons();
-        }
-
-        // Control del Drawer Móvil
-        function openMobileDrawer() {
-            const drawer = document.getElementById('mobileDrawer');
-            const backdrop = document.getElementById('mobileDrawerBackdrop');
-            if (drawer && backdrop) {
-                backdrop.classList.remove('opacity-0', 'pointer-events-none');
-                backdrop.classList.add('opacity-100', 'pointer-events-auto');
-                drawer.classList.remove('-translate-x-full');
-                drawer.classList.add('translate-x-0');
-                document.body.classList.add('overflow-hidden');
-                lucide.createIcons();
-            }
-        }
-
-        function closeMobileDrawer() {
-            const drawer = document.getElementById('mobileDrawer');
-            const backdrop = document.getElementById('mobileDrawerBackdrop');
-            if (drawer && backdrop) {
-                backdrop.classList.remove('opacity-100', 'pointer-events-auto');
-                backdrop.classList.add('opacity-0', 'pointer-events-none');
-                drawer.classList.remove('translate-x-0');
-                drawer.classList.add('-translate-x-full');
-                document.body.classList.remove('overflow-hidden');
-            }
-        }
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeMobileDrawer();
-            }
-        });
-    </script>
-
-    <!-- Leaflet JS -->
+    </section>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    
     @stack('scripts')
 </body>
 </html>

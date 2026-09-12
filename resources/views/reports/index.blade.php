@@ -8,12 +8,12 @@
         <div>
             <div class="flex items-center gap-2">
                 <span class="px-2.5 py-0.5 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-bold text-xs">
-                    Requerimiento RF-12
+                    IMPACTO TERRITORIAL
                 </span>
                 <span class="text-xs text-slate-400">Consolidado Nacional</span>
             </div>
             <h2 class="text-xl font-extrabold text-slate-900 dark:text-white mt-1">
-                Matriz Departamental de Generación e Impacto
+                La energía, departamento a departamento
             </h2>
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                 Desglose oficial por departamento: infraestructura, potencia instalada, energía generada y balance de emisiones.
@@ -50,30 +50,7 @@
             </thead>
             <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
                 @php
-                    $matrix = isset($deptStats) && count($deptStats) > 0 ? $deptStats : [
-                        ['id' => 3, 'name' => 'Escuintla', 'farms' => 3, 'panels' => 3500, 'kw' => 2450.50, 'kwh' => 380000, 'families' => 6500],
-                        ['id' => 21, 'name' => 'Zacapa', 'farms' => 2, 'panels' => 2800, 'kw' => 1950.00, 'kwh' => 285000, 'families' => 5200],
-                        ['id' => 5, 'name' => 'Petén', 'farms' => 2, 'panels' => 2200, 'kw' => 1500.00, 'kwh' => 210000, 'families' => 3800],
-                        ['id' => 4, 'name' => 'Izabal', 'farms' => 2, 'panels' => 2100, 'kw' => 1450.00, 'kwh' => 190000, 'families' => 3600],
-                        ['id' => 13, 'name' => 'Jutiapa', 'farms' => 1, 'panels' => 1800, 'kw' => 1250.00, 'kwh' => 175000, 'families' => 3100],
-                        ['id' => 10, 'name' => 'El Progreso', 'farms' => 1, 'panels' => 1400, 'kw' => 980.00, 'kwh' => 135000, 'families' => 2400],
-                        ['id' => 16, 'name' => 'San Marcos', 'farms' => 1, 'panels' => 1350, 'kw' => 950.00, 'kwh' => 130000, 'families' => 2200],
-                        ['id' => 9, 'name' => 'Chiquimula', 'farms' => 1, 'panels' => 1200, 'kw' => 840.00, 'kwh' => 115000, 'families' => 2000],
-                        ['id' => 2, 'name' => 'Quetzaltenango', 'farms' => 1, 'panels' => 1100, 'kw' => 770.00, 'kwh' => 98000, 'families' => 1800],
-                        ['id' => 1, 'name' => 'Guatemala', 'farms' => 1, 'panels' => 900, 'kw' => 630.00, 'kwh' => 85000, 'families' => 1600],
-                        ['id' => 6, 'name' => 'Alta Verapaz', 'farms' => 1, 'panels' => 850, 'kw' => 595.00, 'kwh' => 78000, 'families' => 1500],
-                        ['id' => 14, 'name' => 'Retalhuleu', 'farms' => 1, 'panels' => 800, 'kw' => 560.00, 'kwh' => 72000, 'families' => 1400],
-                        ['id' => 19, 'name' => 'Suchitepéquez', 'farms' => 1, 'panels' => 750, 'kw' => 525.00, 'kwh' => 68000, 'families' => 1300],
-                        ['id' => 17, 'name' => 'Santa Rosa', 'farms' => 1, 'panels' => 700, 'kw' => 490.00, 'kwh' => 62000, 'families' => 1200],
-                        ['id' => 12, 'name' => 'Jalapa', 'farms' => 1, 'panels' => 650, 'kw' => 455.00, 'kwh' => 58000, 'families' => 1100],
-                        ['id' => 7, 'name' => 'Baja Verapaz', 'farms' => 1, 'panels' => 600, 'kw' => 420.00, 'kwh' => 52000, 'families' => 1000],
-                        ['id' => 11, 'name' => 'Huehuetenango', 'farms' => 1, 'panels' => 550, 'kw' => 385.00, 'kwh' => 48000, 'families' => 950],
-                        ['id' => 8, 'name' => 'Chimaltenango', 'farms' => 1, 'panels' => 500, 'kw' => 350.00, 'kwh' => 42000, 'families' => 850],
-                        ['id' => 18, 'name' => 'Sololá', 'farms' => 1, 'panels' => 450, 'kw' => 315.00, 'kwh' => 38000, 'families' => 750],
-                        ['id' => 15, 'name' => 'Sacatepéquez', 'farms' => 1, 'panels' => 400, 'kw' => 280.00, 'kwh' => 32000, 'families' => 650],
-                        ['id' => 22, 'name' => 'Quiché', 'farms' => 1, 'panels' => 380, 'kw' => 266.00, 'kwh' => 29000, 'families' => 600],
-                        ['id' => 20, 'name' => 'Totonicapán', 'farms' => 1, 'panels' => 350, 'kw' => 245.00, 'kwh' => 26500, 'families' => 550],
-                    ];
+                    $matrix = $deptStats ?? [];
 
                     $totalFarms = 0;
                     $totalPanels = 0;

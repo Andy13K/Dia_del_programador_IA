@@ -8,12 +8,12 @@
         <div>
             <div class="flex items-center gap-2">
                 <span class="px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-400 font-bold text-xs">
-                    Requerimientos RF-03 a RF-07
+                    REGISTRO SOLAR
                 </span>
                 <span class="text-xs text-slate-400">Infraestructura Fotovoltaica</span>
             </div>
             <h2 class="text-xl font-extrabold text-slate-900 dark:text-white mt-1">
-                Catálogo Nacional de Granjas Solares
+                Cada granja, una nueva posibilidad.
             </h2>
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                 Plantas fotovoltaicas registradas y supervisadas con geolocalización en los 22 departamentos.
@@ -24,7 +24,7 @@
             @can('manage-farms')
                 <x-button href="{{ route('farms.create') }}" variant="primary" size="md">
                     <i data-lucide="plus" class="w-4 h-4 mr-1"></i>
-                    <span>Registrar Nueva Granja</span>
+                    <span>Registrar granja</span>
                 </x-button>
             @endcan
         </div>
@@ -32,7 +32,7 @@
 
     <!-- Barra de Filtros -->
     <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
-        <form method="GET" action="{{ route('farms.index') }}" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+        <form data-reactive-filter method="GET" action="{{ route('farms.index') }}" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
             <div>
                 <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">Buscar por Nombre</label>
                 <input type="text" name="search" value="{{ $filters['search'] ?? '' }}" placeholder="Ej. Escuintla, Guayacán..." 

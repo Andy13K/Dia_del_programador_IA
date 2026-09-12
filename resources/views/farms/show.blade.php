@@ -92,6 +92,11 @@
         />
     </div>
 
+    <section class="kin-panel overflow-hidden">
+        <div class="kin-panel-heading pb-5"><div><h3>Ubicación y territorio</h3><p>{{ $farm->department?->name }} · {{ number_format((float)$farm->latitude,4) }}, {{ number_format((float)$farm->longitude,4) }}</p></div><a class="kin-text-link" href="{{ route('map.index', ['farm' => $farm->id]) }}">Abrir mapa <i data-lucide="arrow-up-right"></i></a></div>
+        <div id="farmLocationMap" class="h-64 sm:h-72 relative z-0" aria-label="Ubicación de la granja"></div>
+    </section>
+
     <!-- Pestañas / Tablas de Paneles y Mediciones -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
@@ -218,3 +223,11 @@
 
 </div>
 @endsection
+@push('scripts')
+<script>
+    const farmCoordinates = [Number(@json($farm->latitude)), Number(@json($farm->longitude))];
+    const farmMap = L.map('farmLocationMap', {scrollWheelZoom:false}).setView(farmCoordinates,10);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution:'&copy; OpenStreetMap',maxZoom:19}).addTo(farmMap);
+    L.circleMarker(farmCoordinates, {radius:10,color:'#b45309',weight:3,fillColor:'#fbbf24',fillOpacity:1}).addTo(farmMap);
+</script>
+@endpush
