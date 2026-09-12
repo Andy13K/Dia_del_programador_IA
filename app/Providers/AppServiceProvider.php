@@ -41,5 +41,15 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('manage-generations', fn (User $user): bool => $user->hasAnyRole(['admin', 'operador']));
         Gate::define('manage-alerts', fn (User $user): bool => $user->hasAnyRole(['admin', 'operador']));
         Gate::define('manage-forecasts', fn (User $user): bool => $user->hasAnyRole(['admin', 'operador']));
+
+        // Resto de la matriz de permisos por rol (docs/06-CONTRATOS-HORA-1.md §5). manage-users
+        // y view-reports ya los usa BackendAccessService::farms() (Agente B, PR #2) para decidir
+        // si un usuario ve el listado nacional de granjas o solo las suyas: sin estos Gates
+        // registrados, Gate::allows() siempre niega y todo el mundo quedaba limitado a "sus"
+        // granjas al leer, incluido el rol visualizador que según el contrato ve todo.
+        Gate::define('manage-users', fn (User $user): bool => $user->hasRole('admin'));
+        Gate::define('manage-departments', fn (User $user): bool => $user->hasRole('admin'));
+        Gate::define('view-reports', fn (User $user): bool => $user->hasAnyRole(['admin', 'operador', 'visualizador']));
+        Gate::define('view-api', fn (User $user): bool => $user->hasAnyRole(['admin', 'operador', 'visualizador']));
     }
 }
