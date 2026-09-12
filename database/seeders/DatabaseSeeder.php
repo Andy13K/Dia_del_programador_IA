@@ -13,22 +13,11 @@ class DatabaseSeeder extends Seeder
     use WithoutModelEvents;
 
     /**
-     * Usuarios semilla congelados en docs/06-CONTRATOS-HORA-1.md §5.
-     *
-     * @var list<array{name: string, email: string, password: string, role: string}>
-     */
-    private const SEED_USERS = [
-        ['name' => 'Administrador Nacional', 'email' => 'admin@solarguatemala.gob.gt', 'password' => 'Solar2026!Admin', 'role' => 'admin'],
-        ['name' => 'Operador Regional', 'email' => 'operador@solarguatemala.gob.gt', 'password' => 'Operador2026!', 'role' => 'operador'],
-        ['name' => 'Evaluador Jurado', 'email' => 'evaluador@umg.edu.gt', 'password' => 'Evaluador2026!', 'role' => 'visualizador'],
-    ];
-
-    /**
      * Seed the application's database.
      */
     public function run(): void
     {
-        foreach (self::SEED_USERS as $seedUser) {
+        foreach ($this->seedUsers() as $seedUser) {
             $user = User::query()->updateOrCreate(
                 ['email' => $seedUser['email']],
                 ['name' => $seedUser['name'], 'password' => $seedUser['password']],
@@ -41,5 +30,26 @@ class DatabaseSeeder extends Seeder
 
         $this->call(DepartmentSeeder::class);
         $this->call(SolarDemoSeeder::class);
+    }
+
+    /**
+     * Usuarios semilla (correos y roles congelados en docs/06-CONTRATOS-HORA-1.md §5).
+     *
+     * OWASP A02/A07: las contraseñas ya NO viven como texto plano en el código versionado.
+     * Se leen de variables de entorno (nunca commiteadas, ver .env.example) con un valor de
+     * respaldo solo para desarrollo local — cualquier despliegue real (incluida la URL pública)
+     * debe definir SEED_ADMIN_PASSWORD / SEED_OPERADOR_PASSWORD / SEED_EVALUADOR_PASSWORD en el
+     * panel de variables de entorno de la plataforma con valores propios, distintos a los que
+     * quedaron expuestos en el historial de git.
+     *
+     * @return list<array{name: string, email: string, password: string, role: string}>
+     */
+    private function seedUsers(): array
+    {
+        return [
+            ['name' => 'Administrador Nacional', 'email' => 'admin@solarguatemala.gob.gt', 'password' => env('SEED_ADMIN_PASSWORD', 'Solar2026!Admin'), 'role' => 'admin'],
+            ['name' => 'Operador Regional', 'email' => 'operador@solarguatemala.gob.gt', 'password' => env('SEED_OPERADOR_PASSWORD', 'Operador2026!'), 'role' => 'operador'],
+            ['name' => 'Evaluador Jurado', 'email' => 'evaluador@umg.edu.gt', 'password' => env('SEED_EVALUADOR_PASSWORD', 'Evaluador2026!'), 'role' => 'visualizador'],
+        ];
     }
 }

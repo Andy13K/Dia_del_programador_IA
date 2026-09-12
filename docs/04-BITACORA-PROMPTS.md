@@ -802,6 +802,31 @@ documentación).
 
 ---
 
+### Claude Code (Agente A) — Auditoría OWASP Top 10 completa y corrección de 4 hallazgos — PR #24
+
+**Objetivo:** el humano pidió primero una auditoría exhaustiva OWASP Web Top 10 + Mobile Top 10 de todo el proyecto (formato de informe formal con matriz de resultados, hallazgos y plan de remediación), y después pidió aplicar la solución a cada hallazgo, del más crítico al menos crítico, aclarando que la versión en producción está en `https://kin-solar-guatemala.duckdns.org/` y podía revisarse ahí también.
+
+**Prompts del humano (extractos literales):**
+> Actúa como un Auditor Principal de Seguridad de Software y Especialista en DevSecOps. Tu tarea es realizar un análisis exhaustivo de seguridad sobre la totalidad del código y arquitectura de este proyecto, evaluando el cumplimiento estricto frente a los estándares: 1. OWASP Top 10 ... 2. OWASP Mobile Top 10 ...
+> Ok amigo quiero entonces que vayamos aplicando la solucion a cada hallazgo, comenzando desde el mas critico hasta al mas bajo, y aclaro que la version en produccion esta aqui y puedes ir revsando tambien: https://kin-solar-guatemala.duckdns.org/
+
+**Resultado de la auditoría:** no hay componente móvil en el repositorio (app Blade servida por navegador + API JSON pública), así que el checklist OWASP Mobile se marcó como No Aplica en su totalidad. Del lado Web se identificaron 2 hallazgos críticos, 2 altos y varios medios/bajos — varios de los cuales ya habían sido corregidos por el propio equipo en los ~50 commits que avanzó `master` entre el momento de leer el repo y el de empezar a corregir (cabeceras de seguridad, HTTPS forzado, el bug de `GenerationAlertPolicy`, el patrón `catch (\Throwable)` de "fallar abierto", y el XSS del popup del mapa). Se re-verificó cada hallazgo contra el `master` real (`33bbcde`) y contra la URL pública antes de tocar código, en vez de asumir que la lectura inicial seguía vigente.
+
+**Hallazgos corregidos en esta sesión (4 commits, más crítico primero):**
+
+1. **`database/seeders/DatabaseSeeder.php` (A02/A07):** las 3 contraseñas de usuarios semilla (`admin@solarguatemala.gob.gt` incluido) vivían en texto plano, commiteadas en git — cualquiera con acceso al repositorio obtenía el login real de administrador de la URL pública. Se movieron a `SEED_ADMIN_PASSWORD` / `SEED_OPERADOR_PASSWORD` / `SEED_EVALUADOR_PASSWORD` (con respaldo solo para desarrollo local) y se documentó en `.env.example` que producción debe definir valores propios y distintos a los ya expuestos en el historial.
+2. **`routes/api.php` + `bootstrap/app.php` (A04):** los 5 endpoints de `/api/v1/*` no tenían ningún límite de peticiones — confirmado en vivo (`GET /api/v1/statistics` respondía datos reales sin login). RF-16 pide una API pública, así que no se le exigió autenticación, pero se activó `throttleApi()` + `RateLimiter::for('api', ...)` (60 req/min por IP). Probado con una ráfaga de 60 peticiones: las primeras 54 en 200, el resto en 429.
+3. **`resources/views/farms/create.blade.php` y `farms/edit.blade.php` (A03):** `addPanelRow()` interpolaba `{{ $panel->brand }}`/`{{ $panel->model }}` dentro de un template literal de JS — el escape de Blade solo protege contexto HTML, no JS, así que una marca de panel con comilla invertida rompía el script. Se pasaron los datos del panel como JSON real (directivo Blade de JS) y se renderiza con una función de escape HTML explícita. Probado inyectando `` Evil`);alert(document.cookie);// `` como `brand` de un panel real: antes rompía el script, ahora aparece como texto plano en ambos formularios (con `window.alert` sobrescrito para confirmar que nunca se disparó).
+4. **`resources/views/layouts/app.blade.php` (A03/A08):** `lucide@latest` y la URL de `chart.js` sin versión se cargaban desde CDN sin `integrity`. Se resolvió primero qué versión exacta servía cada URL sin fijar (lucide 1.45.0, chart.js 4.5.1) para no cambiar de comportamiento, se calculó el hash SHA-384 real descargando esos archivos exactos, y se fijaron ambos scripts con el mismo patrón que ya usaba Leaflet.
+
+**Decisiones documentadas sin corregir (fuera del alcance del pedido o de otra zona):** el Gate `view-api` sigue sin invocarse en ninguna ruta — se dejó así a propósito (RF-16 pide API pública) pero se agregó un comentario explicando que es deliberado, no un control roto, y que ya está listo para usarse si el equipo decide requerir sesión más adelante.
+
+**Verificación:** `php artisan test` (24/24, 132 aserciones) después de cada commit; navegador local contra una base de datos aislada (`solar_guatemala_claude_hardening2`) sembrada desde cero con el seeder corregido — login con la contraseña de respaldo, formularios de crear/editar granja (incluida la prueba de inyección real descrita arriba), dashboard y mapa con Chart.js/Lucide/Leaflet cargando correctamente con `integrity` activo, `/reports/export` descargando el CSV, y la API con rate limiting real. Se comparó además la URL pública (`https://kin-solar-guatemala.duckdns.org/`) antes de tocar código: mismos assets compilados que `master`, cabeceras de seguridad activas, `/.env` en 403, HTTP→HTTPS en 301, CSRF exigido (419 sin token) — confirmando que el análisis aplicaba directamente a lo desplegado.
+
+**Trabajo en curso:** por instrucción explícita en `docs/01-REGLAS-DE-TRABAJO.md`/`project_shared_working_dir`, se usó un worktree nuevo (`feat/carlos-claude/hardening-owasp-fase2`, basado en `origin/master` actualizado) en vez de reutilizar el worktree de la auditoría anterior (`feat/carlos-claude/hardening-owasp-auditoria`), que había quedado desactualizado tras el merge de esa rama.
+
+---
+
 ## 4. Evidencia visual
 
 Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:
