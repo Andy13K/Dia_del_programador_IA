@@ -83,6 +83,30 @@
             color: #34d399;
             border: 1px solid rgba(16, 185, 129, 0.3);
         }
+        /* Exportación a PDF: cada diapositiva se imprime como una página completa,
+           independientemente del control JS de navegación (que solo aplica en pantalla). */
+        @media print {
+            @page { size: 1280px 1120px; margin: 0; }
+            html, body { background: #090d16 !important; overflow: visible !important; height: auto !important; }
+            header, footer, .progress-bar-print-hide { display: none !important; }
+            main { overflow: visible !important; height: auto !important; padding: 0 !important; display: block !important; }
+            .slide {
+                display: flex !important;
+                opacity: 1 !important;
+                transform: none !important;
+                width: 1280px !important;
+                min-height: 1120px !important;
+                max-width: 1280px !important;
+                margin: 0 auto !important;
+                padding: 56px 72px !important;
+                box-sizing: border-box !important;
+                page-break-after: always !important;
+                page-break-inside: avoid !important;
+                break-after: page !important;
+                break-inside: avoid !important;
+            }
+            .slide:last-of-type { page-break-after: auto !important; break-after: auto !important; }
+        }
     </style>
 </head>
 <body class="h-full flex flex-col font-sans">
@@ -133,7 +157,7 @@
     </header>
 
     <!-- PROGRESS BAR -->
-    <div class="w-full bg-slate-900 h-1 relative">
+    <div class="w-full bg-slate-900 h-1 relative progress-bar-print-hide">
         <div id="slideProgressBar" class="h-full bg-gradient-to-r from-solar-500 to-amber-300 transition-all duration-300" style="width: 10%;"></div>
     </div>
 
@@ -591,7 +615,7 @@
             <div class="my-auto space-y-6">
                 <div>
                     <h2 class="text-3xl sm:text-4xl font-black text-white">Blindaje de Seguridad <span class="text-gradient">Innegociable</span></h2>
-                    <p class="text-sm text-slate-400 mt-1">Cumplimiento estricto del estándar de seguridad OWASP Top 10 versión 2025 en cada capa.</p>
+                    <p class="text-sm text-slate-400 mt-1">Cumplimiento estricto del estándar de seguridad OWASP Top 10 versión 2025 en cada capa, evaluado además bajo el modelo de calidad <span class="text-slate-200 font-semibold">ISO/IEC 25010</span> (seguridad, fiabilidad y mantenibilidad como atributos formales — ver ERS §5).</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

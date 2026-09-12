@@ -1299,6 +1299,27 @@ API y el diagnóstico de la rúbrica.
 
 ---
 
+### [12:50] Claude Code (Andy) — ERS v2.0 con ISO/IEC 25010, diagramas UML y exportación a PDF de ERS y presentación
+
+**Objetivo:** auditar el estado real del sistema contra el ERS de la Hora 1 y contra el ERS de referencia (Proyecto de Graduación I de Andy, estilo IEEE 830/29148) para producir una documentación final de nivel profesional, con casos de uso y modelo de datos diagramados, atributos de calidad ISO/IEC 25010 y exportables a PDF listos para entregar.
+
+1. **Auditoría de cumplimiento real vs. documentado:** verificación cruzada de los 17 RF originales contra controladores/servicios existentes (`app/Http/Controllers/`, `app/Services/`), confirmando implementación completa; se detectaron dos módulos construidos que no estaban documentados en el ERS 1.0 (`ScadaSimulatorController`, `TelemetrySimulationController`) y el servidor MCP propio ya construido (`mcp-server/`) — documentados con honestidad como RF-18 y RF-19 de valor añadido en vez de omitirse (Regla 10 del proyecto).
+2. **ERS v2.0 (`docs/03-PLANTILLA-ERS.md`):** reestructurado siguiendo el estándar del ERS de referencia — interfaces externas (§3.1), los 17 RF originales reformulados con actor/entrada/proceso/salida/prioridad, RNF ampliado de 6 a 12 categorías, sección nueva de Atributos de Calidad conforme a **ISO/IEC 25010:2011** (§5), matriz de trazabilidad con caso de uso asociado, 12 casos de uso narrados (CU-01 a CU-12) y checklist final del documento.
+3. **Diagramas UML generados (`docs/diagramas/`):** diagrama entidad-relación y diagrama de casos de uso, definidos en Mermaid (`.mmd`) a partir del esquema real de `database/migrations/` y renderizados a SVG con `@mermaid-js/mermaid-cli` (vía `npx`, usando el Chrome del sistema como motor de Puppeteer) con la paleta de marca de K'in Solar.
+4. **Exportación a PDF:**
+   - `docs/export/ERS-Kin-Solar-Guatemala.pdf`: generado desde una vista HTML (`docs/export/ers-print.html`) que renderiza el Markdown del ERS con `marked.js` y las fórmulas matemáticas con `KaTeX`, impreso con Chrome headless (`--print-to-pdf`).
+   - `docs/export/presentacion-kin-solar.pdf`: hoja de estilos de impresión añadida a `public/presentacion.html` (`@media print`) que fuerza las 10 diapositivas interactivas a paginarse una por página en lugar de ocultarse por JavaScript, impresa igualmente con Chrome headless.
+5. **Presentación:** añadida una mención breve al modelo de calidad ISO/IEC 25010 en la diapositiva 8 (Seguridad), sin alterar el resto del guion de 10 minutos ya aprobado.
+
+**Prompt clave:**
+> "Revisa cómo está el estado actual del proyecto versus el PDF inicial [...] actualices la presentación, también me generes una presentación en PDF, y [...] la documentación adaptada a este proyecto. Necesito un buen ERS con un buen diagrama ER [...] solamente genera los diagramas [...] de caso de uso más fáciles de hacer [...] quiero darle un plus a la documentación [...] factores [...] que cumplen nuestro proyecto en base a la ISO veinticinco mil."
+
+**Resultado:** ERS ampliado de 6 a 7 secciones formales con 19 requerimientos documentados (17 originales + 2 de valor añadido), 2 diagramas UML nuevos embebidos, sección ISO/IEC 25010 nueva, y dos PDF generados y verificados visualmente (contenido, tablas, fórmulas y diagramas renderizando correctamente, sin solapamientos de página).
+
+**Intervención humana:** Andy proporcionó el ERS de su Proyecto de Graduación I como referencia de formato y estándar a seguir, y acotó explícitamente el alcance de los diagramas a solo ER y casos de uso ("no quiero generar mucho") para no exceder el tiempo disponible antes de la presentación.
+
+---
+
 ## 4. Evidencia visual
 
 Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:

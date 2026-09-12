@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<base href="../">
+<title>ERS — K'in Solar Guatemala</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+  :root{
+    --ink:#1a2338; --muted:#5b657a; --line:#d8dde6; --accent:#b45309; --accent-soft:#fef3c7;
+  }
+  * { box-sizing: border-box; }
+  body{
+    font-family: "Segoe UI", Arial, sans-serif;
+    color: var(--ink);
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 8px;
+    line-height: 1.55;
+    font-size: 14px;
+  }
+  h1{ font-size: 24px; border-bottom: 3px solid var(--accent); padding-bottom: 10px; margin-top:0; }
+  h2{ font-size: 19px; color: var(--accent); border-bottom: 1px solid var(--line); padding-bottom: 6px; margin-top: 40px; page-break-before: always; }
+  h1 + p, h1 + blockquote { page-break-before: avoid; }
+  h2:first-of-type { page-break-before: avoid; }
+  h3{ font-size: 15.5px; color: #92400e; margin-top: 26px; }
+  h4{ font-size: 14.5px; color: #1a2338; background: var(--accent-soft); padding: 6px 10px; border-left: 4px solid var(--accent); margin-top: 22px; margin-bottom: 8px; page-break-after: avoid; }
+  p, li { color: var(--ink); }
+  a { color: var(--accent); }
+  blockquote{
+    background: #fffbeb; border-left: 4px solid #f59e0b; margin: 12px 0; padding: 8px 14px; color: #78350f; font-size: 13px;
+  }
+  table{ border-collapse: collapse; width: 100%; margin: 12px 0 20px; font-size: 12px; page-break-inside: avoid; }
+  th, td{ border: 1px solid var(--line); padding: 6px 8px; text-align: left; vertical-align: top; }
+  th{ background: #f3f4f6; font-weight: 700; }
+  tr:nth-child(even) td { background: #fafafa; }
+  code{ background: #f1f5f9; color: #92400e; padding: 1px 5px; border-radius: 4px; font-size: 12px; font-family: ui-monospace, Consolas, monospace; }
+  pre code{ display:block; padding: 10px; overflow-x:auto; }
+  img{ max-width: 100%; display:block; margin: 16px auto; border: 1px solid var(--line); border-radius: 6px; padding: 8px; background:#fff; }
+  hr{ border: none; border-top: 1px solid var(--line); margin: 28px 0; }
+  .katex { font-size: 1em; }
+  @media print{
+    body{ padding: 0; max-width: 100%; }
+    a{ color: var(--ink); text-decoration: none; }
+    @page{ size: Letter; margin: 18mm 16mm 20mm 16mm; }
+  }
+</style>
+</head>
+<body>
+<div id="content">Cargando ERS…</div>
+<script>
+  fetch('03-PLANTILLA-ERS.md')
+    .then(r => r.text())
+    .then(md => {
+      document.getElementById('content').innerHTML = marked.parse(md);
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+      document.title = "ERS — K'in Solar Guatemala";
+      window.__ERS_READY__ = true;
+    })
+    .catch(err => {
+      document.getElementById('content').innerHTML = '<p style="color:red">Error cargando el ERS: ' + err + '</p>';
+      window.__ERS_READY__ = true;
+    });
+</script>
+</body>
+</html>
