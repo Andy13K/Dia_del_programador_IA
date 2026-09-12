@@ -26,10 +26,10 @@
             <div>
                 <div class="flex items-center gap-1.5">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span class="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">Requerimiento RF-13</span>
+                    <span class="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">TERRITORIO SOLAR</span>
                 </div>
                 <h2 class="text-xs sm:text-base md:text-lg font-bold text-slate-900 dark:text-white leading-tight mt-0.5">
-                    Distribución Geográfica de Granjas Solares
+                    La energía en el territorio
                 </h2>
             </div>
             <!-- Botón Centrar en móvil compacto -->
@@ -41,35 +41,13 @@
         <!-- Controles / Filtros -->
         <div class="flex items-center gap-2 w-full sm:w-auto">
             <div class="relative flex-1 sm:flex-initial sm:w-auto">
+                <label for="departmentFilter" class="sr-only">Filtrar por departamento</label>
                 <select id="departmentFilter" onchange="filterFarms()" class="w-full sm:w-auto pl-2.5 pr-8 py-1.5 sm:py-2 text-xs font-semibold rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500">
                     <option value="all">Todos los Deptos (22)</option>
                     @if(isset($departments) && $departments->count() > 0)
                         @foreach($departments as $dept)
                             <option value="{{ $dept->id }}" data-name="{{ $dept->name }}" data-lat="{{ $dept->latitude }}" data-lng="{{ $dept->longitude }}">{{ $dept->name }}</option>
                         @endforeach
-                    @else
-                        <option value="1" data-name="Guatemala" data-lat="14.6349" data-lng="-90.5069">Guatemala</option>
-                        <option value="2" data-name="Quetzaltenango" data-lat="14.8347" data-lng="-91.5181">Quetzaltenango</option>
-                        <option value="3" data-name="Escuintla" data-lat="14.3009" data-lng="-90.7850">Escuintla</option>
-                        <option value="4" data-name="Izabal" data-lat="15.7278" data-lng="-88.5944">Izabal</option>
-                        <option value="5" data-name="Petén" data-lat="16.9200" data-lng="-89.8900">Petén</option>
-                        <option value="6" data-name="Alta Verapaz" data-lat="15.4700" data-lng="-90.3700">Alta Verapaz</option>
-                        <option value="7" data-name="Baja Verapaz" data-lat="15.1000" data-lng="-90.3167">Baja Verapaz</option>
-                        <option value="8" data-name="Chimaltenango" data-lat="14.6611" data-lng="-90.8194">Chimaltenango</option>
-                        <option value="9" data-name="Chiquimula" data-lat="14.7978" data-lng="-89.5439">Chiquimula</option>
-                        <option value="10" data-name="El Progreso" data-lat="14.8653" data-lng="-90.0764">El Progreso</option>
-                        <option value="11" data-name="Huehuetenango" data-lat="15.3197" data-lng="-91.4708">Huehuetenango</option>
-                        <option value="12" data-name="Jalapa" data-lat="14.6347" data-lng="-89.9889">Jalapa</option>
-                        <option value="13" data-name="Jutiapa" data-lat="14.2817" data-lng="-89.8958">Jutiapa</option>
-                        <option value="14" data-name="Retalhuleu" data-lat="14.5361" data-lng="-91.6778">Retalhuleu</option>
-                        <option value="15" data-name="Sacatepéquez" data-lat="14.5586" data-lng="-90.7339">Sacatepéquez</option>
-                        <option value="16" data-name="San Marcos" data-lat="14.9639" data-lng="-91.7944">San Marcos</option>
-                        <option value="17" data-name="Santa Rosa" data-lat="14.2783" data-lng="-90.2989">Santa Rosa</option>
-                        <option value="18" data-name="Sololá" data-lat="14.7722" data-lng="-91.1833">Sololá</option>
-                        <option value="19" data-name="Suchitepéquez" data-lat="14.5342" data-lng="-91.5033">Suchitepéquez</option>
-                        <option value="20" data-name="Totonicapán" data-lat="14.9117" data-lng="-91.3611">Totonicapán</option>
-                        <option value="21" data-name="Zacapa" data-lat="14.9722" data-lng="-89.5306">Zacapa</option>
-                        <option value="22" data-name="Quiché" data-lat="15.0306" data-lng="-91.1494">Quiché</option>
                     @endif
                 </select>
             </div>
@@ -103,10 +81,10 @@
             </div>
             <div class="flex items-center gap-1.5 text-slate-200 leading-none">
                 <span class="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-slate-400 inline-block flex-shrink-0"></span>
-                <span class="truncate">Mantenimiento</span>
+                <span class="truncate">No operativa</span>
             </div>
             <div class="hidden sm:block pt-1.5 border-t border-slate-700 text-[10px] text-slate-400">
-                Factor CO₂: <strong class="text-emerald-400">0.40 kg/kWh</strong>
+                Tamaño del pin: capacidad instalada
             </div>
         </div>
 
@@ -115,12 +93,12 @@
             <div class="bg-slate-900/95 text-white backdrop-blur-md px-2.5 py-1.5 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl border border-slate-700/80 shadow-2xl text-[9px] sm:text-xs flex items-center gap-2 sm:gap-3">
                 <div>
                     <div class="text-[8px] sm:text-[10px] uppercase font-bold text-slate-400 leading-none">Granjas</div>
-                    <div class="text-xs sm:text-sm font-extrabold text-white leading-tight mt-0.5" id="visibleFarmsCount">12</div>
+                    <div class="text-xs sm:text-sm font-extrabold text-white leading-tight mt-0.5" id="visibleFarmsCount">0</div>
                 </div>
                 <div class="w-px h-4 sm:h-6 bg-slate-700"></div>
                 <div>
                     <div class="text-[8px] sm:text-[10px] uppercase font-bold text-slate-400 leading-none">Potencia</div>
-                    <div class="text-xs sm:text-sm font-extrabold text-amber-400 leading-tight mt-0.5" id="visiblePowerCount">8,450 kW</div>
+                    <div class="text-xs sm:text-sm font-extrabold text-amber-400 leading-tight mt-0.5" id="visiblePowerCount">0 kW</div>
                 </div>
             </div>
         </div>
@@ -211,33 +189,24 @@
     // Datos iniciales de Granjas (se inyectan de la BD o datos representativos de los 22 departamentos)
     const rawFarmsData = @json($farmsJson ?? null);
     
-    // Granjas semilla realistas para renderizado inmediato
-    const defaultFarms = [
-        { id: 1, name: "Parque Solar Escuintla Verde", dept_id: 3, dept_name: "Escuintla", lat: 14.3009, lng: -90.7850, capacity_kw: 1850.50, families: 4200, status: 'active', has_alert: false, monthly_kwh: 245000 },
-        { id: 2, name: "Granja Solar Guayacán Petén", dept_id: 5, dept_name: "Petén", lat: 16.9200, lng: -89.8900, capacity_kw: 1200.00, families: 2800, status: 'active', has_alert: true, monthly_kwh: 110000 },
-        { id: 3, name: "Central Fotovoltaica San Marcos", dept_id: 16, dept_name: "San Marcos", lat: 14.9639, lng: -91.7944, capacity_kw: 950.00, families: 1900, status: 'active', has_alert: false, monthly_kwh: 130000 },
-        { id: 4, name: "Parque Solar Izabal Caribe", dept_id: 4, dept_name: "Izabal", lat: 15.7278, lng: -88.5944, capacity_kw: 1450.00, families: 3100, status: 'active', has_alert: false, monthly_kwh: 190000 },
-        { id: 5, name: "Granja Solar Los Altos Quetzaltenango", dept_id: 2, dept_name: "Quetzaltenango", lat: 14.8347, lng: -91.5181, capacity_kw: 800.00, families: 1600, status: 'active', has_alert: false, monthly_kwh: 98000 },
-        { id: 6, name: "Planta Solar Zacapa Sol", dept_id: 21, dept_name: "Zacapa", lat: 14.9722, lng: -89.5306, capacity_kw: 2100.00, families: 4900, status: 'active', has_alert: false, monthly_kwh: 285000 },
-        { id: 7, name: "Granja Solar Metropolitana", dept_id: 1, dept_name: "Guatemala", lat: 14.6349, lng: -90.5069, capacity_kw: 650.00, families: 1200, status: 'maintenance', has_alert: false, monthly_kwh: 45000 },
-        { id: 8, name: "Central Solar Chiquimula Oriente", dept_id: 9, dept_name: "Chiquimula", lat: 14.7978, lng: -89.5439, capacity_kw: 1100.00, families: 2300, status: 'active', has_alert: true, monthly_kwh: 85000 },
-        { id: 9, name: "Parque Solar El Progreso Guastatoya", dept_id: 10, dept_name: "El Progreso", lat: 14.8653, lng: -90.0764, capacity_kw: 980.00, families: 2100, status: 'active', has_alert: false, monthly_kwh: 135000 },
-        { id: 10, name: "Granja Solar Jutiapa Frontera", dept_id: 13, dept_name: "Jutiapa", lat: 14.2817, lng: -89.8958, capacity_kw: 1300.00, families: 2700, status: 'active', has_alert: false, monthly_kwh: 175000 }
-    ];
-
-    const farms = (rawFarmsData && rawFarmsData.length > 0) ? rawFarmsData : defaultFarms;
+    const farms = Array.isArray(rawFarmsData) ? rawFarmsData : [];
     let markersLayer = L.layerGroup().addTo(map);
+    const farmUrl = @json(route('farms.show', ['farm' => '__FARM__']));
+    const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, character => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    })[character]);
 
-    function createCustomPin(color, hasAlert) {
+    function createCustomPin(color, hasAlert, capacity) {
+        const size = Number(capacity) >= 1000 ? 42 : Number(capacity) >= 500 ? 36 : 30;
         const pulseHtml = hasAlert 
             ? `<div class="absolute -inset-1 rounded-full bg-rose-500 animate-ping opacity-75"></div>` 
             : '';
         return L.divIcon({
             className: 'custom-solar-pin',
             html: `
-                <div class="relative w-8 h-8 flex items-center justify-center">
+                <div class="relative flex items-center justify-center" style="width:${size}px;height:${size}px">
                     ${pulseHtml}
-                    <div class="w-8 h-8 rounded-full ${color} text-white shadow-lg border-2 border-white dark:border-slate-900 flex items-center justify-center z-10 hover:scale-110 transition-transform">
+                    <div class="w-full h-full rounded-full ${color} text-white shadow-lg border-2 border-white dark:border-slate-900 flex items-center justify-center z-10 hover:scale-110 transition-transform">
                         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="12" cy="12" r="4"></circle>
                             <path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
@@ -245,9 +214,9 @@
                     </div>
                 </div>
             `,
-            iconSize: [32, 32],
-            iconAnchor: [16, 16],
-            popupAnchor: [0, -18]
+            iconSize: [size, size],
+            iconAnchor: [size / 2, size / 2],
+            popupAnchor: [0, -size / 2]
         });
     }
 
@@ -262,7 +231,7 @@
 
             let pinColor = 'bg-amber-500';
             if (farm.has_alert) pinColor = 'bg-rose-600';
-            else if (farm.status === 'maintenance') pinColor = 'bg-slate-500';
+            else if (farm.status !== 'active') pinColor = 'bg-slate-500';
 
             const co2_kg = (farm.monthly_kwh || 0) * 0.40;
             const co2_tons = (co2_kg / 1000).toFixed(2);
@@ -270,13 +239,13 @@
             const popupContent = `
                 <div class="p-1 font-sans min-w-[240px]">
                     <div class="flex items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-2 mb-2">
-                        <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">${farm.dept_name}</span>
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">${escapeHtml(farm.dept_name)}</span>
                         ${farm.has_alert 
                             ? '<span class="text-[10px] bg-rose-100 text-rose-700 font-bold px-1.5 py-0.5 rounded">Déficit ≥20%</span>'
-                            : '<span class="text-[10px] bg-emerald-100 text-emerald-700 font-bold px-1.5 py-0.5 rounded">Activa</span>'
+                            : `<span class="text-[10px] bg-slate-100 text-slate-700 font-bold px-1.5 py-0.5 rounded">${farm.status === 'active' ? 'Activa' : farm.status === 'maintenance' ? 'Mantenimiento' : 'Inactiva'}</span>`
                         }
                     </div>
-                    <h4 class="text-sm font-extrabold text-slate-900 mb-2">${farm.name}</h4>
+                    <h4 class="text-sm font-extrabold text-slate-900 mb-2">${escapeHtml(farm.name)}</h4>
                     <div class="space-y-1.5 text-xs text-slate-600">
                         <div class="flex justify-between">
                             <span class="text-slate-400">Capacidad Total:</span>
@@ -292,14 +261,16 @@
                         </div>
                     </div>
                     <div class="mt-3 pt-2 border-t border-slate-100 flex justify-between items-center">
-                        <span class="text-[10px] text-slate-400">Lat: ${farm.lat.toFixed(4)}, Lng: ${farm.lng.toFixed(4)}</span>
-                        <a href="/farms/${farm.id}" class="text-[11px] font-bold text-amber-600 hover:text-amber-700">Ver Ficha &rarr;</a>
+                        <span class="text-[10px] text-slate-400">Lat: ${Number(farm.lat).toFixed(4)}, Lng: ${Number(farm.lng).toFixed(4)}</span>
+                        <a href="${escapeHtml(farmUrl.replace('__FARM__', encodeURIComponent(farm.id)))}" class="text-[11px] font-bold text-amber-600 hover:text-amber-700">Ver ficha &rarr;</a>
                     </div>
                 </div>
             `;
 
             const marker = L.marker([farm.lat, farm.lng], {
-                icon: createCustomPin(pinColor, farm.has_alert)
+                icon: createCustomPin(pinColor, farm.has_alert, farm.capacity_kw),
+                title: `${farm.name}: ${farm.capacity_kw} kW`,
+                alt: `Granja ${farm.name}`
             }).bindPopup(popupContent);
 
             farmMarkersMap[farm.id] = marker;
@@ -323,7 +294,7 @@
 
         if (selectedDept === 'all') {
             renderMarkers(farms);
-            map.setView(GT_CENTER, GT_ZOOM);
+            map.fitBounds([[13.7, -92.3], [17.9, -88.2]], {padding: [22, 22]});
             return;
         }
 
@@ -361,7 +332,7 @@
                 selectedDepartmentLayer.bindTooltip(`
                     <div class="font-sans py-0.5">
                         <div class="text-[10px] uppercase font-bold text-amber-400">Departamento</div>
-                        <div class="text-sm font-extrabold text-white">${deptFeature.properties.name}</div>
+                        <div class="text-sm font-extrabold text-white">${escapeHtml(deptFeature.properties.name)}</div>
                         <div class="text-[10px] text-slate-300 mt-0.5">${filtered.length} granjas registradas</div>
                     </div>
                 `, {
@@ -393,7 +364,7 @@
             selectedDepartmentLayer = null;
         }
         renderMarkers(farms);
-        map.setView(GT_CENTER, GT_ZOOM);
+        map.fitBounds([[13.7, -92.3], [17.9, -88.2]], {padding: [22, 22]});
     }
 
     // Enfocar granja específica por ID, resaltar su departamento y abrir su popup
@@ -419,6 +390,7 @@
         }
     }
 
+    map.fitBounds([[13.7, -92.3], [17.9, -88.2]], {padding: [22, 22]});
     // Render inicial
     renderMarkers(farms);
 

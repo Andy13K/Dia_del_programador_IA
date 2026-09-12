@@ -3,7 +3,7 @@
 @section('content')
 <div class="max-w-3xl mx-auto space-y-6">
 
-    <div class="flex items-center justify-between">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
             <div class="flex items-center gap-2 text-xs text-slate-500 mb-1">
                 <a href="{{ route('alerts.index') }}" class="hover:text-amber-500 flex items-center gap-1">
@@ -15,7 +15,7 @@
                 Ficha de Alerta #{{ $alert->id }}
             </h2>
             <p class="text-xs text-slate-500 dark:text-slate-400">
-                Incidencia técnica por déficit de generación igual o superior al 20% (RF-14).
+                Seguimiento técnico de una desviación de generación igual o superior al 20%.
             </p>
         </div>
 
@@ -25,7 +25,7 @@
                     <i data-lucide="sun" class="w-3.5 h-3.5 text-amber-500"></i>
                     <span>Ver Granja</span>
                 </a>
-                <a href="{{ route('map.index') }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs font-bold text-slate-700 dark:text-slate-200 hover:border-emerald-400 hover:text-emerald-500 transition shadow-sm">
+                <a href="{{ route('map.index', ['farm' => $alert->solarFarm->id]) }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs font-bold text-slate-700 dark:text-slate-200 hover:border-emerald-400 hover:text-emerald-500 transition shadow-sm">
                     <i data-lucide="map-pin" class="w-3.5 h-3.5 text-emerald-500"></i>
                     <span>Ver en Mapa</span>
                 </a>
@@ -108,8 +108,10 @@
 
                         <form method="POST" action="{{ route('alerts.resolve', $alert) }}" class="space-y-3">
                             @csrf
-                            <textarea name="resolution_notes" rows="3" required maxlength="500" placeholder="Detalle técnico de la resolución aplicada..."
-                                      class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-amber-500"></textarea>
+                            <label for="resolution_notes" class="block font-semibold">Acciones correctivas</label>
+                            <textarea id="resolution_notes" name="resolution_notes" rows="3" required maxlength="500" placeholder="Detalle técnico de la resolución aplicada..."
+                                      class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-amber-500">{{ old('resolution_notes') }}</textarea>
+                            @error('resolution_notes')<p role="alert" class="text-rose-600">{{ $message }}</p>@enderror
                             
                             <div class="flex justify-end">
                                 <button type="submit" class="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs transition shadow-md shadow-amber-500/20 flex items-center gap-2">

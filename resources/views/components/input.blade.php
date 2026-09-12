@@ -24,6 +24,8 @@
             id="{{ $name }}" 
             value="{{ old($name, $value) }}"
             placeholder="{{ $placeholder }}"
+            aria-invalid="{{ $error ? 'true' : 'false' }}"
+            @if($error || $hint) aria-describedby="{{ $name }}-feedback" @endif
             @if($required) required @endif
             {{ $attributes->merge([
                 'class' => 'w-full px-4 py-2.5 rounded-xl border bg-white dark:bg-slate-950 text-slate-900 dark:text-white placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all ' . 
@@ -33,11 +35,11 @@
     </div>
 
     @if($hint && !$error)
-        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">{{ $hint }}</p>
+        <p id="{{ $name }}-feedback" class="text-xs text-slate-500 dark:text-slate-400 mt-1">{{ $hint }}</p>
     @endif
 
     @if($error)
-        <p class="text-xs font-medium text-rose-600 dark:text-rose-400 mt-1.5 flex items-center gap-1">
+        <p id="{{ $name }}-feedback" role="alert" class="text-xs font-medium text-rose-600 dark:text-rose-400 mt-1.5 flex items-center gap-1">
             <i data-lucide="alert-circle" class="w-3.5 h-3.5 inline"></i>
             {{ $error }}
         </p>
