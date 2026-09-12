@@ -1204,6 +1204,30 @@ API y el diagnóstico de la rúbrica.
 
 ---
 
+### [12:20] Antigravity (Andy) — Distinción Visual de Alertas Leídas/No Leídas, Parpadeo Sutil Difuminado y Campanita Fija — PR #43
+
+**Objetivo:** perfeccionar la experiencia de usuario y retroalimentación visual en el centro de notificaciones:
+1. **Diferenciación visual estricta entre alertas leídas y no leídas**:
+   - **No leídas:** borde izquierdo destacado carmesí (`border-l-4 border-rose-500`), fondo reactivo translúcido, badge vibrante "Nueva" con animación de pulso, texto en alto contraste y botón "Más detalles" en ámbar solar de alta jerarquía.
+   - **Leídas:** borde neutro atenuado (`border-slate-300` / `border-slate-700`), opacidad reducida (`opacity-75`), sin animaciones (estática), badge sobrio "✓ Leída" y botón secundario "Ver detalles".
+   - Pestañas de filtrado rápido integradas en el pop-up (`Todas`, `No leídas`, `Leídas`) con conteos independientes.
+2. **Campanita fija sin movimientos:**
+   - La campanita en el Topbar se mantiene 100% estática en su posición sin rotaciones, oscilaciones (`shake`) ni saltos que perturben la interfaz al llegar una alerta o al interactuar con ella.
+3. **Parpadeo sutil y difuminado suave:**
+   - En lugar de destellos agresivos o movimientos bruscos, las alertas no leídas incorporan un efecto de respiración luminosa suave (`@keyframes kinSubtleDiffuseGlow`) con transición de 2.8 segundos en la opacidad del resplandor (`box-shadow`), proporcionando una percepción estética y profesional.
+
+**Prompt clave:**
+> "Me gusta, solamente que necesito poder distinguir las alertas leídas de no leídas, que se muestre bien esa diferencia y, cuando caiga una alerta, que solamente esté sutilmente parpadeando la alerta, pero que la campanita no se mueva, que siempre se mantenga en la misma posición. Solamente la alerta que esté sutilmente parpadeando, así difuminada de manera suave, para que esté bien implementado. Haz esos cambios, por favor."
+
+**Resultado:**
+- Componente `resources/views/components/notification-bell.blade.php` actualizado con estilos de parpadeo suave, filtros por estado, ordenamiento inteligente de alertas y fijación total del icono de la campana.
+- Suite de pruebas de integración `tests/Feature/NotificationBellTest.php` pasando al 100% (73 tests, 433 aserciones).
+- Assets recompilados con Vite (`npm run build`).
+
+**Intervención humana:** Andy identificó la necesidad de separar visualmente el estado de lectura de cada alerta para evitar confusión, exigió eliminar cualquier movimiento o giro de la campana para preservar la estabilidad de la barra superior, y solicitó un parpadeo difuso y suave para las anomalías entrantes.
+
+---
+
 ## 4. Evidencia visual
 
 Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:
