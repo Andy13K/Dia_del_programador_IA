@@ -5,7 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $reportData['title'] }} — K'in Solar Guatemala</title>
     <link rel="icon" type="image/png" href="/images/kin-icon-dorado.png">
-    <script src="https://cdn.tailwindcss.com"></script>
+    {{--
+        OWASP A02: el CSP del sistema (ver app/Http/Middleware/SecurityHeaders.php) solo permite
+        script-src 'self', unpkg.com y cdn.jsdelivr.net — cdn.tailwindcss.com NO esta en la lista,
+        asi que ese script quedaba bloqueado en silencio y esta pagina se veia sin ningun estilo,
+        tanto en pantalla como al imprimir/guardar PDF. Se reemplaza por el CSS ya compilado del
+        propio sistema (mismo bundle que usa toda la app), que ya incluye todas las clases de
+        Tailwind usadas en esta plantilla.
+    --}}
+    @vite(['resources/css/app.css'])
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
