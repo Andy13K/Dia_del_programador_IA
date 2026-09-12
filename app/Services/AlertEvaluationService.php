@@ -19,7 +19,9 @@ class AlertEvaluationService
             $real = (float) $generation->real_kwh;
 
             // Sin generación esperada no existe un déficit porcentual definido.
-            if ($estimated <= 0 || $real > 0.80 * $estimated) {
+            // Los kWh se almacenan con dos decimales: comparar centésimas evita
+            // que el error binario de 0.80 excluya valores justo en el umbral.
+            if ($estimated <= 0 || (int) round($real * 100) * 5 > (int) round($estimated * 100) * 4) {
                 return null;
             }
 

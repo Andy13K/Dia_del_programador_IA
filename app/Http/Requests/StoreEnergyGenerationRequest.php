@@ -25,9 +25,4 @@ class StoreEnergyGenerationRequest extends BackendRequest
             'notes' => ['nullable', 'string', 'max:500'],
         ];
     }
-
-    public function messages(): array
-    {
-        return ['period.unique' => 'Ya existe una medición para esta granja y período.'];
-    }
 }
