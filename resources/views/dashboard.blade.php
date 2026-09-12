@@ -148,7 +148,7 @@
                 
                 <div class="space-y-3.5">
                     @php
-                        $ranking = [
+                        $ranking = isset($topRanking) && count($topRanking) > 0 ? $topRanking : [
                             ['name' => 'Escuintla', 'kwh' => 380000, 'co2' => '152.0 Ton', 'share' => 26.7],
                             ['name' => 'Zacapa', 'kwh' => 285000, 'co2' => '114.0 Ton', 'share' => 20.1],
                             ['name' => 'Petén', 'kwh' => 210000, 'co2' => '84.0 Ton', 'share' => 14.8],
@@ -283,9 +283,13 @@
     // Gráfico Comparativo con Chart.js
     const ctx = document.getElementById('generationComparisonChart').getContext('2d');
     
-    const labels = ['2026-03', '2026-04', '2026-05', '2026-06', '2026-07', '2026-08'];
-    const expectedData = [210000, 230000, 245000, 240000, 250000, 260000];
-    const realData     = [208000, 228500, 241000, 239000, 248000, 215000]; // 2026-08 con caída
+    const rawLabels = @json($chartLabels ?? null);
+    const rawExpected = @json($chartExpected ?? null);
+    const rawReal = @json($chartReal ?? null);
+
+    const labels = (rawLabels && rawLabels.length > 0) ? rawLabels : ['2026-03', '2026-04', '2026-05', '2026-06', '2026-07', '2026-08'];
+    const expectedData = (rawExpected && rawExpected.length > 0) ? rawExpected : [210000, 230000, 245000, 240000, 250000, 260000];
+    const realData     = (rawReal && rawReal.length > 0) ? rawReal : [208000, 228500, 241000, 239000, 248000, 215000];
 
     new Chart(ctx, {
         type: 'bar',

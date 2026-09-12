@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Handler del Dashboard Ejecutivo (RF-11)
+// Handler del Dashboard Ejecutivo Nacional (RF-11)
 $dashboardHandler = function () {
     try {
         $farms = SolarFarm::with(['solarPanels', 'department'])->get();
@@ -40,6 +40,40 @@ $dashboardHandler = function () {
             ->latest()
             ->take(5)
             ->get();
+
+        // Top 5 Ranking Departamental por Generación Real
+        $deptGenerations = DB::table('departments')
+            ->join('solar_farms', 'departments.id', '=', 'solar_farms.department_id')
+            ->join('energy_generations', 'solar_farms.id', '=', 'energy_generations.solar_farm_id')
+            ->select('departments.name', DB::raw('SUM(energy_generations.real_kwh) as total_kwh'))
+            ->groupBy('departments.id', 'departments.name')
+            ->orderByDesc('total_kwh')
+            ->take(5)
+            ->get();
+
+        $topRanking = $deptGenerations->map(function ($row) use ($totalKwh) {
+            $kwh = (float) $row->total_kwh;
+            $co2Ton = ($kwh * 0.40) / 1000;
+            $share = $totalKwh > 0 ? round(($kwh / $totalKwh) * 100, 1) : 0;
+            return [
+                'name' => $row->name,
+                'kwh' => $kwh,
+                'co2' => number_format($co2Ton, 1) . ' Ton',
+                'share' => $share,
+            ];
+        })->all();
+
+        // Gráfica de últimos 6 períodos
+        $monthlyGens = DB::table('energy_generations')
+            ->select('period', DB::raw('SUM(estimated_kwh) as exp_kwh'), DB::raw('SUM(real_kwh) as act_kwh'))
+            ->groupBy('period')
+            ->orderBy('period')
+            ->take(6)
+            ->get();
+
+        $chartLabels = $monthlyGens->pluck('period')->all();
+        $chartExpected = $monthlyGens->pluck('exp_kwh')->map(fn ($v) => (float)$v)->all();
+        $chartReal = $monthlyGens->pluck('act_kwh')->map(fn ($v) => (float)$v)->all();
     } catch (\Throwable) {
         $totalFarms = 10;
         $totalPanels = 14850;
@@ -48,6 +82,10 @@ $dashboardHandler = function () {
         $totalFamilies = 24500;
         $totalCo2Kg = 568200;
         $activeAlerts = collect();
+        $topRanking = null;
+        $chartLabels = null;
+        $chartExpected = null;
+        $chartReal = null;
     }
 
     $stats = [
@@ -59,7 +97,7 @@ $dashboardHandler = function () {
         'total_co2_kg' => $totalCo2Kg > 0 ? $totalCo2Kg : 568200,
     ];
 
-    return view('dashboard', compact('stats', 'activeAlerts'));
+    return view('dashboard', compact('stats', 'activeAlerts', 'topRanking', 'chartLabels', 'chartExpected', 'chartReal'));
 };
 
 // Rutas Principales: Inicio y Dashboard
@@ -128,7 +166,37 @@ Route::get('/alerts/{alert}', [GenerationAlertController::class, 'show'])->middl
 Route::post('/alerts/{alert}/resolve', [GenerationAlertController::class, 'resolve'])->middleware(['auth', 'can:manage-alerts'])->name('alerts.resolve');
 
 // Reportes Departamentales y Exportación CSV (RF-12)
-Route::get('/reports', fn () => view('reports.index'))->middleware('auth')->name('reports.index');
+Route::get('/reports', function () {
+    try {
+        $departments = Department::with(['solarFarms.solarPanels', 'solarFarms.energyGenerations'])->orderBy('name')->get();
+        $deptStats = $departments->map(function ($dept) {
+            $farmsCount = $dept->solarFarms->count();
+            $panelsCount = $dept->solarFarms->sum(fn ($f) => $f->solarPanels->sum('pivot.quantity'));
+            $capacityKw = (float) $dept->solarFarms->sum(fn ($f) => $f->calculated_capacity_kw);
+            $totalKwh = (float) $dept->solarFarms->sum(fn ($f) => $f->energyGenerations->sum('real_kwh'));
+            $co2Kg = $totalKwh * 0.40;
+            $families = (int) $dept->solarFarms->sum('benefited_families');
+
+            return [
+                'id' => $dept->id,
+                'name' => $dept->name,
+                'code' => $dept->code,
+                'farms' => $farmsCount,
+                'panels' => $panelsCount,
+                'kw' => $capacityKw,
+                'kwh' => $totalKwh,
+                'co2_kg' => $co2Kg,
+                'co2_ton' => $co2Kg / 1000,
+                'families' => $families,
+            ];
+        })->all();
+    } catch (\Throwable) {
+        $deptStats = null;
+    }
+
+    return view('reports.index', compact('deptStats'));
+})->middleware('auth')->name('reports.index');
+
 Route::get('/reports/department/{department}', fn (string $department) => redirect()->route('reports.index'))->middleware('auth')->name('reports.department');
 Route::get('/reports/export', function () {
     $headers = [
