@@ -24,18 +24,6 @@
     <aside id="sidebar" class="kin-sidebar">
         <div class="kin-sidebar-brand"><x-brand /></div>
         <x-navigation />
-        <div class="kin-sidebar-bottom">
-            <div class="kin-country"><span aria-hidden="true">◧</span> Guatemala <span>22 departamentos</span></div>
-            @auth
-                <div class="kin-profile">
-                    <span class="kin-avatar">{{ mb_strtoupper(mb_substr(auth()->user()->name, 0, 2)) }}</span>
-                    <div><strong>{{ auth()->user()->name }}</strong><span>{{ ['admin' => 'Administrador', 'operador' => 'Operador', 'visualizador' => 'Visualizador'][auth()->user()->role] ?? 'Usuario' }}</span></div>
-                    <form method="POST" action="{{ route('logout') }}">@csrf<button class="kin-icon-button" title="Cerrar sesión" aria-label="Cerrar sesión"><i data-lucide="log-out"></i></button></form>
-                </div>
-            @else
-                <x-button :href="route('login')" variant="primary" class="w-full" icon="log-in">Iniciar sesión</x-button>
-            @endauth
-        </div>
     </aside>
     <div class="kin-workspace">
         <header class="kin-topbar">
@@ -44,7 +32,7 @@
                 <span class="kin-live"><span aria-hidden="true"></span><span class="hidden sm:inline">Conectado</span></span>
                 <button type="button" class="kin-icon-button kin-theme-toggle" onclick="toggleDarkMode()" aria-label="Cambiar tema" title="Cambiar tema"><i data-lucide="sun" class="hidden dark:block"></i><i data-lucide="moon" class="dark:hidden"></i></button>
                 @auth<a href="{{ route('alerts.index') }}" class="kin-icon-button" aria-label="Ver alertas"><i data-lucide="bell"></i></a>@endauth
-                <span class="kin-avatar kin-top-avatar" title="{{ auth()->user()->name ?? 'Consulta pública' }}">{{ mb_strtoupper(mb_substr(auth()->user()->name ?? 'GT', 0, 2)) }}</span>
+                <x-user-menu :caret="true" class="kin-top-avatar" />
             </div>
         </header>
         <main id="main-content" tabindex="-1" @class(['kin-main', 'kin-map-main' => request()->routeIs('map.*')])>

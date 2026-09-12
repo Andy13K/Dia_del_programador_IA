@@ -22,7 +22,8 @@ button { cursor:pointer; }
 .kin-brand-symbol svg { width:28px; height:28px; }
 .kin-brand strong { font-size:20px; letter-spacing:-.8px; font-weight:750; }
 .kin-brand-accent { font-weight:400; }
-.kin-brand small { font-size:9px; letter-spacing:.5px; color:var(--kin-muted); border:1px solid var(--kin-line); border-radius:4px; padding:2px 4px; vertical-align:middle; }
+.kin-brand small { display:inline-flex; align-items:center; gap:4px; font-size:9px; letter-spacing:.5px; color:var(--kin-muted); border:1px solid var(--kin-line); border-radius:4px; padding:2px 4px; vertical-align:middle; }
+.kin-flag-gt { width:13px; height:9px; border-radius:1.5px; flex-shrink:0; }
 .kin-brand-caption { display:block; font-size:10px; color:var(--kin-muted); margin-top:2px; letter-spacing:.2px; }
 .kin-navigation { padding:0 14px 20px; overflow-y:auto; flex:1; }
 .kin-nav-group { color:var(--kin-muted); font-size:9px; font-weight:700; letter-spacing:1.65px; margin:25px 12px 9px; }
@@ -32,15 +33,36 @@ button { cursor:pointer; }
 .kin-nav-link:hover { background:var(--kin-raised); color:var(--kin-ink); transform:translateX(2px); }
 .kin-nav-link.is-active { color:var(--kin-accent); background:#f59e0b0c; border-color:#f59e0b26; }
 .kin-nav-dot { width:5px; height:5px; background:currentColor; border-radius:50%; margin-left:auto; box-shadow:0 0 12px #f59e0b44; }
-.kin-sidebar-bottom { padding:16px; border-top:1px solid var(--kin-line); }
-.kin-country { display:flex; align-items:center; gap:8px; font-size:10px; color:var(--kin-muted); padding-bottom:16px; }
-.kin-country>span:last-child { margin-left:auto; font-size:9px; }
-.kin-country>span:first-child { color:#0ea5e9; font-size:20px; }
+.kin-sidebar-bottom { padding:16px; border-top:1px solid var(--kin-line); display:flex; }
 .kin-profile { display:flex; align-items:center; gap:9px; }
 .kin-profile>div { min-width:0; flex:1; }
 .kin-profile strong { display:block; font-size:11px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .kin-profile>div>span { color:var(--kin-muted); font-size:10px; }
 .kin-avatar { width:31px; height:31px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:linear-gradient(135deg,#e2c69c,#9a7259); color:#21190f; font-size:10px; font-weight:750; flex-shrink:0; }
+
+/* Menu de usuario: solo el avatar (+ flechita opcional) visible, un clic despliega el popover */
+.kin-user-menu { position:relative; }
+.kin-user-trigger { display:inline-flex; align-items:center; gap:3px; border-radius:999px; padding:2px; transition:box-shadow .15s var(--kin-ease); }
+.kin-user-trigger:hover, .kin-user-trigger:focus-visible { box-shadow:0 0 0 3px var(--kin-raised); }
+.kin-user-caret { width:14px; height:14px; color:var(--kin-muted); }
+.kin-user-popover {
+    position:absolute; right:0; top:calc(100% + 12px); min-width:200px; z-index:40;
+    background:var(--kin-surface); border:1px solid var(--kin-line); border-radius:14px;
+    box-shadow:0 12px 32px #0b0f1740; padding:12px; opacity:0; visibility:hidden; transform:translateY(-6px);
+    transition:opacity .16s var(--kin-ease), transform .16s var(--kin-ease), visibility .16s;
+}
+.kin-user-menu.is-open .kin-user-popover { opacity:1; visibility:visible; transform:translateY(0); }
+.kin-user-popover-info { padding:2px 6px 10px; border-bottom:1px solid var(--kin-line); margin-bottom:8px; }
+.kin-user-popover-info strong { display:block; font-size:12.5px; color:var(--kin-ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.kin-user-popover-info span { display:block; font-size:11px; color:var(--kin-muted); margin-top:1px; }
+.kin-user-logout {
+    width:100%; display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:9px;
+    background:#fef2f2; color:#dc2626; font-size:12.5px; font-weight:600; text-align:left; cursor:pointer;
+}
+.dark .kin-user-logout { background:#4c111180; color:#fca5a5; }
+.kin-user-logout:hover { background:#fee2e2; }
+.dark .kin-user-logout:hover { background:#5c1414a0; }
+.kin-user-logout svg { width:14px; height:14px; flex-shrink:0; }
 .kin-workspace { flex:1; min-width:0; display:flex; flex-direction:column; }
 .kin-topbar { height:66px; flex-shrink:0; padding:0 32px; display:flex; align-items:center; justify-content:space-between; gap:16px; background:var(--kin-surface); border-bottom:1px solid var(--kin-line); }
 .kin-breadcrumb { display:flex; gap:15px; align-items:center; font-size:11px; min-width:0; color:var(--kin-muted); }
@@ -120,16 +142,44 @@ button { cursor:pointer; }
 .kin-map-main>div>div:last-child { flex:1; height:auto; min-height:280px; margin-top:0; }
 .leaflet-popup-content-wrapper { border-radius:15px!important; box-shadow:0 10px 45px #0b0f1726!important; }
 .leaflet-popup-content { margin:17px!important; line-height:1.6!important; }
+.dark .leaflet-popup-content-wrapper { background:#1e293b!important; color:#f1f5f9!important; }
+.dark .leaflet-popup-tip { background:#1e293b!important; }
+.dark .leaflet-popup-close-button { color:#94a3b8!important; }
+.dark .leaflet-popup-close-button:hover { color:#f1f5f9!important; }
 .leaflet-container { font-family:var(--font-sans)!important; }
 .leaflet-bar { box-shadow:0 3px 16px #0b0f1726!important; border:1px solid #d5dce6!important; border-radius:10px!important; overflow:hidden; }
 .kin-modal-panel { animation:kin-dialog .24s var(--kin-ease); }
-.kin-login { min-height:100dvh; display:grid; grid-template-columns:1.1fr 1fr; background:var(--kin-bg); color:var(--kin-ink); }
-.kin-login-story { padding:48px 64px; display:flex; flex-direction:column; justify-content:space-between; background:radial-gradient(ellipse at 45% 45%,#b0781822,transparent 60%),#0b0f17; color:#f1f5f9; position:relative; overflow:hidden; }
-.kin-login-story .kin-brand { color:#f1f5f9; }
-.kin-login-orbit { width:330px; height:330px; border:1px solid #f59e0b25; border-radius:50%; margin:55px auto; display:grid; place-items:center; position:relative; box-shadow:0 0 0 40px #f59e0b04,0 0 0 80px #f59e0b03; }
-.kin-login-orbit:before { content:''; width:130px; height:130px; border-radius:50%; background:radial-gradient(circle at 35% 30%,#ffe8a0,#e6a132 60%,#875316); box-shadow:0 0 65px #f59e0b44,inset -12px -12px 25px #6b3c1333; }
-.kin-login-story h1 { font-size:clamp(30px,3.5vw,48px); font-weight:500; line-height:1.17; letter-spacing:-1.8px; max-width:460px; }
-.kin-login-story p { color:#a1aec2; font-size:13px; line-height:1.8; max-width:380px; margin-top:18px; }
+.kin-login { min-height:100dvh; display:grid; grid-template-columns:3fr 2fr; background:var(--kin-bg); color:var(--kin-ink); }
+/* El panel izquierdo del login es siempre oscuro: se fijan sus variables de tema
+   localmente para que alternar modo claro/oscuro no le cambie absolutamente nada
+   (fondo, badge, texto), solo afecta el formulario del lado derecho. */
+.kin-login-story {
+    --kin-ink:#f1f5f9; --kin-muted:#aab3c5; --kin-line:#2a3446; --kin-surface:#0f1420; --kin-raised:#161d2c; --kin-accent:#fbbf24;
+    container-type:inline-size; padding:44px 56px; display:flex; flex-direction:column; justify-content:space-between;
+    background:radial-gradient(ellipse at 45% 45%,#b0781822,transparent 60%),#0b0f17; color:var(--kin-ink); position:relative; overflow:hidden;
+}
+.kin-login-story:before { content:''; position:absolute; inset:-20px; background:url('/images/paneles-imagen.jpg') 38% 55%/cover; filter:blur(2.5px) brightness(.92) saturate(1.15); transform:scale(1.04); z-index:0; }
+.kin-login-story:after { content:''; position:absolute; inset:0; background:linear-gradient(165deg,#0b0f17a6,#0b0f17b8 45%,#0b0f17e8); z-index:0; }
+.kin-login-story>* { position:relative; z-index:1; }
+.kin-login-story .kin-brand { color:var(--kin-ink); }
+.kin-login-story .kin-brand-symbol { width:64px; height:64px; }
+.kin-login-story .kin-brand strong { font-size:clamp(20px,3.6cqw,30px); letter-spacing:-.5px; }
+.kin-login-story .kin-brand small { background:none; border:none; padding:0; }
+.kin-login-story .kin-brand-caption { font-size:12px; margin-top:-1px; color:var(--kin-muted); }
+
+.kin-login-top { display:flex; flex-direction:column; }
+.kin-login-orbit { width:330px; height:330px; margin:32px 0 0; border:1px solid #f59e0b25; border-radius:50%; display:grid; place-items:center; position:relative; box-shadow:0 0 0 40px #f59e0b04,0 0 0 80px #f59e0b03; animation:kin-orbit-aura 6.5s ease-in-out infinite; }
+.kin-login-orbit:before { content:''; width:130px; height:130px; border-radius:50%; background:radial-gradient(circle at 35% 30%,#ffe8a0,#e6a132 60%,#875316); box-shadow:0 0 65px #f59e0b44,inset -12px -12px 25px #6b3c1333; animation:kin-sun-breathe 5s ease-in-out infinite; }
+@keyframes kin-sun-breathe { 0%,100% { transform:scale(1); filter:brightness(1); } 50% { transform:scale(1.045); filter:brightness(1.12); } }
+@keyframes kin-orbit-aura { 0%,100% { box-shadow:0 0 0 40px #f59e0b04,0 0 0 80px #f59e0b03; } 50% { box-shadow:0 0 0 46px #f59e0b07,0 0 0 92px #f59e0b05; } }
+
+/* Rayos sutiles: nacen lejos del sol (no pegados a su borde) y viajan en
+   diagonal invertida hacia donde estan los paneles de la foto. */
+.kin-login-story h1 { max-width:none; line-height:1.14; }
+.kin-hero-sub { display:block; font-size:clamp(15px,4.4cqw,24px); font-weight:500; letter-spacing:-.3px; color:var(--kin-muted); white-space:nowrap; }
+.kin-hero-main { display:block; font-size:clamp(21px,6.4cqw,42px); font-weight:700; letter-spacing:-1.1px; color:var(--kin-ink); white-space:nowrap; margin-top:2px; }
+.kin-login-story p { color:var(--kin-muted); font-size:clamp(12.5px,1.75cqw,15.5px); font-weight:500; line-height:1.7; max-width:none; white-space:nowrap; margin-top:16px; }
+.kin-login-story footer { color:var(--kin-muted); }
 .kin-login-form { padding:48px 32px; display:flex; flex-direction:column; justify-content:center; align-items:center; }
 .kin-login-form>div { width:100%; max-width:365px; }
 .kin-login-form h2 { font-size:29px; letter-spacing:-1px; margin-bottom:10px; font-weight:600; }

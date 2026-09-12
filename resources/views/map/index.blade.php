@@ -238,31 +238,31 @@
 
             const popupContent = `
                 <div class="p-1 font-sans min-w-[240px]">
-                    <div class="flex items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-2 mb-2">
-                        <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">${escapeHtml(farm.dept_name)}</span>
-                        ${farm.has_alert 
-                            ? '<span class="text-[10px] bg-rose-100 text-rose-700 font-bold px-1.5 py-0.5 rounded">Déficit ≥20%</span>'
-                            : `<span class="text-[10px] bg-slate-100 text-slate-700 font-bold px-1.5 py-0.5 rounded">${farm.status === 'active' ? 'Activa' : farm.status === 'maintenance' ? 'Mantenimiento' : 'Inactiva'}</span>`
+                    <div class="flex items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-700 pb-2 mb-2">
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400">${escapeHtml(farm.dept_name)}</span>
+                        ${farm.has_alert
+                            ? '<span class="text-[10px] bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-300 font-bold px-1.5 py-0.5 rounded">Déficit ≥20%</span>'
+                            : `<span class="text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold px-1.5 py-0.5 rounded">${farm.status === 'active' ? 'Activa' : farm.status === 'maintenance' ? 'Mantenimiento' : 'Inactiva'}</span>`
                         }
                     </div>
-                    <h4 class="text-sm font-extrabold text-slate-900 mb-2">${escapeHtml(farm.name)}</h4>
-                    <div class="space-y-1.5 text-xs text-slate-600">
+                    <h4 class="text-sm font-extrabold text-slate-900 dark:text-white mb-2">${escapeHtml(farm.name)}</h4>
+                    <div class="space-y-1.5 text-xs text-slate-600 dark:text-slate-300">
                         <div class="flex justify-between">
-                            <span class="text-slate-400">Capacidad Total:</span>
-                            <strong class="text-amber-600 font-bold">${parseFloat(farm.capacity_kw).toLocaleString()} kW</strong>
+                            <span class="text-slate-400 dark:text-slate-500">Capacidad Total:</span>
+                            <strong class="text-amber-600 dark:text-amber-400 font-bold">${parseFloat(farm.capacity_kw).toLocaleString()} kW</strong>
                         </div>
                         <div class="flex justify-between">
-                            <span class="text-slate-400">Familias Beneficiadas:</span>
-                            <strong class="text-slate-800">${parseInt(farm.families).toLocaleString()}</strong>
+                            <span class="text-slate-400 dark:text-slate-500">Familias Beneficiadas:</span>
+                            <strong class="text-slate-800 dark:text-slate-100">${parseInt(farm.families).toLocaleString()}</strong>
                         </div>
                         <div class="flex justify-between">
-                            <span class="text-slate-400">CO₂ Evitado (Mes):</span>
-                            <strong class="text-emerald-600 font-bold">${co2_tons} Ton (${co2_kg.toLocaleString()} kg)</strong>
+                            <span class="text-slate-400 dark:text-slate-500">CO₂ Evitado (Mes):</span>
+                            <strong class="text-emerald-600 dark:text-emerald-400 font-bold">${co2_tons} Ton (${co2_kg.toLocaleString()} kg)</strong>
                         </div>
                     </div>
-                    <div class="mt-3 pt-2 border-t border-slate-100 flex justify-between items-center">
-                        <span class="text-[10px] text-slate-400">Lat: ${Number(farm.lat).toFixed(4)}, Lng: ${Number(farm.lng).toFixed(4)}</span>
-                        <a href="${escapeHtml(farmUrl.replace('__FARM__', encodeURIComponent(farm.id)))}" class="text-[11px] font-bold text-amber-600 hover:text-amber-700">Ver ficha &rarr;</a>
+                    <div class="mt-3 pt-2 border-t border-slate-100 dark:border-slate-700 flex justify-between items-center">
+                        <span class="text-[10px] text-slate-400 dark:text-slate-500">Lat: ${Number(farm.lat).toFixed(4)}, Lng: ${Number(farm.lng).toFixed(4)}</span>
+                        <a href="${escapeHtml(farmUrl.replace('__FARM__', encodeURIComponent(farm.id)))}" class="text-[11px] font-bold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300">Ver ficha &rarr;</a>
                     </div>
                 </div>
             `;
