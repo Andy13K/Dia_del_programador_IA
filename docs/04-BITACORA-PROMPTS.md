@@ -848,6 +848,35 @@ documentación).
 
 ---
 
+### [Auditoría] Claude Code (Andy) — Revisión completa de la rúbrica y módulo de prueba de consumo externo de la API
+
+**Objetivo:** ante la duda de qué exige exactamente el punteo de "Uso de MCP Server", se explicó
+el concepto en términos concretos del proyecto (filesystem, mysql, github) y se hizo una
+auditoría del estado real de los 6 criterios de la rúbrica contra el código, no de memoria.
+
+**Prompt:** "no entiendo yo lo que hace el MCP y también quisiera un pequeño módulo que pruebe
+que la api se puede consumir".
+
+**Resultado de la auditoría:**
+- Verificado vía API de GitHub: **`master` sin protección de rama configurada** (404) y
+  **Dependabot no habilitado** (404) — dos huecos reales de "control de versiones" para el
+  criterio de Originalidad, de corrección casi inmediata.
+- Verificado: no existe un archivo de diapositivas (solo el guion en Markdown) — pendiente
+  declarado por el usuario para el final, junto con el resto de documentación.
+- Confirmado en producción (`curl` real): el dominio, la API y el login rediseñado ya reflejan
+  el código más reciente de `master`.
+- **`public/api-demo.html`**: página HTML autocontenida (sin build, sin dependencias de Laravel)
+  que consume en vivo los 6 endpoints de `/api/v1` vía `fetch()`, pensada para poder abrirse
+  incluso como archivo local (`file://`) y demostrar consumo verdaderamente externo, ya que la
+  API responde con `Access-Control-Allow-Origin: *`. Probada en el navegador contra la API de
+  producción real: los 6 endpoints devolvieron `200 OK` con datos reales.
+
+**Intervención humana:** Andy pidió explícitamente que la presentación y el resto de detalles de
+documentación queden para el final; el agente respetó ese orden y solo avanzó con el módulo de
+API y el diagnóstico de la rúbrica.
+
+---
+
 ## 4. Evidencia visual
 
 Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:
