@@ -1,0 +1,41 @@
+sequenceDiagram
+    actor Op as Operador
+    participant Ctrl as EnergyGenerationController
+    participant Req as StoreEnergyGenerationRequest
+    participant Svc as EnergyGenerationService
+    participant CO2 as CarbonOffsetService
+    participant Alert as AlertEvaluationService
+    participant DB as Base de Datos (MySQL)
+
+    Op->>Ctrl: POST /granjas/{id}/generaciones (periodo, kWh esperado, kWh real)
+    Ctrl->>Req: Validar solicitud
+    Req-->>Req: Reglas: granja existe, periodo YYYY-MM, kWh >= 0
+    alt Datos invalidos
+        Req-->>Op: 422 Errores de validacion por campo
+    else Datos validos
+        Req-->>Ctrl: Datos validados
+        Ctrl->>Svc: store(granja, periodo, estimado, real)
+        Svc->>DB: Verificar unicidad (solar_farm_id, period)
+        alt Periodo ya registrado
+            DB-->>Svc: Registro duplicado encontrado
+            Svc-->>Ctrl: Excepcion de negocio
+            Ctrl-->>Op: 422 "Periodo ya registrado para esta granja"
+        else Periodo disponible
+            DB-->>Svc: Sin duplicado
+            Svc->>CO2: calcular(real_kwh)
+            CO2-->>Svc: co2_kg = real_kwh * 0.40
+            Svc->>DB: INSERT energy_generations (con co2_kg)
+            DB-->>Svc: Registro creado
+            Svc->>Alert: evaluar(estimado, real)
+            Alert->>DB: lockForUpdate() sobre la granja
+            Alert-->>Alert: desviacion = (estimado - real) / estimado
+            alt Desviacion >= 20%
+                Alert->>DB: INSERT generation_alerts (status: active)
+                Alert-->>Svc: Alerta generada
+            else Desviacion < 20%
+                Alert-->>Svc: Sin alerta
+            end
+            Svc-->>Ctrl: Generacion registrada (con o sin alerta)
+            Ctrl-->>Op: 201 Creado + resumen (kWh, CO2, alerta si aplica)
+        end
+    end

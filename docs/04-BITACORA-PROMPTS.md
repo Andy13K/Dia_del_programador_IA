@@ -1340,6 +1340,24 @@ API y el diagnóstico de la rúbrica.
 
 ---
 
+### [13:30] Claude Code (Andy) — Doce casos de uso narrados, tres diagramas UML adicionales y exportación a .docx con tipografía institucional UMG
+
+**Objetivo:** aplicar al ERS el estándar tipográfico de la guía de formato de documentos académicos de UMG Puerto Barrios (Arial 12pt, justificado, interlineado 1.5, sangría por nivel de título con tab-stop) conservando la numeración decimal propia del documento en vez del esquema I./A./1. de la guía; expandir los doce casos de uso a narrativa completa (flujo normal, alternos, postcondiciones) grounded en la implementación real; añadir tres diagramas de casos de uso (en vez de uno solo saturado), un diagrama de secuencia y uno de actividades; y entregar el resultado en formato `.docx`.
+
+1. **Doce casos de uso con narrativa completa:** cada CU-01 a CU-12 se documentó con tabla de Módulo/Requerimientos relacionados/Actor(es)/Precondiciones, flujo normal numerado y postcondiciones, citando literalmente las clases reales del código (`EnergyGenerationService::store()`, `AlertEvaluationService`, `lockForUpdate()`, `CarbonOffsetService`, `ForecastService`, `AuthenticateMcpKey`, etc.), agrupados en tres diagramas UML por afinidad de actor en vez de un único diagrama de 12 casos de uso.
+2. **Dos diagramas nuevos:** un diagrama de secuencia (registro de generación → cálculo de CO₂ → evaluación de alerta, con sus ramas `alt` de validación/duplicado/umbral) y un diagrama de actividades (ciclo de vida completo de una alerta de desviación desde el registro hasta la resolución humana), ambos definidos en Mermaid y renderizados con `@mermaid-js/mermaid-cli`.
+3. **Generador de `.docx` a medida (`docs/export/build-ers-docx.js`):** script Node con la librería `docx`, instalada en una carpeta de trabajo separada (no en el proyecto Laravel), que parsea el Markdown del ERS y produce un documento de 3 secciones (carátula sin numeración, índice con `TableOfContents` automático de Word, cuerpo con número de página) replicando la tipografía de la guía UMG (Arial 12, justificado, interlineado 1.5, sangría/hanging/tab-stop por nivel de título) pero conservando la numeración decimal del documento en lugar de I./A./1.
+4. **Verificación real, no solo "compila":** el `.docx` generado se abrió y exportó a PDF mediante automatización COM de Microsoft Word (actualizando los campos del índice) para confirmar visualmente que el documento no estaba corrupto, que el índice automático resuelve números de página reales, que las tablas, el código en monoespaciado y las imágenes se ven correctamente, y se corrigieron dos defectos de paginación encontrados en esa verificación (filas de tabla partidas entre páginas, imágenes de diagramas cortadas en el salto de página) antes de entregarlo.
+
+**Prompt clave:**
+> "necesito que agarres este formato, pero solamente [aplica] el nivel de los títulos [...] pero siempre conserva la estructura actual de la numeración de uno uno punto uno [...] necesito que cada caso de uso tenga su narrativa bien detallada de cómo funciona en base a los requerimientos y cómo está hecho el sistema [...] solamente déjame tres diagramas de caso de uso [...] agrega un diagrama e r [...] y también otros dos diagramas, como de secuencia y de actividades [...] dámelo de formato docx."
+
+**Resultado:** ERS de 67 páginas en Word con doce casos de uso narrados, tres diagramas de casos de uso, un diagrama de secuencia, un diagrama de actividades y el diagrama entidad-relación, con tipografía y numeración exactamente como se pidió, verificado visualmente en Word/PDF antes de entregarlo.
+
+**Intervención humana:** Andy proporcionó su propia guía de formato de documentos de otra materia (Seminario de Tecnologías de Información) y especificó con precisión qué tomar de ella (tipografía) y qué no (el esquema de numeración I./A./1., que debía conservarse como estaba).
+
+---
+
 ## 4. Evidencia visual
 
 Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:

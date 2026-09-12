@@ -20,7 +20,7 @@
 | Versión | Fecha | Autor | Descripción del cambio |
 |---|---|---|---|
 | 1.0 | 11/09/2026 | Andy Aquino & Carlos | Versión inicial, congelada en la Hora 1, basada en el pliego del reto nacional de generación solar. |
-| 2.0 | 12/09/2026 | Andy Aquino & Carlos (con asistencia de IA — ver `04-BITACORA-PROMPTS.md`) | Documento post-desarrollo: carátula con identidad visual del sistema, sección de Objetivos dedicada, interfaces externas, requerimientos ampliados con actor/entrada/proceso/salida/prioridad, 12 RNF, sección de Atributos de Calidad (ISO/IEC 25010), matriz de trazabilidad con casos de uso, casos de uso principales, diagrama de casos de uso y diagrama entidad-relación, checklist final del documento. |
+| 2.0 | 12/09/2026 | Andy Aquino & Carlos (con asistencia de IA — ver `04-BITACORA-PROMPTS.md`) | Documento post-desarrollo: carátula con identidad visual del sistema, sección de Objetivos dedicada, interfaces externas, requerimientos ampliados con actor/entrada/proceso/salida/prioridad, 12 RNF, sección de Atributos de Calidad (ISO/IEC 25010), matriz de trazabilidad con casos de uso, doce casos de uso con narrativa completa (flujo normal, alternos y postcondiciones) agrupados en tres diagramas UML, diagrama entidad-relación, diagrama de secuencia y diagrama de actividades, checklist final del documento. |
 
 ---
 
@@ -48,8 +48,9 @@
 6. [Apéndices](#6-apéndices)
     - [6.1 Matriz de Trazabilidad de Requerimientos](#61-matriz-de-trazabilidad-de-requerimientos)
     - [6.2 Casos de Uso Principales](#62-casos-de-uso-principales)
-    - [6.3 Modelo de Datos](#63-modelo-de-datos)
-    - [6.4 Lista de Verificación (Checklist ERS)](#64-lista-de-verificación-checklist-ers)
+    - [6.3 Diagramas de Comportamiento Adicionales (Secuencia y Actividades)](#63-diagramas-de-comportamiento-adicionales)
+    - [6.4 Modelo de Datos](#64-modelo-de-datos)
+    - [6.5 Lista de Verificación (Checklist ERS)](#65-lista-de-verificación-checklist-ers)
 7. [Firma de Aprobación](#7-firma-de-aprobación)
 
 ---
@@ -135,7 +136,7 @@ CNEE. (2023). *Factor de emisión del Sistema Nacional Interconectado de Guatema
 
 ### 1.6 Resumen del documento
 
-El documento se organiza en siete secciones: la Sección 1 (Introducción) presenta propósito, objetivos general y específicos, alcance, glosario y referencias; la Sección 2 (Descripción General) describe la perspectiva del producto, sus funciones, los tipos de usuario y las restricciones/supuestos; la Sección 3 (Requerimientos Específicos) constituye el núcleo técnico con las interfaces externas, los 19 requerimientos funcionales (17 congelados en la Hora 1 más 2 de valor añadido documentados con honestidad) y los 12 requerimientos no funcionales; la Sección 4 (Restricciones de Diseño y Cumplimiento) enumera los estándares aplicables y las restricciones tecnológicas y legales; la Sección 5 (Atributos de Calidad) resume el cumplimiento conforme a ISO/IEC 25010; y la Sección 6 (Apéndices) reúne la matriz de trazabilidad, los casos de uso principales, el modelo de datos con su diagrama entidad-relación y la lista de verificación final del documento.
+El documento se organiza en siete secciones: la Sección 1 (Introducción) presenta propósito, objetivos general y específicos, alcance, glosario y referencias; la Sección 2 (Descripción General) describe la perspectiva del producto, sus funciones, los tipos de usuario y las restricciones/supuestos; la Sección 3 (Requerimientos Específicos) constituye el núcleo técnico con las interfaces externas, los 19 requerimientos funcionales (17 congelados en la Hora 1 más 2 de valor añadido documentados con honestidad) y los 12 requerimientos no funcionales; la Sección 4 (Restricciones de Diseño y Cumplimiento) enumera los estándares aplicables y las restricciones tecnológicas y legales; la Sección 5 (Atributos de Calidad) resume el cumplimiento conforme a ISO/IEC 25010; y la Sección 6 (Apéndices) reúne la matriz de trazabilidad, los doce casos de uso principales con su narrativa completa agrupados en tres diagramas UML, un diagrama de secuencia y uno de actividades sobre el flujo de registro y alertas, el modelo de datos con su diagrama entidad-relación, y la lista de verificación final del documento.
 
 El desarrollo de este documento parte, como se detalla en el §1.1, de la fragmentación operativa observada en el registro de generación solar departamental en Guatemala. Frente a esa realidad, K'in Solar Guatemala centraliza en una única plataforma el registro de infraestructura, el cómputo ambiental normativo, la detección de anomalías y la proyección estadística de generación futura, exponiéndolo todo tanto a usuarios humanos como a sistemas y agentes de inteligencia artificial externos.
 
@@ -509,24 +510,240 @@ Los apéndices reúnen la evidencia de trazabilidad y modelado formal del sistem
 
 ### 6.2 Casos de Uso Principales
 
-Por alcance del proyecto, la especificación se limita a los dos diagramas más representativos del comportamiento y la estructura del sistema — **casos de uso** y **entidad-relación** — con narrativa breve por cada caso de uso agrupado, en lugar de la plantilla extendida de precondición/postcondición por cada uno de los 19 requerimientos.
+Esta sección documenta los doce casos de uso principales del sistema con su narrativa completa: módulo, requerimientos relacionados, actores, precondiciones, flujo normal paso a paso, flujos alternos o de excepción y postcondiciones. La narrativa de cada caso de uso describe fielmente cómo está implementado en el repositorio (controlador, `FormRequest` y servicio de dominio involucrados), de forma que sirva tanto como especificación de comportamiento como guía de lectura del código fuente. Para mantener el diagrama legible, los doce casos de uso se agrupan en tres diagramas UML por afinidad de actor y módulo, en lugar de un único diagrama saturado.
 
-![Diagrama de Casos de Uso — K'in Solar Guatemala](diagramas/diagrama-casos-de-uso.svg)
+#### Diagrama de Casos de Uso 1 — Gestión de Acceso y Activos (CU-01 a CU-03)
 
-- **CU-01 — Autenticarse y administrar roles.** Todo usuario inicia sesión con correo y contraseña; el administrador además crea, edita y revoca cuentas y roles (`admin`/`operador`/`visualizador`), con protección contra autobloqueo (no puede revocarse su propio rol de administrador ni eliminar su propia cuenta).
-- **CU-02 — Administrar catálogo de paneles y granjas.** El administrador y el operador gestionan el catálogo de paneles solares y el registro de granjas con su ubicación geográfica y familias beneficiadas, dentro de los 22 departamentos oficiales.
-- **CU-03 — Asociar paneles a una granja y calcular kW.** El operador asigna modelos de panel y cantidades a una granja; el sistema recalcula automáticamente la capacidad instalada total, dato que alimenta la proyección de generación (CU-10).
-- **CU-04 — Registrar generación real / esperada.** El operador (o el agente de IA vía CU-12) carga la generación de un período; el sistema calcula el CO₂ evitado (CU-05) y evalúa automáticamente si corresponde una alerta (CU-09).
-- **CU-05 — Calcular CO₂ evitado automáticamente.** Proceso transversal e invariable del sistema: aplica el factor de 0.40 kg CO₂/kWh sobre cada registro de generación real.
-- **CU-06 — Consultar dashboard nacional.** Cualquier usuario autenticado visualiza los seis indicadores clave y el ranking departamental en tiempo real.
-- **CU-07 — Explorar mapa interactivo.** El visualizador navega el mapa de Guatemala, filtra por departamento y consulta el detalle emergente de cada granja.
-- **CU-08 — Generar reportes departamentales.** El visualizador o administrador genera un reporte consolidado por departamento, exportable a PDF, Excel o CSV.
-- **CU-09 — Gestionar alertas de desviación.** El sistema genera alertas automáticas ante un déficit ≥ 20 %; el administrador u operador las resuelve dejando una justificación técnica trazada.
-- **CU-10 — Consultar proyección de generación.** El visualizador consulta la proyección SMA-SF de una granja, con su metodología expuesta y el error frente al dato real cuando existe.
-- **CU-11 — Consumir API REST v1.** Un sistema externo o el agente de IA consulta estadísticas, departamentos, granjas, generación y alertas mediante la API pública documentada.
-- **CU-12 — Registrar medición vía servidor MCP.** Un agente de IA externo, mediante lenguaje natural, invoca el servidor MCP propio para registrar una medición de generación, que internamente reutiliza el mismo flujo de CU-04 y queda trazada a un usuario de sistema dedicado.
+![Diagrama de Casos de Uso 1 — Gestión de Acceso y Activos](diagramas/uc-01-acceso-activos.png)
 
-### 6.3 Modelo de Datos
+##### CU-01 — Autenticarse y administrar roles
+
+| Campo | Detalle |
+|---|---|
+| **Módulo** | I — Gestión de Acceso y Seguridad |
+| **Requerimientos relacionados** | RF-17 |
+| **Actor primario** | Cualquier usuario registrado (`admin`, `operador`, `visualizador`) |
+| **Actor secundario** | Administrador (gestión de cuentas) |
+| **Precondiciones** | El usuario posee una cuenta previamente creada en la tabla `users`, con contraseña almacenada mediante hash bcrypt. |
+
+**Flujo normal:**
+1. El usuario accede al formulario de inicio de sesión (`AuthController`) e ingresa correo y contraseña.
+2. El sistema valida las credenciales contra la base de datos mediante el guard de autenticación de Laravel.
+3. Si las credenciales son correctas, el sistema regenera el identificador de sesión (`session()->regenerate()`) y redirige al usuario al panel correspondiente a su rol.
+4. Para tareas de administración de cuentas, el administrador accede a `UserController` (rutas protegidas con `Gate::authorize('manage-users')`), donde puede crear, editar el rol o revocar el acceso de otros usuarios mediante `StoreUserRequest` / `UpdateUserRequest`.
+
+**Flujos alternos / excepción:**
+- Si las credenciales son inválidas, el sistema responde con un mensaje genérico ("Credenciales inválidas") sin indicar cuál campo falló, evitando enumeración de usuarios (OWASP A07).
+- Si el administrador intenta revocar su propio rol de administrador o eliminar su propia cuenta, `UserController` rechaza la operación (protección de autobloqueo).
+
+**Postcondiciones (éxito):** el usuario queda autenticado con una sesión activa y accede únicamente a los módulos autorizados para su rol.
+**Postcondiciones (fracaso):** no se crea ninguna sesión; el intento queda sujeto al límite de tasa de autenticación (5 intentos/minuto).
+
+##### CU-02 — Administrar catálogo de paneles y granjas
+
+| Campo | Detalle |
+|---|---|
+| **Módulo** | II — Infraestructura y Activos |
+| **Requerimientos relacionados** | RF-01, RF-02, RF-03, RF-04, RF-07 |
+| **Actor primario** | Administrador · Operador |
+| **Precondiciones** | Los 22 departamentos de Guatemala están precargados por el `DatabaseSeeder`. |
+
+**Flujo normal:**
+1. El usuario accede al listado de paneles (`SolarPanelController@index`) o de granjas (`SolarFarmController@index`).
+2. Para crear un panel, envía marca, modelo, potencia nominal en kW y estado; `StorePanelRequest` valida que la potencia sea numérica y positiva antes de persistir.
+3. Para crear una granja, envía nombre, departamento, coordenadas y familias beneficiadas; `SolarFarmService` valida que las coordenadas estén dentro de los límites geográficos de Guatemala y persiste el registro con `created_by` igual al usuario autenticado.
+4. Las ediciones posteriores reutilizan las mismas validaciones; la desactivación usa `SoftDeletes` en lugar de un `DELETE` físico.
+
+**Flujos alternos / excepción:** si la potencia nominal es negativa o cero, o las coordenadas caen fuera del rango válido, el `FormRequest` correspondiente rechaza la solicitud con errores por campo antes de que la lógica de negocio se ejecute.
+
+**Postcondiciones (éxito):** el catálogo de paneles o el listado de granjas queda actualizado y disponible inmediatamente en el dashboard y el mapa.
+**Postcondiciones (fracaso):** ningún registro parcial o inconsistente se persiste; la base de datos permanece en su estado anterior.
+
+##### CU-03 — Asociar paneles a una granja y calcular capacidad instalada
+
+| Campo | Detalle |
+|---|---|
+| **Módulo** | II — Infraestructura y Activos |
+| **Requerimientos relacionados** | RF-05, RF-06 |
+| **Actor primario** | Operador |
+| **Precondiciones** | Existen al menos un modelo de panel activo y una granja registrada. |
+
+**Flujo normal:**
+1. El operador selecciona una granja y añade uno o más modelos de panel con su cantidad de unidades instaladas, persistidos en la tabla pivote `farm_panel`.
+2. El sistema recalcula la capacidad instalada total mediante la fórmula $\text{Capacidad (kW)} = \sum(\text{cantidad}_i \times \text{potencia nominal}_i)$ cada vez que se consulta la granja, sin necesidad de un campo desnormalizado.
+3. El valor recalculado se refleja de inmediato en la ficha de la granja, el dashboard y, posteriormente, alimenta el cálculo de respaldo de la proyección de generación (CU-10, fórmula de *fallback* $\text{Capacidad} \times 140\text{ HSP}$).
+
+**Flujos alternos / excepción:** si se intenta asociar una cantidad no numérica o negativa, la validación del formulario la rechaza antes de escribir en `farm_panel`.
+
+**Postcondiciones (éxito):** la capacidad instalada de la granja refleja exactamente la suma ponderada de sus paneles asociados.
+
+---
+
+#### Diagrama de Casos de Uso 2 — Mediciones, Ambiente, Alertas y Proyección (CU-04, CU-05, CU-09, CU-10)
+
+![Diagrama de Casos de Uso 2 — Mediciones, Ambiente, Alertas y Proyección](diagramas/uc-02-mediciones-monitoreo.png)
+
+##### CU-04 — Registrar generación real y esperada
+
+| Campo | Detalle |
+|---|---|
+| **Módulo** | III — Mediciones y Ambiental |
+| **Requerimientos relacionados** | RF-08, RF-09 |
+| **Actor primario** | Operador · **Actor secundario:** Agente de IA externo (vía CU-12) |
+| **Precondiciones** | La granja destino existe y está activa. |
+
+**Flujo normal:**
+1. El operador (o el agente de IA a través del servidor MCP) envía granja, período en formato `YYYY-MM`, kWh estimados y kWh reales a `EnergyGenerationController`.
+2. `StoreEnergyGenerationRequest` valida que ambos valores sean numéricos y no negativos.
+3. `EnergyGenerationService::store()` verifica la restricción única `(solar_farm_id, period)` antes de insertar; si el período ya existe para esa granja, la operación se rechaza.
+4. En una misma transacción, el servicio invoca a `CarbonOffsetService` (CU-05) para calcular y persistir el CO₂ evitado, y a `AlertEvaluationService` (CU-09) para evaluar si corresponde generar una alerta. El diagrama de secuencia de la Sección 6.3 detalla este flujo completo paso a paso.
+
+**Flujos alternos / excepción:** si el período ya fue registrado para la misma granja, el sistema responde con un error 422 explícito sin duplicar el registro.
+
+**Postcondiciones (éxito):** existe un nuevo registro en `energy_generations` con su CO₂ evitado ya calculado, y el dashboard, mapa y reportes reflejan el dato inmediatamente.
+
+##### CU-05 — Calcular CO₂ evitado automáticamente
+
+| Campo | Detalle |
+|---|---|
+| **Módulo** | III — Ambiental |
+| **Requerimientos relacionados** | RF-10 |
+| **Actor primario** | Sistema (automático, invocado siempre dentro de CU-04) |
+| **Precondiciones** | Existe un valor de kWh real a procesar. |
+
+**Flujo normal:** `CarbonOffsetService` aplica el factor normativo fijo $0.40\text{ kg CO}_2/\text{kWh}$ sobre el valor real de generación y devuelve el resultado en kilogramos, que `EnergyGenerationService` persiste junto con el registro de generación; la conversión a toneladas ($\text{kg}/1000$) se calcula en la capa de presentación para su despliegue en dashboard y reportes.
+
+**Postcondiciones (éxito):** para 10,000 kWh reales, el sistema produce exactamente 4,000.00 kg (4.00 toneladas) de CO₂ evitado, de forma determinista y auditable.
+
+##### CU-09 — Gestionar alertas de desviación
+
+| Campo | Detalle |
+|---|---|
+| **Módulo** | VI — Monitoreo y Alertas |
+| **Requerimientos relacionados** | RF-14 |
+| **Actor primario** | Sistema (detección automática) · **Actor secundario:** Administrador / Operador (resolución) |
+| **Precondiciones** | Se acaba de registrar una medición de generación (CU-04) con su valor esperado. |
+
+**Flujo normal:**
+1. Inmediatamente después de guardar la generación, `AlertEvaluationService` bloquea la fila de la granja con `lockForUpdate()` para evitar condiciones de carrera si dos mediciones llegan casi simultáneamente.
+2. Calcula la desviación porcentual: $\text{desviación} = (\text{esperada} - \text{real}) / \text{esperada}$.
+3. Si la desviación es mayor o igual a 20 %, crea un registro en `generation_alerts` con estado `active`, vinculado a la granja y a la medición que la originó.
+4. La alerta aparece en la bandeja de alertas y en el dashboard; un administrador u operador la revisa y, al resolverla, debe ingresar una nota de justificación técnica (`resolution_notes`), quedando registrados `resolved_by` y `resolved_at`.
+
+**Flujos alternos / excepción:** si la desviación es menor a 20 %, no se crea ninguna alerta y el flujo de CU-04 continúa normalmente.
+
+**Postcondiciones (éxito):** toda desviación crítica queda visible y trazable hasta su resolución, con evidencia inmutable en `audit_logs`.
+
+##### CU-10 — Consultar proyección de generación
+
+| Campo | Detalle |
+|---|---|
+| **Módulo** | VII — Proyección |
+| **Requerimientos relacionados** | RF-15 |
+| **Actor primario** | Visualizador · Administrador |
+| **Precondiciones** | La granja tiene capacidad instalada calculada (CU-03); idealmente cuenta con histórico de mediciones. |
+
+**Flujo normal:**
+1. El usuario accede a la pantalla `/forecasts` de una granja.
+2. `ForecastService` intenta aplicar el modelo SMA-SF: $\text{Base} = 0.50\,M_{t-1} + 0.30\,M_{t-2} + 0.20\,M_{t-3}$, ajustado por el factor estacional (1.20 en época seca, 0.88 en lluviosa).
+3. Si la granja no cuenta con al menos 3 mediciones históricas, el servicio aplica el cálculo de respaldo $\text{Capacidad (kW)} \times 140\text{ HSP}$.
+4. El sistema muestra el valor proyectado, el método aplicado y, cuando ya existe el dato real del período proyectado, el error de la proyección frente a ese dato.
+
+**Postcondiciones (éxito):** el usuario obtiene una proyección con su metodología expuesta, nunca una "caja negra".
+
+---
+
+#### Diagrama de Casos de Uso 3 — Consulta, Reportes e Integración Externa (CU-06, CU-07, CU-08, CU-11, CU-12)
+
+![Diagrama de Casos de Uso 3 — Consulta, Reportes e Integración Externa](diagramas/uc-03-consulta-integracion.png)
+
+##### CU-06 — Consultar dashboard nacional
+
+| Campo | Detalle |
+|---|---|
+| **Módulo** | IV — Analítica |
+| **Requerimientos relacionados** | RF-11 |
+| **Actor primario** | Visualizador · Administrador · Operador |
+
+**Flujo normal:** el usuario autenticado accede al dashboard, donde el sistema consolida en tiempo real seis indicadores (granjas, paneles, capacidad instalada, generación acumulada, familias beneficiadas y CO₂ evitado) y un ranking departamental con comparativa real vs. esperada, mediante consultas agregadas de Eloquent sin problema N+1.
+
+**Postcondiciones (éxito):** los indicadores mostrados coinciden exactamente con el estado actual de la base de datos.
+
+##### CU-07 — Explorar mapa interactivo
+
+| Campo | Detalle |
+|---|---|
+| **Módulo** | V — Georreferenciación |
+| **Requerimientos relacionados** | RF-13 |
+| **Actor primario** | Visualizador · Administrador · Operador |
+
+**Flujo normal:** el usuario abre `/mapa`, donde Leaflet.js renderiza un marcador por cada granja activa sobre mosaicos de OpenStreetMap; al hacer clic en un marcador se despliega un popup con nombre, departamento, capacidad y familias beneficiadas, y el usuario puede filtrar el conjunto de marcadores por departamento sin recargar la página.
+
+**Postcondiciones (éxito):** el usuario localiza visualmente cualquier granja activa del país en menos de tres segundos desde el inicio de sesión.
+
+##### CU-08 — Generar reportes departamentales
+
+| Campo | Detalle |
+|---|---|
+| **Módulo** | IV — Reportes |
+| **Requerimientos relacionados** | RF-12 |
+| **Actor primario** | Visualizador · Administrador |
+
+**Flujo normal:**
+1. El usuario define filtros (tipo de reporte, rango de fechas, departamento) en `ReportController@index`, validados por `ReportFilterRequest`.
+2. `ReportService::getReportData()` consolida granjas, paneles, capacidad, generación, familias y CO₂ por departamento.
+3. El usuario exporta el resultado a la plantilla imprimible (`ReportController@printPdf`), a Excel (`exportExcel`, formato `.xls` HTML con encabezado y logo institucional) o a CSV con BOM UTF-8 (`exportCsv`).
+
+**Postcondiciones (éxito):** el archivo exportado refleja los mismos totales que la vista interactiva, con los 22 departamentos representados.
+
+##### CU-11 — Consumir API REST v1
+
+| Campo | Detalle |
+|---|---|
+| **Módulo** | VIII — Integración Externa |
+| **Requerimientos relacionados** | RF-16 |
+| **Actor primario** | Sistema externo (municipalidad, ONG, MINEM) · **Actor secundario:** Agente de IA externo |
+
+**Flujo normal:** el sistema externo realiza una petición `GET` a un endpoint de `/api/v1/*` (`statistics`, `departments`, `farms`, `generations`, `alerts`); el controlador correspondiente en `app/Http/Controllers/Api/` devuelve una respuesta JSON normalizada con cabecera `Access-Control-Allow-Origin: *`, sin requerir autenticación por tratarse de datos públicos de solo lectura. El cliente de referencia `public/api-demo.html` demuestra este flujo desde un origen externo real.
+
+**Postcondiciones (éxito):** la respuesta HTTP 200 llega en formato JSON documentado, consumible por cualquier origen.
+
+##### CU-12 — Registrar medición vía servidor MCP
+
+| Campo | Detalle |
+|---|---|
+| **Módulo** | VIII — Integración Externa / Innovación |
+| **Requerimientos relacionados** | RF-18 |
+| **Actor primario** | Agente de IA externo (p. ej. Claude Desktop) |
+| **Precondiciones** | El agente de IA posee la clave `X-MCP-Key` entregada de forma segura fuera del repositorio. |
+
+**Flujo normal:**
+1. El usuario del agente de IA formula una instrucción en lenguaje natural (por ejemplo, "Registra una medición de 45,000 kWh para la Granja Villa Nueva").
+2. El agente invoca la herramienta `kin_solar_register_generation` del servidor `mcp-server/index.js` (`@modelcontextprotocol/sdk`).
+3. El servidor MCP realiza una petición `POST /api/v1/generations`, autenticada por el middleware `AuthenticateMcpKey` mediante comparación segura con `hash_equals()`.
+4. El endpoint reutiliza internamente el mismo `EnergyGenerationService::store()` de CU-04 — no existe una segunda implementación de la regla de negocio — y el evento se atribuye en `audit_logs` al usuario de sistema `mcp-agent@kinsolar.internal`.
+
+**Flujos alternos / excepción:** si la clave `X-MCP-Key` es inválida o falta, `AuthenticateMcpKey` rechaza la petición con `401` antes de invocar cualquier lógica de negocio (falla cerrada).
+
+**Postcondiciones (éxito):** la medición registrada por el agente de IA es indistinguible, en la base de datos, de una registrada manualmente por un operador, salvo por el usuario de auditoría al que queda atribuida.
+
+### 6.3 Diagramas de Comportamiento Adicionales
+
+Además de los casos de uso, se documentan dos diagramas de comportamiento adicionales sobre el flujo más representativo del sistema — el registro de una medición de generación y la evaluación automática de alertas (CU-04, CU-05 y CU-09) — por ser el proceso donde interactúan más servicios de dominio y donde el rigor matemático y la seguridad ante condiciones de carrera son más críticos.
+
+#### Diagrama de Secuencia — Registro de Generación, Cálculo de CO₂ y Evaluación de Alerta
+
+![Diagrama de Secuencia — Registro de Generación](diagramas/secuencia-registro-generacion.png)
+
+El diagrama anterior traza la interacción exacta entre el operador, el controlador HTTP, la validación de entrada, el servicio de dominio y sus colaboradores (`CarbonOffsetService`, `AlertEvaluationService`) y la base de datos. Refleja fielmente el código: la validación ocurre antes de cualquier escritura, la verificación de unicidad del período precede al cálculo ambiental, y el bloqueo pesimista (`lockForUpdate`) se aplica únicamente durante la evaluación de la alerta, no durante todo el ciclo de la petición, para minimizar el tiempo de bloqueo de fila.
+
+#### Diagrama de Actividades — Ciclo de Vida de una Alerta de Desviación
+
+![Diagrama de Actividades — Ciclo de una Alerta](diagramas/actividad-ciclo-alerta.png)
+
+Este diagrama complementa al de secuencia mostrando el proceso desde la perspectiva del negocio, no de las clases: desde que el operador registra una medición hasta que una eventual alerta queda resuelta con su justificación auditada. Ilustra los dos caminos posibles (desviación por debajo o por encima del umbral del 20 %) y el ciclo de espera de una alerta activa hasta su resolución humana explícita — el sistema nunca resuelve una alerta automáticamente.
+
+### 6.4 Modelo de Datos
 
 El sistema persiste su información en nueve entidades relacionales (además de las tablas de infraestructura de Laravel: `sessions`, `password_reset_tokens`, `cache`, `jobs`). El siguiente diagrama entidad-relación refleja fielmente las migraciones actuales del repositorio (`database/migrations/`):
 
@@ -544,7 +761,7 @@ El sistema persiste su información en nueve entidades relacionales (además de 
 - **`users`** — cuentas del sistema con rol (`admin`/`operador`/`visualizador`), incluyendo el usuario de sistema del servidor MCP.
 - **`audit_logs`** — bitácora inmutable de acciones sensibles, con usuario, acción, modelo afectado, IP, *user agent* y carga útil en JSON.
 
-### 6.4 Lista de Verificación (Checklist ERS)
+### 6.5 Lista de Verificación (Checklist ERS)
 
 | Criterio de calidad del documento | Estado |
 |---|---|
@@ -554,7 +771,7 @@ El sistema persiste su información en nueve entidades relacionales (además de 
 | Las interfaces externas del sistema están documentadas (§3.1) | ✅ Cumplido |
 | Los requerimientos no funcionales tienen métricas cuantificables | ✅ Cumplido |
 | La matriz de trazabilidad está completa (RF → CU → Módulo → Prioridad) | ✅ Cumplido |
-| El diagrama de casos de uso y el diagrama entidad-relación siguen notación UML | ✅ Cumplido |
+| Los diagramas de casos de uso, entidad-relación, secuencia y actividades siguen notación UML | ✅ Cumplido |
 | Las referencias bibliográficas siguen formato APA 7.ª edición | ✅ Cumplido |
 | El glosario cubre los términos técnicos usados en el documento | ✅ Cumplido |
 | Los atributos de calidad se documentan conforme a ISO/IEC 25010 | ✅ Cumplido |
