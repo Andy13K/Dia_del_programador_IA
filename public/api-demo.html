@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cliente Externo de Prueba — API K'in Solar</title>
+<style>
+    :root {
+        --bg: #f4f6f9;
+        --surface: #ffffff;
+        --line: #e2e8f0;
+        --ink: #1a2338;
+        --muted: #64748b;
+        --accent: #2563eb;
+        --accent-ink: #ffffff;
+        --ok: #059669;
+        --err: #dc2626;
+    }
+    * { box-sizing: border-box; }
+    body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        padding: 28px 20px 60px;
+    }
+    .wrap { max-width: 920px; margin: 0 auto; }
+    header {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 22px 26px;
+        margin-bottom: 20px;
+    }
+    header h1 { margin: 0 0 6px; font-size: 20px; }
+    header p { margin: 0; color: var(--muted); font-size: 13.5px; line-height: 1.6; }
+    .badge {
+        display: inline-block;
+        font-size: 10.5px;
+        font-weight: 700;
+        letter-spacing: .04em;
+        text-transform: uppercase;
+        background: #eef2ff;
+        color: #4338ca;
+        padding: 3px 9px;
+        border-radius: 999px;
+        margin-bottom: 10px;
+    }
+    .base-url {
+        display: flex;
+        gap: 8px;
+        margin-top: 14px;
+        flex-wrap: wrap;
+    }
+    .base-url input {
+        flex: 1;
+        min-width: 240px;
+        padding: 9px 12px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        font-size: 13px;
+        font-family: ui-monospace, Consolas, monospace;
+    }
+    .base-url button {
+        padding: 9px 16px;
+        border: none;
+        border-radius: 10px;
+        background: var(--ink);
+        color: #fff;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 14px;
+    }
+    .card {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .card h2 {
+        margin: 0;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .card .method {
+        font-size: 10px;
+        font-weight: 700;
+        background: #dbeafe;
+        color: var(--accent);
+        padding: 2px 7px;
+        border-radius: 6px;
+    }
+    .card .path {
+        font-family: ui-monospace, Consolas, monospace;
+        font-size: 11.5px;
+        color: var(--muted);
+        word-break: break-all;
+    }
+    .card button {
+        align-self: flex-start;
+        padding: 7px 14px;
+        border: 1px solid var(--accent);
+        background: var(--surface);
+        color: var(--accent);
+        border-radius: 8px;
+        font-size: 12.5px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+    .card button:hover { background: var(--accent); color: var(--accent-ink); }
+    .card button:disabled { opacity: .5; cursor: wait; }
+    .status { font-size: 11.5px; font-weight: 600; min-height: 16px; }
+    .status.ok { color: var(--ok); }
+    .status.err { color: var(--err); }
+    pre {
+        margin: 0;
+        background: #0f172a;
+        color: #e2e8f0;
+        padding: 12px;
+        border-radius: 10px;
+        font-size: 11px;
+        line-height: 1.55;
+        max-height: 220px;
+        overflow: auto;
+        white-space: pre-wrap;
+        word-break: break-word;
+        display: none;
+    }
+    pre.show { display: block; }
+    footer {
+        margin-top: 26px;
+        padding: 16px 20px;
+        background: #fffbeb;
+        border: 1px solid #fde68a;
+        border-radius: 12px;
+        font-size: 12.5px;
+        color: #78350f;
+        line-height: 1.7;
+    }
+    footer code { background: #fef3c7; padding: 1px 5px; border-radius: 4px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+    <header>
+        <span class="badge">Cliente independiente · no forma parte del sistema</span>
+        <h1>Prueba de consumo externo — API REST de K'in Solar Guatemala</h1>
+        <p>
+            Esta página es un archivo HTML autocontenido, sin backend propio y sin ninguna
+            dependencia del proyecto Laravel. Solo usa <code>fetch()</code> de JavaScript
+            para consultar la API pública en vivo, igual que lo haría cualquier sistema externo
+            del MINEM, una municipalidad o una ONG. Se puede abrir directamente como archivo
+            local (doble clic, sin servidor) y seguirá funcionando.
+        </p>
+        <div class="base-url">
+            <input id="baseUrl" type="text" value="https://kin-solar-guatemala.duckdns.org/api/v1" spellcheck="false">
+            <button onclick="testAll()">Probar todos los endpoints</button>
+        </div>
+    </header>
+
+    <div class="grid" id="grid"></div>
+
+    <footer>
+        <strong>Por qué esto es prueba real de consumo externo:</strong> el servidor responde con
+        la cabecera <code>Access-Control-Allow-Origin: *</code>, así que cualquier origen —
+        incluyendo <code>null</code> (un archivo abierto localmente) — puede leer la respuesta.
+        No se envía ninguna cookie de sesión ni token: la API es pública y de solo lectura.
+    </footer>
+
+</div>
+
+<script>
+const endpoints = [
+    { name: 'Estadísticas nacionales', method: 'GET', path: '/statistics' },
+    { name: 'Catálogo de departamentos', method: 'GET', path: '/departments' },
+    { name: 'Detalle de un departamento', method: 'GET', path: '/departments/1' },
+    { name: 'Listado de granjas solares', method: 'GET', path: '/farms' },
+    { name: 'Mediciones de generación', method: 'GET', path: '/generations?solar_farm_id=1' },
+    { name: 'Alertas activas', method: 'GET', path: '/alerts' },
+];
+
+const grid = document.getElementById('grid');
+
+endpoints.forEach((ep, i) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+        <h2><span class="method">${ep.method}</span> ${ep.name}</h2>
+        <div class="path">${ep.path}</div>
+        <button id="btn-${i}" onclick="callEndpoint(${i})">Consultar en vivo</button>
+        <div class="status" id="status-${i}"></div>
+        <pre id="out-${i}"></pre>
+    `;
+    grid.appendChild(card);
+});
+
+async function callEndpoint(i) {
+    const ep = endpoints[i];
+    const base = document.getElementById('baseUrl').value.replace(/\/$/, '');
+    const btn = document.getElementById(`btn-${i}`);
+    const status = document.getElementById(`status-${i}`);
+    const out = document.getElementById(`out-${i}`);
+
+    btn.disabled = true;
+    status.textContent = 'Consultando...';
+    status.className = 'status';
+    out.classList.remove('show');
+
+    const started = performance.now();
+    try {
+        const res = await fetch(base + ep.path, { method: ep.method });
+        const elapsed = Math.round(performance.now() - started);
+        const json = await res.json();
+
+        status.textContent = `HTTP ${res.status} · ${elapsed} ms · CORS: ${res.headers.get('access-control-allow-origin') || '(no visible desde JS, pero la respuesta llegó)'}`;
+        status.className = 'status ' + (res.ok ? 'ok' : 'err');
+
+        out.textContent = JSON.stringify(json, null, 2);
+        out.classList.add('show');
+    } catch (err) {
+        status.textContent = 'Error de red: ' + err.message;
+        status.className = 'status err';
+    } finally {
+        btn.disabled = false;
+    }
+}
+
+async function testAll() {
+    for (let i = 0; i < endpoints.length; i++) {
+        await callEndpoint(i);
+    }
+}
+</script>
+</body>
+</html>
