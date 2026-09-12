@@ -4,10 +4,15 @@
 <style>
     #guatemalaMap .leaflet-overlay-pane svg,
     #guatemalaMap .leaflet-container svg,
-    #guatemalaMap svg {
+    #guatemalaMap svg,
+    .leaflet-pane > svg {
         border: none !important;
         outline: none !important;
         box-shadow: none !important;
+    }
+    path.leaflet-interactive:focus,
+    path:focus {
+        outline: none !important;
     }
 </style>
 @endpush
@@ -162,7 +167,30 @@
     };
     L.control.layers(baseMaps, null, { position: 'topright' }).addTo(map);
 
-    // Capa de Contorno Departamental Dinámico (GeoJSON)
+    // 1. Contorno Nacional Permanente de la República de Guatemala (SIEMPRE visible para contraste)
+    let gtNationalLayer = null;
+
+    fetch('/data/guatemala.geojson')
+        .then(response => {
+            if (!response.ok) throw new Error('Error al cargar GeoJSON nacional');
+            return response.json();
+        })
+        .then(geoData => {
+            gtNationalLayer = L.geoJSON(geoData, {
+                style: {
+                    color: '#f59e0b',        // Amarillo ámbar solar continuo
+                    weight: 2.5,             // Trazo elegante y definido
+                    opacity: 0.90,           // Muy visible
+                    fillColor: '#fbbf24',    // Sombreado amarillo solar suave
+                    fillOpacity: 0.08,       // Contraste sutil y elegante contra países vecinos
+                    dashArray: ''            // Línea continua sin marco
+                },
+                interactive: false           // No interfiere con clics en departamentos ni pines
+            }).addTo(map);
+        })
+        .catch(err => console.warn('GeoJSON nacional no disponible:', err));
+
+    // 2. Capa de Contorno Departamental Dinámico (GeoJSON de los 22 departamentos)
     let departmentsGeoData = null;
     let selectedDepartmentLayer = null;
 
@@ -315,11 +343,11 @@
             if (deptFeature) {
                 selectedDepartmentLayer = L.geoJSON(deptFeature, {
                     style: {
-                        color: '#f59e0b',        // Borde dorado ámbar solar brillante
-                        weight: 3.5,             // Grosor nítido
-                        opacity: 0.95,
-                        fillColor: '#fbbf24',    // Relleno ámbar solar suave
-                        fillOpacity: 0.22,       // Sombreado elegante del territorio
+                        color: '#b45309',        // Borde dorado profundo / ámbar intenso para destacar
+                        weight: 4.0,             // Contorno nítido y prominente
+                        opacity: 1.0,            // Máxima opacidad
+                        fillColor: '#f59e0b',    // Relleno ámbar solar cálido
+                        fillOpacity: 0.30,       // Mayor contraste para el departamento activo
                         dashArray: ''            // Línea continua sin cuadros
                     }
                 }).addTo(map);

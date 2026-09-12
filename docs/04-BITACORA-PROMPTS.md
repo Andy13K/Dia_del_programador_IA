@@ -581,6 +581,23 @@ navegador antes de commitear).
 
 ---
 
+### [20:48] Antigravity (Andy) — Contorno Amarillo Nacional Permanente con Resalte Departamental — PR #14
+
+**Objetivo:** restituir el contorno soberano amarillo/ámbar de toda la República de Guatemala de forma permanente para mantener el contraste nítido con los países vecinos, y superponer sobre este el contorno dorado intenso al seleccionar cualquier departamento, garantizando cero cuadros o marcos rectangulares.
+
+**Prompt:**
+> Me gusta, pero quitaste el contorno de todo Guatemala. Yo quiero que el contorno amarillo que se ve en todo el país se siga manteniendo, y cuando ya vaya por departamento, ese contorno pasa a como está ahorita. El contorno que tienen los departamentos me gustaría que lo tuviera todo Guatemala siempre, para que haga un contraste.
+
+**Resultado:**
+- Capa base permanente `gtNationalLayer` con el polígono soberano nacional en amarillo ámbar continuo (`#f59e0b`, peso 2.5, relleno translúcido suave al 8%) que nunca desaparece, estableciendo el contraste visual de todo el territorio nacional contra los países limítrofes.
+- Capa dinámica departamental `selectedDepartmentLayer` con trazo dorado intenso (`#b45309`, peso 4.0, relleno al 30%) que se superpone al departamento activo al filtrar en el menú desplegable.
+- Regla CSS reforzada para anular cualquier borde o contorno en elementos SVG de Leaflet (`border: none !important`), eliminando cualquier cuadro no deseado.
+- Pruebas PHPUnit al 100% (19/19) y compilación de Vite completada.
+
+**Intervención humana:** Andy definió la jerarquía visual de dos capas: el país entero siempre con su contorno amarillo de contraste nacional, y el departamento activo resaltado con mayor intensidad al seleccionarlo.
+
+---
+
 ## 4. Evidencia visual
 
 Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:
