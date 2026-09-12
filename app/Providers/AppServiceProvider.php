@@ -11,7 +11,10 @@ use App\Policies\EnergyGenerationPolicy;
 use App\Policies\GenerationAlertPolicy;
 use App\Policies\SolarFarmPolicy;
 use App\Policies\SolarPanelPolicy;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
@@ -57,6 +60,17 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('manage-users', fn (User $user): bool => $user->hasRole('admin'));
         Gate::define('manage-departments', fn (User $user): bool => $user->hasRole('admin'));
         Gate::define('view-reports', fn (User $user): bool => $user->hasAnyRole(['admin', 'operador', 'visualizador']));
+
+        // "view-api" queda definida para uso futuro (p. ej. un nivel autenticado de la API),
+        // pero routes/api.php NO la invoca: RF-16 pide una API REST pública sin login. No es
+        // un control roto — es deliberado — pero si alguna vez se decide requerir sesión para
+        // /api/v1/*, este Gate ya está listo para usarse con ->middleware('can:view-api').
         Gate::define('view-api', fn (User $user): bool => $user->hasAnyRole(['admin', 'operador', 'visualizador']));
+
+        // OWASP A04: RF-16 pide una API REST pública (docs/06-CONTRATOS-HORA-1.md), así que
+        // routes/api.php no exige login — pero sin límite de peticiones quedaba abierta a
+        // scraping/DoS de bajo esfuerzo. `throttleApi()` en bootstrap/app.php activa este
+        // limitador con el nombre reservado "api" que Laravel busca en el grupo de middleware.
+        RateLimiter::for('api', fn (Request $request) => Limit::perMinute(60)->by($request->ip()));
     }
 }

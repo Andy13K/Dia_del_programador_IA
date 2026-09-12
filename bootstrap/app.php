@@ -17,6 +17,10 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->append(SecurityHeaders::class);
+
+        // OWASP A04: /api/v1/* (routes/api.php) no tenía ningún límite de peticiones —
+        // el limitador "api" se define en AppServiceProvider::boot().
+        $middleware->throttleApi();
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
