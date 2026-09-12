@@ -547,6 +547,22 @@ navegador antes de commitear).
 
 ---
 
+### [20:25] Antigravity (Andy) — Despliegue de Assets Compilados (Vite) y Fix HTTP para AWS EC2 — PR #12
+
+**Objetivo:** solucionar la carga sin estilos (CSS ausente y fallo de HTTPS) en la instancia pública de AWS EC2 (`http://3.238.198.77`), permitiendo que el servidor Nginx sirva los estilos compilados de Tailwind CSS v4 directamente desde `public/build`, y acondicionar `URL::forceScheme('https')` para operar limpiamente en entornos HTTP sin certificado SSL.
+
+**Prompt:**
+> MIRA COMO CARGA EN LINEA [Captura de pantalla mostrando la app en 3.238.198.77/dashboard sin estilos CSS y enlaces en bruto]
+
+**Resultado:**
+- Eliminación de `/public/build` de `.gitignore` e incorporación del bundle de producción (`app-*.css`, `app-*.js`, fuentes `Instrument Sans`, `manifest.json`) al repositorio.
+- Corrección en `AppServiceProvider.php` para que `URL::forceScheme('https')` sea condicional a `FORCE_HTTPS=true` o `request()->isSecure()`, evitando que una instancia en IP pública HTTP intente redirigir a un puerto 443 inexistente.
+- Verificación de compilación Vite (551 ms) y suite de pruebas PHPUnit intacta (19 tests, 121 aserciones pasando).
+
+**Intervención humana:** Andy identificó visualmente en el navegador que el servidor en AWS EC2 cargaba el HTML en bruto sin estilos CSS y compartió la captura de pantalla para diagnosticar y corregir el problema de raíz.
+
+---
+
 ## 4. Evidencia visual
 
 Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:
