@@ -934,6 +934,23 @@ API y el diagnóstico de la rúbrica.
 
 ---
 
+### [02:05] Antigravity (Andy) — Vinculación del Sistema a la Zona Horaria de Guatemala (America/Guatemala, UTC-6) y Localización en Español
+
+**Objetivo:** Configurar oficialmente en Laravel y en la base de datos la zona horaria `America/Guatemala` (CST / UTC-6) y los locales en español (`es`, `es_ES`), asegurando que todos los registros de auditoría, marcas temporales de mediciones, alertas y vistas operen con la hora exacta local guatemalteca.
+
+**Prompt del humano:**
+> OJO QUIERO QUE TODO EL SISTEMA ESTE VINCULADO A LA HORA DE GUATEMALA POR FAVOR DIME COMO CONFIGURO ESO
+
+**Resultado:**
+- `config/app.php`: `timezone` establecido en `env('APP_TIMEZONE', 'America/Guatemala')`, y locales `APP_LOCALE` / `APP_FALLBACK_LOCALE` en `es`.
+- `config/database.php`: conexiones `mysql` y `mariadb` configuradas con `'timezone' => env('DB_TIMEZONE', '-06:00')` para que las funciones de base de datos (`NOW()`, etc.) respeten la hora de Guatemala.
+- `.env.example` y `.env` actualizados con `APP_TIMEZONE=America/Guatemala` y `APP_LOCALE=es`.
+- 39 tests de PHPUnit ejecutados y pasando al 100%.
+
+**Intervención humana:** Andy solicitó explícitamente vincular todo el sistema a la hora de Guatemala para garantizar consistencia horaria en las alertas, mediciones y auditorías ante el jurado calificador.
+
+---
+
 
 ## 4. Evidencia visual
 
