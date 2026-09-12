@@ -158,7 +158,7 @@ button { cursor:pointer; }
     container-type:inline-size; padding:44px 56px; display:flex; flex-direction:column; justify-content:space-between;
     background:radial-gradient(ellipse at 45% 45%,#b0781822,transparent 60%),#0b0f17; color:var(--kin-ink); position:relative; overflow:hidden;
 }
-.kin-login-story:before { content:''; position:absolute; inset:-20px; background:url('/images/paneles-imagen.jpg') 60% 55%/cover; filter:blur(2.5px) brightness(.92) saturate(1.15); transform:scale(1.04); z-index:0; }
+.kin-login-story:before { content:''; position:absolute; inset:-20px; background:url('/images/paneles-imagen.jpg') 38% 55%/cover; filter:blur(2.5px) brightness(.92) saturate(1.15); transform:scale(1.04); z-index:0; }
 .kin-login-story:after { content:''; position:absolute; inset:0; background:linear-gradient(165deg,#0b0f17a6,#0b0f17b8 45%,#0b0f17e8); z-index:0; }
 .kin-login-story>* { position:relative; z-index:1; }
 .kin-login-story .kin-brand { color:var(--kin-ink); }
@@ -177,12 +177,12 @@ button { cursor:pointer; }
    diagonal invertida hacia donde estan los paneles de la foto. */
 /* Abanico de rayos rectos y sutiles, todos anclados al mismo punto en el
    borde del sol, cayendo en distintos angulos sobre los paneles de la foto. */
-.kin-ray { position:absolute; top:63%; left:63%; width:1.5px; border-radius:2px; background:linear-gradient(180deg,#ffe8a0b0,#ffd68540 55%,#ffd68500); opacity:0; transform-origin:top center; animation:kin-ray-travel 5s ease-in-out infinite; }
-.kin-ray-a { height:150px; transform:rotate(8deg); animation-delay:0s; }
-.kin-ray-b { height:190px; transform:rotate(24deg); animation-delay:.5s; }
-.kin-ray-c { height:170px; transform:rotate(40deg); animation-delay:1s; }
-.kin-ray-d { height:140px; transform:rotate(55deg); animation-delay:1.5s; }
-.kin-ray-e { height:105px; transform:rotate(69deg); animation-delay:2s; }
+.kin-ray { position:absolute; top:62%; left:57%; width:1.5px; border-radius:2px; background:linear-gradient(180deg,#ffe8a0b0,#ffd68540 55%,#ffd68500); opacity:0; transform-origin:top center; animation:kin-ray-travel 5s ease-in-out infinite; }
+.kin-ray-a { height:150px; transform:rotate(-12deg); animation-delay:0s; }
+.kin-ray-b { height:190px; transform:rotate(-28deg); animation-delay:.5s; }
+.kin-ray-c { height:170px; transform:rotate(-44deg); animation-delay:1s; }
+.kin-ray-d { height:140px; transform:rotate(-58deg); animation-delay:1.5s; }
+.kin-ray-e { height:105px; transform:rotate(-71deg); animation-delay:2s; }
 @keyframes kin-ray-travel { 0%,100% { opacity:0; } 35% { opacity:.35; } 65% { opacity:.35; } 100% { opacity:0; } }
 .kin-login-story h1 { max-width:none; line-height:1.14; }
 .kin-hero-sub { display:block; font-size:clamp(15px,4.4cqw,24px); font-weight:500; letter-spacing:-.3px; color:var(--kin-muted); white-space:nowrap; }
