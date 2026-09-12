@@ -175,15 +175,6 @@ button { cursor:pointer; }
 
 /* Rayos sutiles: nacen lejos del sol (no pegados a su borde) y viajan en
    diagonal invertida hacia donde estan los paneles de la foto. */
-/* Abanico de rayos rectos y sutiles, todos anclados al mismo punto en el
-   borde del sol, cayendo en distintos angulos sobre los paneles de la foto. */
-.kin-ray { position:absolute; top:62%; left:57%; width:1.5px; border-radius:2px; background:linear-gradient(180deg,#ffe8a0b0,#ffd68540 55%,#ffd68500); opacity:0; transform-origin:top center; animation:kin-ray-travel 5s ease-in-out infinite; }
-.kin-ray-a { height:150px; transform:rotate(-12deg); animation-delay:0s; }
-.kin-ray-b { height:190px; transform:rotate(-28deg); animation-delay:.5s; }
-.kin-ray-c { height:170px; transform:rotate(-44deg); animation-delay:1s; }
-.kin-ray-d { height:140px; transform:rotate(-58deg); animation-delay:1.5s; }
-.kin-ray-e { height:105px; transform:rotate(-71deg); animation-delay:2s; }
-@keyframes kin-ray-travel { 0%,100% { opacity:0; } 35% { opacity:.35; } 65% { opacity:.35; } 100% { opacity:0; } }
 .kin-login-story h1 { max-width:none; line-height:1.14; }
 .kin-hero-sub { display:block; font-size:clamp(15px,4.4cqw,24px); font-weight:500; letter-spacing:-.3px; color:var(--kin-muted); white-space:nowrap; }
 .kin-hero-main { display:block; font-size:clamp(21px,6.4cqw,42px); font-weight:700; letter-spacing:-1.1px; color:var(--kin-ink); white-space:nowrap; margin-top:2px; }
