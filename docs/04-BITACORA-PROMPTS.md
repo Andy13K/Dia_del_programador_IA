@@ -1026,6 +1026,19 @@ API y el diagnóstico de la rúbrica.
 
 ---
 
+### Codex (Carlos), Agente B — Ajuste del sol tras revisión humana
+
+**Fecha:** 12/09/2026. **PR:** #35, misma rama `style/carlos-codex/login-sol-vivo`.
+
+**Corrección literal del humano:**
+> unicamente amigo quita las orejitas que le salen al sol, lo demas en general me gusta
+
+**Cambio:** se retiran únicamente los arcos exteriores que parecían orejas, su degradado y la regla de animación asociada. Se conservan la textura, corona, órbitas, partículas, brillo, pausa y diseño adaptable. Se recompilan los assets y se actualizan las capturas del PR.
+
+**Verificación del ajuste:** build, caché de vistas y revisión del diff correctos. Login local comprobado en navegador: sin arcos exteriores, con las otras nueve capas animadas presentes. Capturas de escritorio claro y oscuro actualizadas; pendiente de integración y despliegue del PR.
+
+---
+
 ## 4. Evidencia visual
 
 Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:

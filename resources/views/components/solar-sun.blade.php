@@ -21,11 +21,6 @@
                     <stop offset=".95" stop-color="#ff6f0c" stop-opacity=".15" />
                     <stop offset="1" stop-color="#ffe3a0" stop-opacity=".85" />
                 </radialGradient>
-                <linearGradient id="{{ $id }}-flare" x1="140" y1="130" x2="350" y2="350" gradientUnits="userSpaceOnUse">
-                    <stop stop-color="#ffb52e" stop-opacity=".05" />
-                    <stop offset=".45" stop-color="#ffda78" />
-                    <stop offset="1" stop-color="#f8790c" stop-opacity=".1" />
-                </linearGradient>
                 <filter id="{{ $id }}-plasma" x="0" y="0" width="100%" height="100%">
                     <feTurbulence type="fractalNoise" baseFrequency=".11" numOctaves="3" seed="8" />
                     <feColorMatrix values="1.6 0 0 0 .25  .7 0 0 0 .1  .15 0 0 0 0  0 0 0 1 0" />
@@ -36,16 +31,6 @@
                 <clipPath id="{{ $id }}-disc"><circle cx="240" cy="240" r="96" /></clipPath>
             </defs>
             <circle cx="240" cy="240" r="222" stroke="#ffe3a0" stroke-opacity=".1" stroke-dasharray="1 13" />
-            <g class="kin-solar-flares" stroke="url(#{{ $id }}-flare)" stroke-linecap="round">
-                <g stroke-width="7" filter="url(#{{ $id }}-glow)">
-                    <path d="M308 174C369 108 387 215 332 219M170 305C115 371 102 265 146 255M200 151C180 101 248 104 267 148" />
-                </g>
-                <g stroke-width="1.3">
-                    <path d="M308 174C369 108 387 215 332 219M313 184C353 128 367 201 334 207" />
-                    <path d="M170 305C115 371 102 265 146 255M162 292C125 330 123 281 147 272" />
-                    <path d="M200 151C180 101 248 104 267 148M209 147C196 120 239 114 254 145" />
-                </g>
-            </g>
             <circle cx="240" cy="240" r="98" fill="#ffb52e" opacity=".75" filter="url(#{{ $id }}-glow)" />
             <circle cx="240" cy="240" r="96" fill="url(#{{ $id }}-surface)" />
             <g clip-path="url(#{{ $id }}-disc)">
