@@ -672,6 +672,26 @@ navegador antes de commitear).
 
 ---
 
+### [22:25] Antigravity (Andy) — Mapa Móvil Cero Scroll con Leyendas Visibles, Botón Cerrar Sesión y Tarjetas de Alertas con Botón Rojo — PR #17 (Iteración 4)
+
+**Objetivo:** asegurar que en la vista móvil el mapa de Guatemala contenga absolutamente todas las leyendas de estado (activa, déficit, mantenimiento) y los contadores (granjas y potencia) dentro de la pantalla sin requerir scroll alguno, integrar el botón de cierre de sesión seguro mediante POST con protección CSRF tanto en el Topbar como en el Drawer móvil de usuario, y transformar el listado de alertas en dispositivos móviles en tarjetas limpias sin barras de desplazamiento horizontal que incluyan un botón rojo destacado "Ver más detalles" hacia la ficha de la alerta con todas sus opciones y acciones de resolución técnica.
+
+**Prompt:**
+> En la vista móvil, el mapa siempre necesita hacer scroll para ver las leyendas solares de activa, déficit, mantenimiento, granjas y potencia. Necesito que no tenga que hacer scroll, que toda esa información o toda esa pantalla esté contenida dentro de esa pantalla sin necesidad de tener que hacer scroll para ver esas leyendas hasta abajo. También, no veo ningún botón de cerrar sesión en el usuario, agrégalo, por favor. Otro detalle, en las alertas, quiero que se muestre igual que la granja, que no aparezca una barra deslizable, sino que solo aparezca el detalle como de la alerta y el botón de ver más detalles en rojo. Y ahí sí ya que aparezca todas las opciones y los demás estados y atender y ver y todo eso, por favor.
+
+**Resultado:**
+- En la vista móvil de `map/index.blade.php`, se compactó la cabecera a una sola fila con botón de centrado y se ajustó la altura del mapa mediante `h-[calc(100vh-190px)] min-h-[300px]`, combinándose con `<main class="... overflow-hidden">` cuando la ruta activa es de mapa. Los paneles flotantes de la leyenda solar (`bottom-2 left-2`) y los contadores de granjas y potencia (`bottom-2 right-2`) se rediseñaron con fuentes compactas y dimensiones reducidas (`p-2 text-[9px]`), quedando 100% contenidos dentro del visor de cualquier teléfono móvil sin desbordes verticales ni necesidad de scroll.
+- Se agregó el botón de cierre de sesión (`POST /logout` con directiva `@csrf`) en dos ubicaciones estratégicas:
+  1. En la barra superior (`Topbar`), al lado del nombre y avatar del usuario autenticado, con icono `log-out` en color carmesí/rojo y efecto de realce interactivo.
+  2. En el encabezado del menú lateral móvil desplegable (`Mobile Drawer`), dentro de la tarjeta de perfil, con botón rotulado "Salir" y confirmación visual.
+- El módulo de alertas (`alerts/index.blade.php`) fue dotado de una vista móvil responsiva mediante tarjetas estilizadas (`md:hidden`) idéntica a la experiencia de granjas solares: muestra ID de alerta, período, granja, departamento, porcentaje de déficit crítico, badge de estado, y el **botón rojo "Ver más detalles"** (`bg-rose-600 hover:bg-rose-700 text-white`) con icono `chevron-right` sin ninguna barra de scroll horizontal. La tabla completa de 9 columnas se conserva exclusivamente para pantallas de escritorio (`hidden md:block`).
+- En la vista de detalle `alerts/show.blade.php`, se enriqueció la cabecera con accesos rápidos a "Ver Granja" y "Ver en Mapa", junto con la visualización del estado y el panel de atención técnica y resolución con notas correctivas para operadores autorizados (`@can('manage-alerts')`).
+- Compilación de assets de producción con Vite (`npm run build`) y ejecución completa del banco de pruebas PHPUnit con resultado 100% satisfactorio (19/19 pruebas, 121 aserciones).
+
+**Intervención humana:** Andy corrigió el comportamiento de la pantalla de mapa en celulares donde las leyendas quedaban cortadas exigiendo scroll, solicitó expresamente la incorporación de los botones de cerrar sesión para el usuario, demandó sustituir la tabla ancha con scroll horizontal en alertas móviles por tarjetas limpias con un botón rojo "Ver más detalles", y enriqueció el flujo hacia la resolución y detalle completo de la anomalía.
+
+---
+
 ## 4. Evidencia visual
 
 Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:

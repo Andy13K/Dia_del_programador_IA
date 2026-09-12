@@ -260,12 +260,23 @@
                             {{ auth()->user()->role ?? 'Equipo Competencia' }}
                         </div>
                     </div>
+
+                    <!-- Botón Cerrar Sesión Topbar -->
+                    <form method="POST" action="{{ route('logout') }}" class="inline ml-1">
+                        @csrf
+                        <button type="submit" 
+                                class="p-2 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-all duration-200 hover:scale-105 active:scale-95 flex items-center gap-1" 
+                                title="Cerrar sesión">
+                            <i data-lucide="log-out" class="w-4 h-4 text-rose-500"></i>
+                            <span class="hidden xl:inline text-xs font-bold text-rose-600 dark:text-rose-400">Salir</span>
+                        </button>
+                    </form>
                 </div>
             </div>
         </header>
 
         <!-- ÁREA DE CONTENIDO CON SCROLL Y RESPETO AL BOTTOM NAV -->
-        <main class="flex-1 overflow-y-auto overflow-x-hidden p-3.5 sm:p-6 lg:p-8 pb-28 md:pb-8 w-full animate-fade-in">
+        <main class="flex-1 overflow-y-auto overflow-x-hidden {{ request()->routeIs('map.*') ? 'p-2 sm:p-6 pb-20 md:pb-8 overflow-hidden' : 'p-3.5 sm:p-6 lg:p-8 pb-28 md:pb-8' }} w-full animate-fade-in">
             
             <!-- MENSAJES FLASH (Alertas de sesión) -->
             @if(session('success'))
@@ -379,20 +390,33 @@
         <!-- Links de Navegación del Drawer -->
         <div class="flex-1 overflow-y-auto px-4 py-4 space-y-4">
             
-            <!-- Perfil / Usuario -->
-            <div class="p-3 rounded-2xl bg-slate-950/50 border border-slate-800/90 flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-amber-500 to-amber-600 flex items-center justify-center text-white font-bold text-sm shadow-md flex-shrink-0">
-                    {{ substr(auth()->user()->name ?? 'Andy & Carlos', 0, 2) }}
-                </div>
-                <div class="min-w-0">
-                    <div class="text-xs font-bold text-white truncate">
-                        {{ auth()->user()->name ?? 'Andy & Carlos' }}
+            <!-- Perfil / Usuario con botón de cerrar sesión -->
+            <div class="p-3 rounded-2xl bg-slate-950/50 border border-slate-800/90 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3 min-w-0">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-amber-500 to-amber-600 flex items-center justify-center text-white font-bold text-sm shadow-md flex-shrink-0">
+                        {{ substr(auth()->user()->name ?? 'Andy & Carlos', 0, 2) }}
                     </div>
-                    <div class="text-[10px] text-emerald-400 font-semibold truncate flex items-center gap-1">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse"></span>
-                        {{ auth()->user()->role ?? 'Equipo Competencia' }}
+                    <div class="min-w-0">
+                        <div class="text-xs font-bold text-white truncate">
+                            {{ auth()->user()->name ?? 'Andy & Carlos' }}
+                        </div>
+                        <div class="text-[10px] text-emerald-400 font-semibold truncate flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse"></span>
+                            {{ auth()->user()->role ?? 'Equipo Competencia' }}
+                        </div>
                     </div>
                 </div>
+
+                <!-- Botón Salir Móvil -->
+                <form method="POST" action="{{ route('logout') }}" class="inline flex-shrink-0">
+                    @csrf
+                    <button type="submit" 
+                            class="px-2.5 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-400 border border-rose-500/30 text-xs font-bold flex items-center gap-1.5 transition active:scale-95" 
+                            title="Cerrar sesión">
+                        <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+                        <span>Salir</span>
+                    </button>
+                </form>
             </div>
 
             <!-- Navegación Principal -->
