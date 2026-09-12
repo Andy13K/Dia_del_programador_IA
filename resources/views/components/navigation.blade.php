@@ -8,6 +8,7 @@
         ['label' => 'Alertas', 'route' => 'alerts.index', 'match' => ['alerts.*'], 'icon' => 'bell', 'group' => 'ANALIZAR', 'color' => 'text-rose-400'],
         ['label' => 'Reportes', 'route' => 'reports.index', 'match' => ['reports.*'], 'icon' => 'chart-no-axes-combined', 'group' => null, 'color' => 'text-indigo-400'],
         ['label' => 'Proyecciones', 'route' => 'forecasts.index', 'match' => ['forecasts.*'], 'icon' => 'sparkles', 'group' => null, 'color' => 'text-teal-400'],
+        ['label' => 'Simulador SCADA IoT', 'route' => 'simulator.index', 'match' => ['simulator.*'], 'icon' => 'radio', 'group' => 'LABORATORIO', 'color' => 'text-amber-500'],
         ['label' => 'API y documentación', 'route' => 'api.docs', 'match' => ['api.docs'], 'icon' => 'braces', 'group' => 'DESARROLLADORES', 'color' => 'text-violet-400'],
     ];
 

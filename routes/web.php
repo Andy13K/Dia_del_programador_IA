@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EnergyGenerationController;
 use App\Http\Controllers\GenerationAlertController;
+use App\Http\Controllers\ScadaSimulatorController;
 use App\Http\Controllers\SolarFarmController;
 use App\Http\Controllers\SolarPanelController;
 use App\Http\Controllers\TelemetrySimulationController;
@@ -92,6 +93,11 @@ Route::get('/dashboard', $dashboardHandler)->middleware('auth')->name('dashboard
 Route::post('/telemetry/simulate', [TelemetrySimulationController::class, 'simulate'])
     ->middleware(['auth', 'can:manage-generations'])
     ->name('telemetry.simulate');
+
+// Laboratorio y Centro de Control SCADA IoT en Tiempo Real
+Route::get('/simulator', [ScadaSimulatorController::class, 'index'])->middleware('auth')->name('simulator.index');
+Route::post('/simulator/event', [ScadaSimulatorController::class, 'recordEvent'])->middleware(['auth', 'can:manage-generations'])->name('simulator.event');
+Route::post('/simulator/reset', [ScadaSimulatorController::class, 'resetTelemetry'])->middleware(['auth', 'can:manage-generations'])->name('simulator.reset');
 
 // Autenticación (OWASP A01/A06/A07): throttle:5,1 limita fuerza bruta en el intento de login.
 Route::get('/login', [AuthController::class, 'showLoginForm'])->middleware('guest')->name('login');

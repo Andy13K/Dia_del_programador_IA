@@ -3,7 +3,7 @@
 <div>
     <div class="kin-dashboard-heading">
         <div><div class="kin-eyebrow">GUATEMALA · ENERGÍA RENOVABLE</div><h1>El sol de hoy.<br class="sm:hidden"> Un futuro más limpio.</h1><p>Una mirada a la generación solar y su impacto en nuestro país.</p></div>
-        <div class="kin-heading-actions"><x-button :href="route('reports.index')" variant="outline" icon="arrow-up-right">Ver reportes</x-button><x-button :href="route('map.index')" icon="map">Explorar el mapa</x-button></div>
+        <div class="kin-heading-actions"><x-button :href="route('simulator.index')" variant="primary" icon="radio">Simulador SCADA</x-button><x-button :href="route('reports.index')" variant="outline" icon="arrow-up-right">Ver reportes</x-button><x-button :href="route('map.index')" icon="map">Explorar el mapa</x-button></div>
     </div>
 
     @can('manage-generations')
