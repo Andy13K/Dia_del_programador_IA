@@ -47,13 +47,24 @@
     @php
         $colCount = count($columns) + 1;
         $kpis = $summary_kpis ?? [];
+        // Logo embebido como data URI: el archivo .xls se descarga y se abre de forma
+        // desconectada del servidor, así que una <img src="/images/..."> normal no cargaría
+        // en Excel. Al embeberlo en base64 el logo se ve siempre, sin depender de internet.
+        $logoBase64 = base64_encode((string) file_get_contents(public_path('images/kin-icon-dorado.png')));
     @endphp
 
     <!-- Cabecera Institucional -->
     <table class="header-table">
         <tr>
-            <td colspan="{{ $colCount }}" class="brand-title">
-                ☀️ K'IN SOLAR GUATEMALA — SISTEMA NACIONAL DE MONITOREO FOTOVOLTAICO
+            <td colspan="{{ $colCount }}" class="brand-title" style="padding: 6px 12px;">
+                <table style="border-collapse: collapse;"><tr>
+                    <td style="padding: 0 10px 0 0; vertical-align: middle; border: none;">
+                        <img src="data:image/png;base64,{{ $logoBase64 }}" alt="K'in Solar" width="34" height="34" style="display: block;">
+                    </td>
+                    <td style="vertical-align: middle; border: none; background-color: transparent; padding: 0;">
+                        K'IN SOLAR GUATEMALA — SISTEMA NACIONAL DE MONITOREO FOTOVOLTAICO
+                    </td>
+                </tr></table>
             </td>
         </tr>
         <tr>

@@ -48,7 +48,7 @@
 
         <!-- Tipo 1: Departamental -->
         <a href="{{ route('reports.index', array_merge($queryParams, ['type' => 'departamental'])) }}" class="p-4 rounded-2xl border transition flex items-center space-x-3 {{ $currentType === 'departamental' ? 'bg-amber-500/10 border-amber-500/40 text-amber-600 dark:text-amber-400' : 'bg-white dark:bg-slate-900 border-slate-200/80 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-slate-300' }}">
-            <span class="text-2xl">🏛️</span>
+            <i data-lucide="landmark" class="w-6 h-6 flex-shrink-0" aria-hidden="true"></i>
             <div>
                 <span class="text-xs font-bold block text-slate-900 dark:text-white">Departamental</span>
                 <span class="text-[10px] text-slate-400 block leading-tight">22 departamentos</span>
@@ -57,7 +57,7 @@
 
         <!-- Tipo 2: Granjas -->
         <a href="{{ route('reports.index', array_merge($queryParams, ['type' => 'granjas'])) }}" class="p-4 rounded-2xl border transition flex items-center space-x-3 {{ $currentType === 'granjas' ? 'bg-amber-500/10 border-amber-500/40 text-amber-600 dark:text-amber-400' : 'bg-white dark:bg-slate-900 border-slate-200/80 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-slate-300' }}">
-            <span class="text-2xl">⚡</span>
+            <i data-lucide="zap" class="w-6 h-6 flex-shrink-0" aria-hidden="true"></i>
             <div>
                 <span class="text-xs font-bold block text-slate-900 dark:text-white">Por Granjas</span>
                 <span class="text-[10px] text-slate-400 block leading-tight">Rendimiento solar</span>
@@ -66,7 +66,7 @@
 
         <!-- Tipo 3: Ambiental -->
         <a href="{{ route('reports.index', array_merge($queryParams, ['type' => 'ambiental'])) }}" class="p-4 rounded-2xl border transition flex items-center space-x-3 {{ $currentType === 'ambiental' ? 'bg-amber-500/10 border-amber-500/40 text-amber-600 dark:text-amber-400' : 'bg-white dark:bg-slate-900 border-slate-200/80 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-slate-300' }}">
-            <span class="text-2xl">🌱</span>
+            <i data-lucide="leaf" class="w-6 h-6 flex-shrink-0" aria-hidden="true"></i>
             <div>
                 <span class="text-xs font-bold block text-slate-900 dark:text-white">Mitigación CO₂</span>
                 <span class="text-[10px] text-slate-400 block leading-tight">Balance ecológico</span>
@@ -75,7 +75,7 @@
 
         <!-- Tipo 4: Alertas -->
         <a href="{{ route('reports.index', array_merge($queryParams, ['type' => 'alertas'])) }}" class="p-4 rounded-2xl border transition flex items-center space-x-3 {{ $currentType === 'alertas' ? 'bg-amber-500/10 border-amber-500/40 text-amber-600 dark:text-amber-400' : 'bg-white dark:bg-slate-900 border-slate-200/80 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-slate-300' }}">
-            <span class="text-2xl">🚨</span>
+            <i data-lucide="siren" class="w-6 h-6 flex-shrink-0" aria-hidden="true"></i>
             <div>
                 <span class="text-xs font-bold block text-slate-900 dark:text-white">Alertas & Fallas</span>
                 <span class="text-[10px] text-slate-400 block leading-tight">Déficit ≥ 20%</span>
