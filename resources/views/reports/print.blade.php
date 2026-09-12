@@ -45,81 +45,96 @@
                 break-inside: avoid;
                 page-break-inside: avoid;
             }
+            .print-header {
+                flex-direction: row !important;
+                justify-content: space-between !important;
+            }
+            .print-header-right {
+                text-align: right !important;
+                border-top: none !important;
+                padding-top: 0 !important;
+                width: auto !important;
+            }
+            .print-signatures {
+                display: grid !important;
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                gap: 3rem !important;
+            }
         }
     </style>
 </head>
-<body class="p-4 sm:p-8">
+<body class="p-2.5 sm:p-4 md:p-8">
 
     <!-- BARRA FLOTANTE DE CONTROL (NO SE IMPRIME) -->
-    <div class="no-print max-w-7xl mx-auto mb-6 bg-slate-900 text-white p-4 rounded-2xl shadow-xl flex flex-wrap items-center justify-between gap-4 border border-slate-800">
-        <div class="flex items-center space-x-3">
-            <a href="{{ route('reports.index', ['type' => $reportData['type'], 'start_date' => $reportData['start_date'], 'end_date' => $reportData['end_date'], 'department_id' => $reportData['department_id']]) }}" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded-xl transition flex items-center space-x-2">
+    <div class="no-print max-w-7xl mx-auto mb-4 sm:mb-6 bg-slate-900 text-white p-3 sm:p-4 rounded-2xl shadow-xl flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4 border border-slate-800">
+        <div class="flex items-center space-x-2 sm:space-x-3">
+            <a href="{{ route('reports.index', ['type' => $reportData['type'], 'start_date' => $reportData['start_date'], 'end_date' => $reportData['end_date'], 'department_id' => $reportData['department_id']]) }}" class="px-3 py-1.5 sm:px-3.5 sm:py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded-xl transition flex items-center space-x-1.5 shrink-0">
                 <span>← Volver al Panel</span>
             </a>
-            <span class="text-xs text-slate-400">|</span>
-            <span class="text-xs text-slate-300 font-medium">Plantilla Ejecutiva Oficial para PDF / Impresión</span>
+            <span class="text-xs text-slate-500 hidden sm:inline">|</span>
+            <span class="text-[11px] sm:text-xs text-slate-300 font-medium truncate">Plantilla Ejecutiva Oficial para PDF / Impresión</span>
         </div>
 
-        <div class="flex items-center space-x-3">
-            <a href="{{ route('reports.export.excel', ['type' => $reportData['type'], 'start_date' => $reportData['start_date'], 'end_date' => $reportData['end_date'], 'department_id' => $reportData['department_id']]) }}" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl transition flex items-center space-x-1.5 shadow-sm">
+        <div class="grid grid-cols-2 gap-2 sm:flex sm:items-center sm:space-x-3">
+            <a href="{{ route('reports.export.excel', ['type' => $reportData['type'], 'start_date' => $reportData['start_date'], 'end_date' => $reportData['end_date'], 'department_id' => $reportData['department_id']]) }}" class="px-3 sm:px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl transition flex items-center justify-center space-x-1.5 shadow-sm text-center">
                 <span>Descargar Excel (.xls)</span>
             </a>
-            <button onclick="window.print()" class="px-5 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-extrabold rounded-xl transition flex items-center space-x-2 shadow-lg">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+            <button onclick="window.print()" class="px-3 sm:px-5 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-extrabold rounded-xl transition flex items-center justify-center space-x-1.5 shadow-lg text-center">
+                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
                 <span>Guardar como PDF / Imprimir</span>
             </button>
         </div>
     </div>
 
     <!-- DOCUMENTO EJECUTIVO DE REPORTE -->
-    <main class="print-page max-w-7xl mx-auto bg-white p-8 md:p-10 rounded-3xl shadow-sm border border-slate-200">
+    <main class="print-page max-w-7xl mx-auto bg-white p-4 sm:p-8 md:p-10 rounded-2xl sm:rounded-3xl shadow-sm border border-slate-200">
 
         <!-- ENCABEZADO INSTITUCIONAL -->
-        <header class="border-b-2 border-slate-900 pb-6 mb-6">
-            <div class="flex items-start justify-between gap-6">
+        <header class="border-b-2 border-slate-900 pb-5 sm:pb-6 mb-5 sm:mb-6">
+            <div class="print-header flex flex-col md:flex-row items-start justify-between gap-4 md:gap-6">
                 <!-- Logos y Título -->
-                <div class="flex items-center space-x-4">
-                    <img src="/images/kin-icon-dorado.png" alt="K'in Solar" class="w-16 h-16 rounded-2xl shadow-sm border border-amber-500/30">
+                <div class="flex items-center space-x-3 sm:space-x-4">
+                    <img src="/images/kin-icon-dorado.png" alt="K'in Solar" class="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl shadow-sm border border-amber-500/30 shrink-0">
                     <div>
-                        <div class="text-[11px] font-black uppercase tracking-widest text-amber-600">
+                        <div class="text-[10px] sm:text-[11px] font-black uppercase tracking-wider sm:tracking-widest text-amber-600">
                             República de Guatemala • CNEE & MEM
                         </div>
-                        <h1 class="text-2xl sm:text-3xl font-black text-slate-950 tracking-tight leading-none mt-1">
+                        <h1 class="text-xl sm:text-2xl md:text-3xl font-black text-slate-950 tracking-tight leading-tight mt-0.5 sm:mt-1">
                             K'IN SOLAR GUATEMALA
                         </h1>
-                        <p class="text-xs font-semibold text-slate-600 mt-1">
+                        <p class="text-[11px] sm:text-xs font-semibold text-slate-600 mt-0.5 sm:mt-1">
                             Sistema Nacional de Monitoreo, Trazabilidad y Proyección Fotovoltaica
                         </p>
                     </div>
                 </div>
 
                 <!-- Título del Reporte y Estado -->
-                <div class="text-right">
-                    <span class="inline-block px-3 py-1 bg-slate-900 text-white font-mono text-[10px] font-bold rounded-lg uppercase tracking-wider">
+                <div class="print-header-right text-left md:text-right w-full md:w-auto border-t md:border-t-0 pt-3 md:pt-0 border-slate-100">
+                    <span class="inline-block px-2.5 py-0.5 sm:px-3 sm:py-1 bg-slate-900 text-white font-mono text-[9px] sm:text-[10px] font-bold rounded-lg uppercase tracking-wider">
                         Documento Oficial
                     </span>
-                    <h2 class="text-lg font-black text-slate-900 mt-2">{{ $reportData['title'] }}</h2>
-                    <p class="text-xs text-slate-500 font-medium">{{ $reportData['subtitle'] }}</p>
+                    <h2 class="text-base sm:text-lg font-black text-slate-900 mt-1 sm:mt-2">{{ $reportData['title'] }}</h2>
+                    <p class="text-[11px] sm:text-xs text-slate-500 font-medium">{{ $reportData['subtitle'] }}</p>
                 </div>
             </div>
 
             <!-- Cuadro de Metadatos de Auditoría -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6 pt-4 border-t border-slate-200 text-xs">
-                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200/80">
-                    <span class="text-[10px] uppercase font-bold text-slate-400 block font-mono">Ámbito Geográfico</span>
-                    <span class="font-bold text-slate-900">{{ $reportData['department_name'] }}</span>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 mt-5 sm:mt-6 pt-4 border-t border-slate-200 text-xs">
+                <div class="bg-slate-50 p-2.5 sm:p-3 rounded-xl border border-slate-200/80">
+                    <span class="text-[9px] sm:text-[10px] uppercase font-bold text-slate-400 block font-mono">Ámbito Geográfico</span>
+                    <span class="font-bold text-slate-900 text-[11px] sm:text-xs block truncate">{{ $reportData['department_name'] }}</span>
                 </div>
-                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200/80">
-                    <span class="text-[10px] uppercase font-bold text-slate-400 block font-mono">Período Evaluado</span>
-                    <span class="font-bold text-slate-900">{{ $reportData['start_date'] ?: 'Histórico inicial' }} al {{ $reportData['end_date'] ?: 'Actual' }}</span>
+                <div class="bg-slate-50 p-2.5 sm:p-3 rounded-xl border border-slate-200/80">
+                    <span class="text-[9px] sm:text-[10px] uppercase font-bold text-slate-400 block font-mono">Período Evaluado</span>
+                    <span class="font-bold text-slate-900 text-[11px] sm:text-xs block">{{ $reportData['start_date'] ?: 'Histórico inicial' }} al {{ $reportData['end_date'] ?: 'Actual' }}</span>
                 </div>
-                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200/80">
-                    <span class="text-[10px] uppercase font-bold text-slate-400 block font-mono">Fecha de Emisión</span>
-                    <span class="font-bold text-slate-900 font-mono">{{ $reportData['generated_at'] }} (UTC-6)</span>
+                <div class="bg-slate-50 p-2.5 sm:p-3 rounded-xl border border-slate-200/80">
+                    <span class="text-[9px] sm:text-[10px] uppercase font-bold text-slate-400 block font-mono">Fecha de Emisión</span>
+                    <span class="font-bold text-slate-900 font-mono text-[11px] sm:text-xs block">{{ $reportData['generated_at'] }} (UTC-6)</span>
                 </div>
-                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200/80">
-                    <span class="text-[10px] uppercase font-bold text-slate-400 block font-mono">Usuario / Rol</span>
-                    <span class="font-bold text-slate-900">{{ $reportData['generated_by'] }} ({{ $reportData['user_role'] }})</span>
+                <div class="bg-slate-50 p-2.5 sm:p-3 rounded-xl border border-slate-200/80">
+                    <span class="text-[9px] sm:text-[10px] uppercase font-bold text-slate-400 block font-mono">Usuario / Rol</span>
+                    <span class="font-bold text-slate-900 text-[11px] sm:text-xs block truncate">{{ $reportData['generated_by'] }} ({{ $reportData['user_role'] }})</span>
                 </div>
             </div>
         </header>
@@ -138,8 +153,12 @@
         @endif
 
         <!-- TABLA PRINCIPAL DE DATOS -->
-        <section class="overflow-x-auto rounded-2xl border border-slate-300">
-            <table class="w-full text-left text-xs border-collapse">
+        <div class="sm:hidden flex items-center justify-between text-[10px] text-slate-400 italic mb-1.5 px-0.5">
+            <span>👉 Desliza horizontalmente la tabla</span>
+            <span class="font-mono text-[9px]">↔ SCROLL</span>
+        </div>
+        <section class="overflow-x-auto rounded-2xl border border-slate-300 shadow-sm">
+            <table class="w-full text-left text-xs border-collapse min-w-[560px] sm:min-w-full">
                 <thead class="bg-slate-900 text-white uppercase text-[10px] font-extrabold tracking-wider">
                     <tr>
                         <th class="p-3 text-center border-b border-slate-700 w-10">#</th>
@@ -206,21 +225,21 @@
         </section>
 
         <!-- SECCIÓN DE FIRMAS Y VALIDEZ LEGAL -->
-        <footer class="mt-12 pt-8 border-t border-slate-300">
-            <div class="grid grid-cols-2 gap-12 text-center text-xs">
+        <footer class="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-slate-300">
+            <div class="print-signatures grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-12 text-center text-xs">
                 <div>
-                    <div class="border-b border-slate-400 w-3/4 mx-auto mb-2 h-16"></div>
+                    <div class="border-b border-slate-400 w-3/4 mx-auto mb-2 h-12 sm:h-16"></div>
                     <span class="font-extrabold text-slate-900 block">Ing. Supervisor de Operaciones Energéticas</span>
                     <span class="text-slate-500 text-[10px]">K'in Solar Guatemala • Verificación Técnica</span>
                 </div>
                 <div>
-                    <div class="border-b border-slate-400 w-3/4 mx-auto mb-2 h-16"></div>
+                    <div class="border-b border-slate-400 w-3/4 mx-auto mb-2 h-12 sm:h-16"></div>
                     <span class="font-extrabold text-slate-900 block">Dirección de Sostenibilidad y Recursos Renovables</span>
                     <span class="text-slate-500 text-[10px]">CNEE / Ministerio de Energía y Minas</span>
                 </div>
             </div>
 
-            <div class="mt-8 pt-4 border-t border-slate-200 text-[10px] text-slate-400 flex flex-col sm:flex-row justify-between items-center gap-2">
+            <div class="mt-6 sm:mt-8 pt-4 border-t border-slate-200 text-[9px] sm:text-[10px] text-slate-400 flex flex-col sm:flex-row justify-between items-center gap-2 text-center sm:text-left">
                 <span>Certificación de emisiones bajo factor normativo CNEE de 0.40 kg CO₂ evitado por kWh.</span>
                 <span class="font-mono">Plataforma Oficial: https://kin-solar-guatemala.duckdns.org</span>
             </div>
