@@ -1131,6 +1131,32 @@ API y el diagnóstico de la rúbrica.
 
 ---
 
+### [11:35] Antigravity (Andy) — Módulo Dedicado de Centro de Control y Laboratorio SCADA IoT en Vivo — PR #40
+
+**Objetivo:** construir un módulo de control y emulación de campo independiente (`/simulator`, enrutado bajo el grupo "LABORATORIO" del menú lateral) con streaming de telemetría continua de alta frecuencia, gráfica de osciloscopio en tiempo real, interruptores de inversores (breakers de campo), control meteorológico y consola de telemetría cruda (IoT RAW Stream):
+1. **Flujo de Telemetría Continuo (Streaming Auto-Tick 2s):** Muestreo continuo que simula paquetes Modbus-TCP / MQTT entrantes cada 2 segundos, calculando en caliente potencia activa (kW), irradiancia ($W/m^2$), temperatura de módulos (°C) y tasa de mitigación horaria de CO₂.
+2. **Gráfica de Osciloscopio Dinámico (Chart.js):** Curva de potencia generada vs. esperada vs. irradiancia solar que se desplaza hacia la izquierda en tiempo real segundo a segundo.
+3. **Interruptores de Campo para Inversores (4 Canales):** Breakers individuales interactivos (`[ACTIVO / TRIPPED]`) que permiten desconectar ramas fotovoltaicas en vivo y ver la caída inmediata de generación y eficiencia.
+4. **Selector Climático en Caliente:** Botones para alternar entre Pleno Sol (1000 $W/m^2$), Nubosidad Parcial (600 $W/m^2$), Tormenta Severa (180 $W/m^2$) y Noche (0 $W/m^2$).
+5. **Inyector de Contingencias & Persistencia Oficial:** Generación y persistencia de incidentes con alerta automática RF-14 en base de datos (`generation_alerts`), trazabilidad en `audit_logs` con `AuditService`, y resolución/restablecimiento con botón de restauración nominal.
+6. **Consola Terminal SCADA:** Stream de logs crudos con códigos de respuesta, protocolos industriales y marcas de tiempo oficiales de Guatemala.
+
+**Prompt clave:**
+> "pero veo que no funciona tan dinaminicamente, mejor todo eso crea un muevo modulo para pruebas por asi decrilo donde se emule todo dime si me entiendes"
+> "SI ME GUSTA AGREGA ESO POR FAVOR"
+
+**Resultado:**
+- Controlador `app/Http/Controllers/ScadaSimulatorController.php` con métodos `index`, `recordEvent` y `resetTelemetry`.
+- Rutas cableadas en `routes/web.php` (`/simulator`, `/simulator/event`, `/simulator/reset`) bajo autenticación y autorización por roles.
+- Enlace destacado en `resources/views/components/navigation.blade.php` bajo la nueva sección "LABORATORIO" con icono `radio` color ámbar y botón directo en el encabezado del Dashboard.
+- Vista completa `resources/views/simulator/index.blade.php` con panel de instrumentos digitales, osciloscopio, switches interactivos y consola terminal industrial.
+- Suite de pruebas `tests/Feature/ScadaSimulatorTest.php` (5 pruebas, 26 aserciones) pasando al 100%. Suite global de la aplicación: **67 tests pasados de 67 (391 aserciones)**.
+- Compilación limpia con Vite (`npm run build`).
+
+**Intervención humana:** Andy determinó que un simple control en el dashboard no alcanzaba el nivel de dinamismo e interactividad visual necesario para convencer al jurado, y encomendó la creación de una suite/módulo completo e independiente donde se pudiera emular toda la telemetría de forma continua e inmersiva.
+
+---
+
 ## 4. Evidencia visual
 
 Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:
