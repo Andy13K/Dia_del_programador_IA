@@ -594,7 +594,24 @@ navegador antes de commitear).
 - Regla CSS reforzada para anular cualquier borde o contorno en elementos SVG de Leaflet (`border: none !important`), eliminando cualquier cuadro no deseado.
 - Pruebas PHPUnit al 100% (19/19) y compilación de Vite completada.
 
-**Intervención humana:** Andy definió la jerarquía visual de dos capas: el país entero siempre con su contorno amarillo de contraste nacional, y el departamento activo resaltado con mayor intensidad al seleccionarlo.
+### [21:40] Antigravity (Andy) — Navegación Estilo App Nativa y Layout 100% Responsivo — PR #15
+
+**Objetivo:** transformar la interfaz web en una experiencia 100% responsiva y optimizada para dispositivos móviles como si fuera una aplicación móvil nativa (iOS/Android), eliminando desbordamientos horizontales y barras deslizantes molestas, añadiendo una barra de navegación inferior (Bottom Navigation Bar) fija, un menú deslizable (Slide-Over Drawer) y adaptando mapas y tarjetas KPI a rejillas táctiles.
+
+**Prompt:**
+> Ahora necesito que todo sea responsivo. No necesito ningúna barra deslizante. Dentro de los menús o mapas, por lo cual tiene que ser responsivo, y la versión para móvil quiero que la hagas como que fuese una aplicación nativa de teléfono. Obviamente es una aplicación web, pero la navegación quiero que la hagas así para que sea más amigable, intuitiva y eso, en la vista para celular, por favor.
+> mira opus se quedo sin tokens mira que etsba haciendo y hazlo tu
+
+**Resultado:**
+- Barra de navegación inferior móvil (`mobileBottomNav`) fija con efecto glassmorphism (`backdrop-blur-xl bg-slate-900/95`), 5 pestañas táctiles con estados activos (Inicio, Mapa, Granjas, Alertas con pulso visual, y botón 'Más').
+- Slide-over drawer modal (`mobileDrawer`) lateral fluido con información de perfil de usuario, estado del servidor AWS, navegación completa categorizada y botón de alternancia de tema Claro/Oscuro.
+- Ocultación del sidebar de escritorio en dispositivos móviles (`hidden md:flex`) y adición de margen inferior de seguridad (`pb-28 md:pb-8`) en `<main>` para garantizar que ningún botón, tabla o formulario quede oculto bajo la barra inferior.
+- Contenedor principal con `overflow-x-hidden w-full` eliminando al 100% el scroll horizontal en teléfonos.
+- Rejilla de tarjetas KPI en el Dashboard adaptada a 2 columnas en móviles (`grid-cols-2 md:grid-cols-3 xl:grid-cols-6`) con tipografía compacta y truncado seguro.
+- Mapa Leaflet adaptativo (`h-[460px] sm:h-[540px] md:h-[620px]`) con selectores y botones a pantalla completa en móvil y leyendas/contadores flotantes reposicionados sin colisión.
+- 19/19 pruebas PHPUnit superadas (121 aserciones) y assets de Vite recompilados para producción.
+
+**Intervención humana:** Andy solicitó una experiencia móvil equivalente a una aplicación de teléfono nativa sin barras deslizantes molestas, instruyendo a Antigravity asumir la tarea inmediatamente tras agotarse los tokens de Opus.
 
 ---
 

@@ -36,9 +36,9 @@
         </div>
 
         <!-- Controles / Filtros -->
-        <div class="flex flex-wrap items-center gap-3">
-            <div class="relative">
-                <select id="departmentFilter" onchange="filterFarms()" class="pl-3 pr-8 py-2 text-xs font-semibold rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500">
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
+            <div class="relative w-full sm:w-auto">
+                <select id="departmentFilter" onchange="filterFarms()" class="w-full sm:w-auto pl-3 pr-8 py-2.5 sm:py-2 text-xs font-semibold rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500">
                     <option value="all">Todos los Departamentos (22)</option>
                     @if(isset($departments) && $departments->count() > 0)
                         @foreach($departments as $dept)
@@ -71,7 +71,7 @@
                 </select>
             </div>
 
-            <button type="button" onclick="resetMap()" class="px-3 py-2 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition flex items-center gap-1.5">
+            <button type="button" onclick="resetMap()" class="w-full sm:w-auto justify-center px-3 py-2.5 sm:py-2 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition flex items-center gap-1.5 active:scale-95">
                 <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
                 <span>Centrar Guatemala</span>
             </button>
@@ -79,45 +79,45 @@
     </div>
 
     <!-- Contenedor del Mapa con Paneles Flotantes -->
-    <div class="relative w-full h-[620px] rounded-3xl overflow-hidden border border-slate-200/80 dark:border-slate-800 shadow-xl bg-slate-900">
+    <div class="relative w-full h-[460px] sm:h-[540px] md:h-[620px] rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200/80 dark:border-slate-800 shadow-xl bg-slate-900">
         
         <!-- Mapa Leaflet -->
         <div id="guatemalaMap" class="w-full h-full z-10"></div>
 
         <!-- Leyenda Flotante -->
-        <div class="absolute bottom-6 left-6 z-20 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-lg text-xs space-y-2 max-w-xs">
-            <div class="font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <i data-lucide="layers" class="w-4 h-4 text-amber-500"></i>
-                <span>Leyenda de Granjas Solares</span>
+        <div class="absolute bottom-3 left-3 z-20 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md p-2.5 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-lg text-[10px] sm:text-xs space-y-1 sm:space-y-2 max-w-[170px] sm:max-w-xs">
+            <div class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5 sm:gap-2">
+                <i data-lucide="layers" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500"></i>
+                <span class="truncate">Leyenda Solares</span>
             </div>
-            <div class="flex items-center gap-2 text-slate-600 dark:text-slate-300">
-                <span class="w-3.5 h-3.5 rounded-full bg-amber-500 ring-4 ring-amber-500/20 inline-block"></span>
-                <span>Granja Activa (Generando)</span>
+            <div class="flex items-center gap-1.5 sm:gap-2 text-slate-600 dark:text-slate-300">
+                <span class="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 rounded-full bg-amber-500 ring-2 sm:ring-4 ring-amber-500/20 inline-block flex-shrink-0"></span>
+                <span class="truncate">Activa (Gen)</span>
             </div>
-            <div class="flex items-center gap-2 text-slate-600 dark:text-slate-300">
-                <span class="w-3.5 h-3.5 rounded-full bg-rose-500 ring-4 ring-rose-500/20 inline-block"></span>
-                <span>Alerta por Déficit (≥20%)</span>
+            <div class="flex items-center gap-1.5 sm:gap-2 text-slate-600 dark:text-slate-300">
+                <span class="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 rounded-full bg-rose-500 ring-2 sm:ring-4 ring-rose-500/20 inline-block flex-shrink-0"></span>
+                <span class="truncate">Déficit (≥20%)</span>
             </div>
-            <div class="flex items-center gap-2 text-slate-600 dark:text-slate-300">
-                <span class="w-3.5 h-3.5 rounded-full bg-slate-400 inline-block"></span>
-                <span>En Mantenimiento</span>
+            <div class="flex items-center gap-1.5 sm:gap-2 text-slate-600 dark:text-slate-300">
+                <span class="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 rounded-full bg-slate-400 inline-block flex-shrink-0"></span>
+                <span class="truncate">Mantenimiento</span>
             </div>
-            <div class="pt-2 border-t border-slate-200 dark:border-slate-800 text-[11px] text-slate-400">
+            <div class="hidden sm:block pt-2 border-t border-slate-200 dark:border-slate-800 text-[11px] text-slate-400">
                 Factor CO₂: <strong class="text-emerald-500">0.40 kg / kWh</strong>
             </div>
         </div>
 
         <!-- Contador flotante inferior derecho -->
-        <div class="absolute bottom-6 right-6 z-20 flex gap-2">
-            <div class="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-4 py-2.5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-lg text-xs flex items-center gap-3">
+        <div class="absolute bottom-3 right-3 z-20 flex gap-2">
+            <div class="bg-white/95 dark:bg-slate-900/95 backdrop-blur-md px-2.5 py-1.5 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-lg text-[10px] sm:text-xs flex items-center gap-2 sm:gap-3">
                 <div>
-                    <div class="text-[10px] uppercase font-bold text-slate-400">Granjas Visibles</div>
-                    <div class="text-sm font-extrabold text-slate-900 dark:text-white" id="visibleFarmsCount">12 granjas</div>
+                    <div class="text-[9px] sm:text-[10px] uppercase font-bold text-slate-400">Granjas</div>
+                    <div class="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white" id="visibleFarmsCount">12</div>
                 </div>
-                <div class="w-px h-6 bg-slate-200 dark:border-slate-800"></div>
+                <div class="w-px h-5 sm:h-6 bg-slate-200 dark:border-slate-800"></div>
                 <div>
-                    <div class="text-[10px] uppercase font-bold text-slate-400">Potencia en Mapa</div>
-                    <div class="text-sm font-extrabold text-amber-500" id="visiblePowerCount">8,450 kW</div>
+                    <div class="text-[9px] sm:text-[10px] uppercase font-bold text-slate-400">Potencia</div>
+                    <div class="text-xs sm:text-sm font-extrabold text-amber-500" id="visiblePowerCount">8,450 kW</div>
                 </div>
             </div>
         </div>

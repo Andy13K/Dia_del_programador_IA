@@ -43,23 +43,23 @@
     $v = $variants[$variant] ?? $variants['solar'];
 @endphp
 
-<div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-200 {{ $v['border'] }} relative overflow-hidden group">
-    <div class="flex items-start justify-between">
-        <div>
-            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 block mb-1">
+<div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl p-3.5 sm:p-5 shadow-sm hover:shadow-md transition-all duration-200 {{ $v['border'] }} relative overflow-hidden group">
+    <div class="flex items-start justify-between gap-2">
+        <div class="min-w-0">
+            <span class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 block mb-0.5 sm:mb-1 truncate">
                 {{ $title }}
             </span>
-            <div class="text-2xl lg:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+            <div class="text-lg sm:text-2xl lg:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight truncate">
                 {{ $value }}
             </div>
             @if($subtitle)
-                <div class="text-xs text-slate-500 dark:text-slate-400 mt-1 flex items-center gap-1.5 font-medium">
+                <div class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5 sm:mt-1 flex items-center gap-1 font-medium truncate">
                     {{ $subtitle }}
                 </div>
             @endif
         </div>
-        <div class="w-12 h-12 rounded-2xl {{ $v['bg'] }} flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
-            <i data-lucide="{{ $icon }}" class="w-6 h-6 {{ $v['icon'] }}"></i>
+        <div class="w-8 h-8 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl {{ $v['bg'] }} flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+            <i data-lucide="{{ $icon }}" class="w-4 h-4 sm:w-6 sm:h-6 {{ $v['icon'] }}"></i>
         </div>
     </div>
     @if($trend)
