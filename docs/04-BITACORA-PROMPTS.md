@@ -1282,6 +1282,23 @@ API y el diagnóstico de la rúbrica.
 
 ---
 
+### Codex (Carlos), Agente B — Cobertura departamental con granjas demo adicionales
+
+**Fecha:** 12/09/2026. **Rama:** `feat/carlos-codex/granjas-cobertura-demo`, aislada desde `origin/master` (`cb3c899`).
+
+**Solicitud literal:**
+> Amigo, ya llevamos avanzado el proyecto, ahora necesito que uses seeder para meter mas granjas solares, en puntos estrategicos de guatemala donde no haya niguna granja, para que se vea mas poblado por favor
+
+**Aclaración humana:** la carga solicitada es en producción, en la web pública. El humano autorizó expresamente el trabajo con seeders al Agente B. Se solicitó la ruta de la llave SSH o coordinación con quien administra el servidor para ejecutar la carga.
+
+**Resultado:** se identificaron 15 granjas en 12 departamentos mediante la API pública. Se creó `SolarCoverageDemoSeeder`, separado del seeder general, que llena departamentos sin registros de granjas, conserva datos y eliminaciones previas, bloquea los departamentos durante una transacción y utiliza un administrador y un panel existentes. Las diez ubicaciones propuestas están dentro de sus polígonos departamentales. Los nombres incluyen `Demo`; no se presentan como instalaciones reales verificadas ni se inventan mediciones o familias beneficiadas. La carga no requiere cambios de esquema, modelos, rutas ni contratos.
+
+**Verificación:** Pint, caché de vistas y build correctos (compilación fuera del árbol versionado para no alterar assets ajenos). 77 pruebas y 470 aserciones correctas, incluidas cuatro pruebas nuevas sobre preservación, repetición, eliminaciones y rollback. Prueba con una copia local de las 15 granjas públicas: agregó 10, resultando en 25 granjas y los 22 departamentos cubiertos; la segunda ejecución agregó cero. En navegador se comprobaron los pines, el detalle de Huehuetenango y el filtro de Sololá. Captura `docs/evidencias/cobertura-demo-mapa-local.png`.
+
+**Ejecución pendiente:** se documentó el comando específico y el procedimiento en `docs/OPERACION-COBERTURA-DEMO.md`. La validación local no equivale a la carga en producción; falta acceso al servidor o ejecución por su responsable.
+
+---
+
 ## 4. Evidencia visual
 
 Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:
