@@ -110,12 +110,14 @@
 15. Decir: *"El sistema calcula en tiempo real el CO₂ evitado — usando el factor normativo de 0.40 kg por kWh — y advierte al operador antes de guardar que esta medición va a disparar una alerta automática por déficit del 30%."*
 16. Guardar la medición
 
-**[3:55–4:25] — Alerta generada automáticamente (RF-14)**
-17. Ir a **"Alertas"** en el sidebar
-18. Mostrar la nueva alerta con el badge rojo del 30%
-19. Clic en **"Ver"** para abrir el detalle
-20. Decir: *"La alerta se creó sola, sin intervención humana. El operador ahora puede investigar la causa y registrar la resolución."*
-21. Hacer clic en **"Resolver"**, escribir una nota, confirmar
+**[3:55–4:25] — Alertas en Tiempo Real, Campanita con Sonido y Laboratorio SCADA (RF-14 & Diferenciador)**
+17. Mostrar la **Campanita de Notificaciones** en el Topbar con su contador badge rojo.
+18. Abrir el menú pop-up: mostrar cómo distingue alertas no leídas (respiración suave y badge 'Nueva') de leídas (atenuadas y '✓ Leída').
+19. Hacer clic en **"Más detalles"**: mostrar cómo el contador descuenta en tiempo real y abre la alerta.
+20. Ir a **"Laboratorio SCADA IoT"** (`/simulator`) y presionar **"Simular Falla Inversores (-26.5%)"**:
+    - **Demostrar el sonido armónico (chime)** sonando en vivo por Web Audio API.
+    - Mostrar el osciloscopio en tiempo real y cómo la campanita suma la nueva alerta al instante sin refrescar la página.
+21. Decir: *"La alerta se transmite vía telemetría SCADA, emite aviso sonoro nativo y se persiste con trazabilidad OWASP A09 en audit_logs."*
 
 **[4:25–4:55] — Dashboard de Reportes y CO₂ (RF-11, RF-12)**
 22. Ir a **"Reportes"**
@@ -221,7 +223,7 @@
 | *¿Cómo coordinaron 5 agentes sin conflictos?* | Carlos | "Propiedad exclusiva de carpetas por agente y contratos de interfaz congelados en la primera hora. Ningún agente tocó la zona de otro." |
 | *¿Por qué 0.40 kg/kWh?* | Andy | "Es el factor de emisión de la red eléctrica guatemalteca conforme a la Comisión Nacional de Energía Eléctrica (CNEE). Lo especificaba el mismo reto." |
 | *¿Está seguro el sistema?* | Carlos | Repetir la demo del 403 + "tenemos el checklist OWASP 2025 firmado en cada PR" |
-| *¿Qué le falta?* | Andy | "Autenticación con doble factor y HTTPS con certificado Let's Encrypt para producción total. En 12 horas priorizamos funcionalidad sobre certificación TLS." |
+| *¿Qué le falta?* | Andy | "Autenticación con doble factor (2FA) y enlace directo con sensores de hardware físico en sitio. El certificado TLS HTTPS con Let's Encrypt ya está activo en producción y el Laboratorio SCADA emula la telemetría en tiempo real." |
 | *¿El mapa funciona sin internet?* | Andy | "No — Leaflet.js carga los tiles de OpenStreetMap desde sus servidores CDN. En la presentación usamos la red del salón." |
 
 ---

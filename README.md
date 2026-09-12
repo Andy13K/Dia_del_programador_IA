@@ -62,9 +62,12 @@ La aplicación está desplegada en producción sobre **AWS EC2 (Ubuntu 24.04 LTS
 | RF-16 | API REST pública documentada (`/api/v1/...`) | ✅ Implementado | `/api-docs` — `routes/api.php` |
 | RF-17 | Exportación de reportes en CSV (con BOM UTF-8 para Excel) | ✅ Implementado | `/reports/export` |
 
-**Funciones secundarias implementadas:**
-- Trazabilidad y auditoría (OWASP A09): `AuditService` → tabla `audit_logs`
-- Cálculo ecológico: equivalencias en árboles plantados y hogares guatemaltecos abastecidos
+**Funciones innovadoras y diferenciadores implementados:**
+- **Laboratorio y Centro de Control SCADA IoT en Tiempo Real (`/simulator`):** Streaming continuo de paquetes Modbus-TCP/MQTT cada 2s, gráfica de osciloscopio dinámico, breakers interactivos de inversores, control de clima en caliente y persistencia de incidentes RF-14.
+- **Centro de Notificaciones con Campanita Interactiva y Web Audio API:** Contador badge en vivo (`1, 2, 3...`), sintetizador de audio polifónico (chime G5-C6) nativo sin dependencias externas, respiración luminosa difusa para alertas no leídas y pop-up responsivo con filtrado rápido.
+- **Gestión de Usuarios y Roles RBAC (`/users`):** Administración estricta para rol admin con políticas de autorización, validación contra auto-bloqueo y trazabilidad.
+- **Trazabilidad y auditoría (OWASP A09):** `AuditService` → tabla `audit_logs` con registro de 403, autenticaciones y contingencias.
+- **Cálculo ecológico normativo:** Equivalencias en árboles plantados y hogares guatemaltecos abastecidos.
 
 ---
 
