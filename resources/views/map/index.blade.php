@@ -66,39 +66,39 @@
         <div id="guatemalaMap" class="w-full h-full z-10"></div>
 
         <!-- Leyenda Flotante (Siempre visible y contenida en pantalla) -->
-        <div class="absolute bottom-2 left-2 sm:bottom-3 sm:left-3 z-20 bg-slate-900/95 text-white backdrop-blur-md p-2 sm:p-3.5 rounded-xl sm:rounded-2xl border border-slate-700/80 shadow-2xl text-[9px] sm:text-xs space-y-1 sm:space-y-1.5 max-w-[145px] sm:max-w-xs select-none">
-            <div class="font-bold text-amber-400 flex items-center gap-1 leading-none text-[10px] sm:text-xs">
-                <i data-lucide="layers" class="w-3 h-3 sm:w-4 sm:h-4 text-amber-400"></i>
+        <div class="absolute bottom-2 left-2 sm:bottom-3 sm:left-3 z-20 bg-white/95 text-slate-900 dark:bg-slate-900/95 dark:text-white backdrop-blur-md p-2 sm:p-3.5 rounded-xl sm:rounded-2xl border border-slate-200 dark:border-slate-700/80 shadow-2xl text-[9px] sm:text-xs space-y-1 sm:space-y-1.5 max-w-[145px] sm:max-w-xs select-none">
+            <div class="font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1 leading-none text-[10px] sm:text-xs">
+                <i data-lucide="layers" class="w-3 h-3 sm:w-4 sm:h-4 text-amber-600 dark:text-amber-400"></i>
                 <span>Leyenda Solar</span>
             </div>
-            <div class="flex items-center gap-1.5 text-slate-200 leading-none">
+            <div class="flex items-center gap-1.5 text-slate-700 dark:text-slate-200 leading-none">
                 <span class="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-amber-500 ring-2 ring-amber-500/30 inline-block flex-shrink-0"></span>
                 <span class="truncate">Activa</span>
             </div>
-            <div class="flex items-center gap-1.5 text-slate-200 leading-none">
+            <div class="flex items-center gap-1.5 text-slate-700 dark:text-slate-200 leading-none">
                 <span class="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-rose-500 ring-2 ring-rose-500/30 inline-block flex-shrink-0"></span>
                 <span class="truncate">Déficit (≥20%)</span>
             </div>
-            <div class="flex items-center gap-1.5 text-slate-200 leading-none">
+            <div class="flex items-center gap-1.5 text-slate-700 dark:text-slate-200 leading-none">
                 <span class="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-slate-400 inline-block flex-shrink-0"></span>
                 <span class="truncate">No operativa</span>
             </div>
-            <div class="hidden sm:block pt-1.5 border-t border-slate-700 text-[10px] text-slate-400">
+            <div class="hidden sm:block pt-1.5 border-t border-slate-200 dark:border-slate-700 text-[10px] text-slate-500 dark:text-slate-400">
                 Tamaño del pin: capacidad instalada
             </div>
         </div>
 
         <!-- Contador flotante inferior derecho -->
         <div class="absolute bottom-2 right-2 sm:bottom-3 sm:right-3 z-20 select-none">
-            <div class="bg-slate-900/95 text-white backdrop-blur-md px-2.5 py-1.5 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl border border-slate-700/80 shadow-2xl text-[9px] sm:text-xs flex items-center gap-2 sm:gap-3">
+            <div class="bg-white/95 text-slate-900 dark:bg-slate-900/95 dark:text-white backdrop-blur-md px-2.5 py-1.5 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl border border-slate-200 dark:border-slate-700/80 shadow-2xl text-[9px] sm:text-xs flex items-center gap-2 sm:gap-3">
                 <div>
-                    <div class="text-[8px] sm:text-[10px] uppercase font-bold text-slate-400 leading-none">Granjas</div>
-                    <div class="text-xs sm:text-sm font-extrabold text-white leading-tight mt-0.5" id="visibleFarmsCount">0</div>
+                    <div class="text-[8px] sm:text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 leading-none">Granjas</div>
+                    <div class="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white leading-tight mt-0.5" id="visibleFarmsCount">0</div>
                 </div>
-                <div class="w-px h-4 sm:h-6 bg-slate-700"></div>
+                <div class="w-px h-4 sm:h-6 bg-slate-200 dark:bg-slate-700"></div>
                 <div>
-                    <div class="text-[8px] sm:text-[10px] uppercase font-bold text-slate-400 leading-none">Potencia</div>
-                    <div class="text-xs sm:text-sm font-extrabold text-amber-400 leading-tight mt-0.5" id="visiblePowerCount">0 kW</div>
+                    <div class="text-[8px] sm:text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 leading-none">Potencia</div>
+                    <div class="text-xs sm:text-sm font-extrabold text-amber-600 dark:text-amber-400 leading-tight mt-0.5" id="visiblePowerCount">0 kW</div>
                 </div>
             </div>
         </div>
@@ -331,13 +331,13 @@
 
                 selectedDepartmentLayer.bindTooltip(`
                     <div class="font-sans py-0.5">
-                        <div class="text-[10px] uppercase font-bold text-amber-400">Departamento</div>
-                        <div class="text-sm font-extrabold text-white">${escapeHtml(deptFeature.properties.name)}</div>
-                        <div class="text-[10px] text-slate-300 mt-0.5">${filtered.length} granjas registradas</div>
+                        <div class="text-[10px] uppercase font-bold text-amber-600 dark:text-amber-400">Departamento</div>
+                        <div class="text-sm font-extrabold text-slate-900 dark:text-white">${escapeHtml(deptFeature.properties.name)}</div>
+                        <div class="text-[10px] text-slate-500 dark:text-slate-300 mt-0.5">${filtered.length} granjas registradas</div>
                     </div>
                 `, {
                     sticky: true,
-                    className: 'bg-slate-900/95 text-white text-xs px-3 py-1.5 rounded-xl border border-amber-500/50 shadow-2xl backdrop-blur-sm'
+                    className: 'bg-white/95 dark:bg-slate-900/95 text-slate-900 dark:text-white text-xs px-3 py-1.5 rounded-xl border border-amber-500/50 shadow-2xl backdrop-blur-sm'
                 });
 
                 // Encuadrar la cámara suavemente al polígono del departamento
