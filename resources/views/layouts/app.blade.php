@@ -316,9 +316,9 @@
          class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 transition-opacity duration-300 opacity-0 pointer-events-none md:hidden">
     </div>
 
-    <!-- DRAWER LATERAL MÓVIL (Slide-over menú completo) -->
+    <!-- DRAWER LATERAL MÓVIL (Slide-over a la izquierda con animación fluida) -->
     <div id="mobileDrawer" 
-         class="fixed inset-y-0 right-0 max-w-[310px] w-full bg-slate-900 border-l border-slate-800 z-50 shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300 ease-in-out md:hidden text-slate-300 select-none">
+         class="fixed inset-y-0 left-0 max-w-[310px] w-full bg-slate-900 border-r border-slate-800 z-50 shadow-2xl flex flex-col transform -translate-x-full transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] md:hidden text-slate-300 select-none">
         
         <!-- Header Drawer -->
         <div class="h-16 px-5 flex items-center justify-between border-b border-slate-800 bg-slate-950/60">
@@ -475,7 +475,7 @@
             if (drawer && backdrop) {
                 backdrop.classList.remove('opacity-0', 'pointer-events-none');
                 backdrop.classList.add('opacity-100', 'pointer-events-auto');
-                drawer.classList.remove('translate-x-full');
+                drawer.classList.remove('-translate-x-full');
                 drawer.classList.add('translate-x-0');
                 document.body.classList.add('overflow-hidden');
                 lucide.createIcons();
@@ -489,7 +489,7 @@
                 backdrop.classList.remove('opacity-100', 'pointer-events-auto');
                 backdrop.classList.add('opacity-0', 'pointer-events-none');
                 drawer.classList.remove('translate-x-0');
-                drawer.classList.add('translate-x-full');
+                drawer.classList.add('-translate-x-full');
                 document.body.classList.remove('overflow-hidden');
             }
         }
