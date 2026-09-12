@@ -1,4 +1,42 @@
 const icons = () => window.lucide?.createIcons();
+window.toggleUserMenu = (button) => {
+    const menu = button.closest('.kin-user-menu');
+    const willOpen = !menu.classList.contains('is-open');
+    document.querySelectorAll('.kin-user-menu.is-open').forEach(open => {
+        open.classList.remove('is-open');
+        open.querySelector('.kin-user-trigger')?.setAttribute('aria-expanded', 'false');
+    });
+    if (willOpen) {
+        menu.classList.add('is-open');
+        button.setAttribute('aria-expanded', 'true');
+    }
+};
+document.addEventListener('click', event => {
+    document.querySelectorAll('.kin-user-menu.is-open').forEach(menu => {
+        if (!menu.contains(event.target)) {
+            menu.classList.remove('is-open');
+            menu.querySelector('.kin-user-trigger')?.setAttribute('aria-expanded', 'false');
+        }
+    });
+});
+document.addEventListener('keydown', event => {
+    if (event.key !== 'Escape') return;
+    document.querySelectorAll('.kin-user-menu.is-open').forEach(menu => {
+        menu.classList.remove('is-open');
+        menu.querySelector('.kin-user-trigger')?.setAttribute('aria-expanded', 'false');
+    });
+});
+window.togglePasswordVisibility = (id, button) => {
+    const field = document.getElementById(id);
+    const nowVisible = field.type === 'password';
+    field.type = nowVisible ? 'text' : 'password';
+    button.setAttribute('aria-pressed', String(nowVisible));
+    button.setAttribute('aria-label', nowVisible ? 'Ocultar contraseña' : 'Mostrar contraseña');
+    const eyeOff = button.querySelector('.kin-eye-off');
+    const eyeOn = button.querySelector('.kin-eye-on');
+    if (eyeOff) eyeOff.style.display = nowVisible ? 'none' : '';
+    if (eyeOn) eyeOn.style.display = nowVisible ? '' : 'none';
+};
 window.toggleDarkMode = () => {
     const dark = document.documentElement.classList.toggle('dark');
     localStorage.setItem('theme', dark ? 'dark' : 'light');
