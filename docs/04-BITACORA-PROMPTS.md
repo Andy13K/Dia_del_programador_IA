@@ -1320,6 +1320,26 @@ API y el diagnóstico de la rúbrica.
 
 ---
 
+### [13:05] Claude Code (Andy) — Carátula formal, sección de Objetivos dedicada y prosa ampliada del ERS
+
+**Objetivo:** corregir la primera entrega del ERS v2.0, señalada por Andy como "un poco pobre" en comparación con el ERS de referencia — específicamente la ausencia de una carátula formal con identidad visual del sistema y de una sección de objetivos explícita, y en general una redacción demasiado condensada frente a la prosa completa del documento de referencia.
+
+1. **Carátula formal:** se añadió el logo real del sistema (`public/images/kin-logo-negro.png`, versión en negro apta para impresión) en la parte superior del documento, seguido de un título centrado a gran tamaño, la norma de referencia, el nombre del proyecto y las tablas de metadatos/control de versiones — tratados visualmente como una portada independiente tanto en la vista de GitHub como en el PDF (página propia, con salto de página forzado antes del Índice).
+2. **Sección 1.2 Objetivos (nueva):** separada de Alcance, con Objetivo General (1 oración) y siete Objetivos Específicos numerados, redactados explícitamente a partir de lo que ya se documentaba de forma implícita.
+3. **Renumeración de la Sección 1:** Propósito (1.1), Objetivos (1.2, nuevo), Alcance (1.3), Definiciones (1.4), Referencias (1.5), Resumen del Documento (1.6) — todas las referencias cruzadas internas (`§1.2`, `§1.3`) se actualizaron en consecuencia.
+4. **Prosa ampliada:** el Propósito pasó de 3 a 4 párrafos con contexto del problema real que resuelve el sistema; se añadieron párrafos introductorios antes de las tablas en §2.2, §2.4, §2.5, al inicio de la Sección 3, la Sección 4 y la Sección 6, evitando que el documento se sienta como una sucesión de tablas sin narrativa.
+5. **Índice detallado:** se expandió para listar también las subsecciones (1.1 a 7), corrigiendo además un error de formato Markdown (los sub-ítems "1.1." no se anidaban correctamente como lista; se resolvió usando viñetas anidadas bajo cada elemento numerado).
+6. Se regeneró `docs/export/ERS-Kin-Solar-Guatemala.pdf` y se verificó visualmente la carátula, el índice anidado y la nueva sección de objetivos.
+
+**Prompt clave:**
+> "Mira, el RS, el ERS, yo lo necesito bien hecho, tal cual el que yo te mandé, tanto la carátula, en vez del logo de la u, utiliza el logo de del sistema, y todo bien detallado. [...] Porque necesito una buena documentación, pero buena documentación. porque la veo un poco pobre."
+
+**Resultado:** carátula profesional con el logo real del sistema, sección de Objetivos dedicada (general + 7 específicos), Índice anidado y prosa sustancialmente más desarrollada en las seis secciones principales, verificado visualmente en el PDF regenerado.
+
+**Intervención humana:** Andy rechazó explícitamente la primera versión por considerarla insuficientemente detallada y pidió fidelidad al nivel de detalle del ERS de referencia, además de corregir el uso del logo institucional de la universidad por el logo propio del sistema en la portada.
+
+---
+
 ## 4. Evidencia visual
 
 Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:

@@ -1,8 +1,12 @@
-# Especificación de Requerimientos de Software (ERS)
+![K'in Solar Guatemala](../public/images/kin-logo-negro.png)
 
-> **Norma de referencia:** IEEE 830-1998 / ISO/IEC/IEEE 29148:2018. Atributos de calidad conforme a ISO/IEC 25010:2011.
-> **Proyecto:** K'in Solar Guatemala — Sistema de Registro y Monitoreo de Generación Solar por Departamento.
-> **Contexto:** Competencia de Programación con IA — Día del Programador, Universidad Mariano Gálvez, sede Puerto Barrios.
+# Especificación de Requerimientos de Software
+
+## (ERS)
+
+**Basada en el estándar IEEE 830-1998 / ISO/IEC/IEEE 29148:2018 — Atributos de calidad conforme a ISO/IEC 25010:2011**
+
+## K'in Solar Guatemala — Sistema de Registro y Monitoreo de Generación Solar por Departamento
 
 | Campo | Detalle | Campo | Detalle |
 |---|---|---|---|
@@ -16,18 +20,36 @@
 | Versión | Fecha | Autor | Descripción del cambio |
 |---|---|---|---|
 | 1.0 | 11/09/2026 | Andy Aquino & Carlos | Versión inicial, congelada en la Hora 1, basada en el pliego del reto nacional de generación solar. |
-| 2.0 | 12/09/2026 | Andy Aquino & Carlos (con asistencia de IA — ver `04-BITACORA-PROMPTS.md`) | Documento post-desarrollo: interfaces externas, requerimientos ampliados con actor/entrada/proceso/salida/prioridad, 12 RNF, sección de Atributos de Calidad (ISO/IEC 25010), matriz de trazabilidad con casos de uso, casos de uso principales, diagrama de casos de uso y diagrama entidad-relación, checklist final del documento. |
+| 2.0 | 12/09/2026 | Andy Aquino & Carlos (con asistencia de IA — ver `04-BITACORA-PROMPTS.md`) | Documento post-desarrollo: carátula con identidad visual del sistema, sección de Objetivos dedicada, interfaces externas, requerimientos ampliados con actor/entrada/proceso/salida/prioridad, 12 RNF, sección de Atributos de Calidad (ISO/IEC 25010), matriz de trazabilidad con casos de uso, casos de uso principales, diagrama de casos de uso y diagrama entidad-relación, checklist final del documento. |
 
 ---
 
 ## Índice
 
 1. [Introducción](#1-introducción)
+    - [1.1 Propósito](#11-propósito)
+    - [1.2 Objetivos](#12-objetivos)
+    - [1.3 Alcance](#13-alcance)
+    - [1.4 Definiciones, Acrónimos y Abreviaturas](#14-definiciones-acrónimos-y-abreviaturas)
+    - [1.5 Referencias](#15-referencias)
+    - [1.6 Resumen del Documento](#16-resumen-del-documento)
 2. [Descripción General del Sistema](#2-descripción-general-del-sistema)
+    - [2.1 Perspectiva del Producto](#21-perspectiva-del-producto)
+    - [2.2 Funciones del Producto](#22-funciones-del-producto)
+    - [2.3 Características de los Usuarios](#23-características-de-los-usuarios)
+    - [2.4 Restricciones Generales](#24-restricciones-generales)
+    - [2.5 Suposiciones y Dependencias](#25-suposiciones-y-dependencias)
 3. [Requerimientos Específicos](#3-requerimientos-específicos)
+    - [3.1 Interfaces Externas](#31-interfaces-externas)
+    - [3.2 Requerimientos Funcionales (RF-01 a RF-19)](#32-requerimientos-funcionales)
+    - [3.3 Requerimientos No Funcionales (RNF-01 a RNF-12)](#33-requerimientos-no-funcionales-rnf)
 4. [Restricciones de Diseño y Cumplimiento](#4-restricciones-de-diseño-y-cumplimiento)
 5. [Atributos de Calidad (ISO/IEC 25010)](#5-atributos-de-calidad-isoiec-250102011)
 6. [Apéndices](#6-apéndices)
+    - [6.1 Matriz de Trazabilidad de Requerimientos](#61-matriz-de-trazabilidad-de-requerimientos)
+    - [6.2 Casos de Uso Principales](#62-casos-de-uso-principales)
+    - [6.3 Modelo de Datos](#63-modelo-de-datos)
+    - [6.4 Lista de Verificación (Checklist ERS)](#64-lista-de-verificación-checklist-ers)
 7. [Firma de Aprobación](#7-firma-de-aprobación)
 
 ---
@@ -36,15 +58,35 @@
 
 ### 1.1 Propósito
 
-El presente documento constituye la Especificación de Requerimientos de Software (ERS) formal para **K'in Solar Guatemala**, redactado bajo el estándar IEEE 830-1998 y su evolución ISO/IEC/IEEE 29148:2018, incorporando además el modelo de atributos de calidad ISO/IEC 25010:2011 (SQuaRE) como criterio de evaluación no funcional. Establece los requerimientos funcionales, no funcionales, reglas de negocio matemáticas, interfaces externas y restricciones técnicas que rigen el desarrollo y la evaluación del sistema.
+El presente documento constituye la Especificación de Requerimientos de Software (ERS) formal para **K'in Solar Guatemala**, redactado bajo el estándar IEEE 830-1998 y su evolución ISO/IEC/IEEE 29148:2018, incorporando además el modelo de atributos de calidad ISO/IEC 25010:2011 (SQuaRE) como criterio de evaluación no funcional. Su propósito es definir, de manera formal, precisa y verificable, la totalidad de los requerimientos funcionales, no funcionales, reglas de negocio matemáticas, interfaces externas y restricciones técnicas que rigen el desarrollo y la evaluación del sistema, estableciendo un contrato técnico único entre el equipo de desarrollo y los interesados del proyecto: la terna examinadora de la competencia.
 
-Está dirigido a: (a) el equipo de desarrollo, integrado por Andy Aquino y Carlos con cinco agentes de inteligencia artificial coordinados (Claude Code ×2, Codex, Antigravity ×2); (b) la terna examinadora de la competencia; y (c) cualquier evaluador académico o técnico que requiera comprender el alcance, comportamiento y restricciones del sistema.
+El documento nace de una problemática real y verificable en el contexto guatemalteco: la generación de energía solar departamental se reporta hoy de forma fragmentada, mediante hojas de cálculo aisladas y comunicación informal entre operadores regionales, sin un mecanismo centralizado que permita a una autoridad nacional conocer, en tiempo real, cuánta energía limpia se produce, cuánto CO₂ se evita y cuántas familias se benefician en cada uno de los 22 departamentos del país. K'in Solar Guatemala responde a esa problemática con una plataforma única de registro, monitoreo y proyección, y este ERS documenta con rigor técnico cada una de las capacidades que la resuelven.
 
-A diferencia de la versión 1.0 —redactada y congelada en la Hora 1 antes de escribir código—, esta versión 2.0 se elabora **al cierre del desarrollo**, verificando cada requerimiento contra la implementación real (controladores, servicios, migraciones y rutas del repositorio) para garantizar que el documento describe el sistema que efectivamente se entrega, no solamente el que se planeó.
+Está dirigido a: (a) el equipo de desarrollo, integrado por Andy Aquino y Carlos con cinco agentes de inteligencia artificial coordinados (Claude Code ×2, Codex, Antigravity ×2), responsables de implementar y verificar los requerimientos descritos; (b) la terna examinadora de la competencia, responsable de evaluar el cumplimiento del sistema contra este documento; y (c) cualquier evaluador académico o técnico que, con posterioridad a la competencia, requiera comprender el alcance, comportamiento, arquitectura y restricciones del sistema sin necesidad de leer el código fuente.
 
-### 1.2 Alcance
+A diferencia de la versión 1.0 —redactada y congelada en la Hora 1 de la competencia, antes de escribir una sola línea de código, como contrato inicial de diseño—, esta versión 2.0 se elabora **al cierre del desarrollo**, verificando cada requerimiento contra la implementación real (controladores, servicios, migraciones y rutas del repositorio) para garantizar que el documento describe fielmente el sistema que efectivamente se entrega y no solamente el que se planeó en la primera hora. Esta metodología de doble redacción —una especificación ex-ante que guía el desarrollo y una verificación ex-post que lo audita— es, en sí misma, una práctica de ingeniería de requerimientos deliberada y documentada como tal.
+
+### 1.2 Objetivos
+
+#### 1.2.1 Objetivo general
+
+Especificar de manera completa, verificable y trazable los requerimientos funcionales, no funcionales y de calidad del sistema K'in Solar Guatemala, de forma que sirvan simultáneamente como guía de implementación para el equipo de desarrollo y como instrumento de evaluación objetiva para la terna examinadora de la competencia.
+
+#### 1.2.2 Objetivos específicos
+
+1. Definir con precisión el alcance funcional del sistema, delimitando explícitamente qué capacidades forman parte del producto y cuáles quedan fuera de su cobertura, evitando ambigüedad en la evaluación.
+2. Documentar cada requerimiento funcional (RF) con su actor, entrada, proceso, salida, criterio de aceptación verificable y prioridad, de forma que cualquier evaluador pueda confirmar su cumplimiento sin depender de explicaciones verbales del equipo.
+3. Establecer requerimientos no funcionales medibles (rendimiento, seguridad, disponibilidad, usabilidad, auditabilidad, entre otros) con métricas cuantificables, en lugar de declaraciones de intención no verificables.
+4. Incorporar el modelo de calidad ISO/IEC 25010:2011 como marco complementario a los estándares IEEE 830 / ISO/IEC/IEEE 29148, demostrando que el sistema fue diseñado bajo un criterio de calidad de producto de software reconocido internacionalmente, y no únicamente bajo un criterio funcional.
+5. Modelar formalmente la estructura de datos del sistema mediante un diagrama entidad-relación fiel al esquema real implementado, y su comportamiento mediante un diagrama de casos de uso, ambos bajo notación UML.
+6. Documentar honestamente los elementos de valor añadido construidos durante el desarrollo que exceden el alcance originalmente congelado en la Hora 1 (el servidor MCP propio y los simuladores de telemetría), en cumplimiento del principio de no ampliar el alcance sin registrarlo.
+7. Dejar evidencia explícita, mediante la bitácora de prompts referenciada en este documento, de cómo se empleó la inteligencia artificial durante el desarrollo y qué criterio humano corrigió o validó su producción.
+
+### 1.3 Alcance
 
 El sistema es una plataforma web desarrollada en **Laravel 13 / PHP 8.3** que centraliza la administración de infraestructura de energía solar en los **22 departamentos de Guatemala**. Permite registrar granjas solares con coordenadas geográficas, vincular paneles y calcular automáticamente la capacidad instalada en kW, registrar mediciones periódicas de generación energética real y estimada en kWh, computar la reducción de dióxido de carbono ($0.40\text{ kg CO}_2/\text{kWh}$), generar alertas automáticas ante desviaciones críticas ($\ge 20\%$), proyectar generación futura con base en regímenes climáticos estacionales de Guatemala, visualizar los activos sobre un mapa interactivo nacional (Leaflet.js) y exponer un conjunto de endpoints API REST documentados y consumibles externamente, incluyendo un **servidor MCP (Model Context Protocol) propio** que permite a agentes de IA externos consultar y registrar datos en lenguaje natural.
+
+El sistema está pensado para ser operado por tres perfiles de usuario claramente diferenciados —administrador, operador regional y visualizador institucional— y para ser consumido, además, por sistemas externos (municipalidades, el Ministerio de Energía y Minas, organizaciones no gubernamentales) a través de su API pública, y por asistentes de inteligencia artificial a través de su servidor MCP propio. Esta doble vía de consumo (humano vía interfaz web, y automatizado vía API/MCP) es central al alcance del producto y se documenta en detalle en la Sección 3.1 (Interfaces Externas).
 
 **Explícitamente fuera del alcance:**
 1. Catálogo nominal individualizado de familias beneficiadas (se registra únicamente el conteo total acumulado por granja según las bases).
@@ -52,7 +94,7 @@ El sistema es una plataforma web desarrollada en **Laravel 13 / PHP 8.3** que ce
 3. Modelos opacos de Deep Learning que requieran servidores dedicados de GPU (se utiliza un modelo algorítmico estadístico de estacionalidad bimodal guatemalteca — SMA-SF — explicable y auditable en PHP).
 4. Integración con hardware SCADA/telemetría real de planta; el módulo de simulación (`ScadaSimulatorController`, `TelemetrySimulationController`) es una herramienta pedagógica de generación de datos de demostración, no un enlace a dispositivos físicos.
 
-### 1.3 Definiciones, acrónimos y abreviaturas
+### 1.4 Definiciones, acrónimos y abreviaturas
 
 | Sigla / Término | Definición |
 |---|---|
@@ -71,7 +113,7 @@ El sistema es una plataforma web desarrollada en **Laravel 13 / PHP 8.3** que ce
 | **PSR-12** | Estándar de estilo de código para PHP de la PHP-FIG. |
 | **TLS** | *Transport Layer Security* — protocolo criptográfico requerido en tránsito (mínimo 1.2) mediante HTTPS. |
 
-### 1.4 Referencias
+### 1.5 Referencias
 
 IEEE. (1998). *IEEE recommended practice for software requirements specifications* (IEEE Std 830-1998). Institute of Electrical and Electronics Engineers.
 
@@ -91,9 +133,11 @@ OpenStreetMap Foundation. (2024). *Leaflet.js documentation*. https://leafletjs.
 
 CNEE. (2023). *Factor de emisión del Sistema Nacional Interconectado de Guatemala* (referencia normativa para el factor 0.40 kg CO₂/kWh usado en el cálculo ambiental del sistema).
 
-### 1.5 Resumen del documento
+### 1.6 Resumen del documento
 
-El documento se organiza en siete secciones: la Sección 1 (Introducción) presenta propósito, alcance, glosario y referencias; la Sección 2 (Descripción General) describe la perspectiva del producto, sus funciones, los tipos de usuario y las restricciones/supuestos; la Sección 3 (Requerimientos Específicos) constituye el núcleo técnico con las interfaces externas, los 19 requerimientos funcionales (17 congelados en la Hora 1 más 2 de valor añadido documentados con honestidad) y los 12 requerimientos no funcionales; la Sección 4 (Restricciones de Diseño y Cumplimiento) enumera los estándares aplicables y las restricciones tecnológicas y legales; la Sección 5 (Atributos de Calidad) resume el cumplimiento conforme a ISO/IEC 25010; y la Sección 6 (Apéndices) reúne la matriz de trazabilidad, los casos de uso principales, el modelo de datos con su diagrama entidad-relación y la lista de verificación final del documento.
+El documento se organiza en siete secciones: la Sección 1 (Introducción) presenta propósito, objetivos general y específicos, alcance, glosario y referencias; la Sección 2 (Descripción General) describe la perspectiva del producto, sus funciones, los tipos de usuario y las restricciones/supuestos; la Sección 3 (Requerimientos Específicos) constituye el núcleo técnico con las interfaces externas, los 19 requerimientos funcionales (17 congelados en la Hora 1 más 2 de valor añadido documentados con honestidad) y los 12 requerimientos no funcionales; la Sección 4 (Restricciones de Diseño y Cumplimiento) enumera los estándares aplicables y las restricciones tecnológicas y legales; la Sección 5 (Atributos de Calidad) resume el cumplimiento conforme a ISO/IEC 25010; y la Sección 6 (Apéndices) reúne la matriz de trazabilidad, los casos de uso principales, el modelo de datos con su diagrama entidad-relación y la lista de verificación final del documento.
+
+El desarrollo de este documento parte, como se detalla en el §1.1, de la fragmentación operativa observada en el registro de generación solar departamental en Guatemala. Frente a esa realidad, K'in Solar Guatemala centraliza en una única plataforma el registro de infraestructura, el cómputo ambiental normativo, la detección de anomalías y la proyección estadística de generación futura, exponiéndolo todo tanto a usuarios humanos como a sistemas y agentes de inteligencia artificial externos.
 
 ---
 
@@ -109,7 +153,11 @@ K'in Solar Guatemala es un sistema nuevo, sin precedente institucional, desarrol
 
 El sistema además expone dos interfaces externas activas: una **API REST v1** de solo lectura para integración con terceros (municipalidades, MINEM, ONG), y un **servidor MCP propio** (`mcp-server/`, Node.js + `@modelcontextprotocol/sdk`) que permite a cualquier asistente de IA compatible (p. ej. Claude Desktop) consultar estadísticas y registrar mediciones de generación en lenguaje natural, autenticado con clave dedicada y trazado en la tabla de auditoría.
 
+Desde la perspectiva del negocio, K'in Solar Guatemala se ubica como un sistema de registro y monitoreo (no de control físico): no opera hardware de generación ni sustituye a un SCADA industrial real, sino que provee la capa de gestión, trazabilidad y proyección que hoy no existe de forma centralizada para la generación solar departamental guatemalteca. Su valor no está únicamente en el CRUD de activos, sino en las tres capas de inteligencia de negocio que se aplican sobre esos datos: el cómputo ambiental normativo (RF-10), la detección autónoma de anomalías (RF-14) y la proyección estadística estacional (RF-15).
+
 ### 2.2 Funciones del Producto
+
+Las funciones del sistema se agrupan en diez módulos operativos, ocho de ellos correspondientes a los 17 requerimientos funcionales congelados en la Hora 1 y dos adicionales que documentan honestamente el valor añadido construido durante el desarrollo (§3.2, RF-18 y RF-19):
 
 | Módulo | Funciones principales | RF relacionados |
 |---|---|---|
@@ -135,6 +183,8 @@ El sistema además expone dos interfaces externas activas: una **API REST v1** d
 
 ### 2.4 Restricciones Generales
 
+El desarrollo del sistema estuvo sujeto a restricciones de tiempo, alcance técnico y disciplina de equipo propias del formato de la competencia, las cuales condicionan directamente cómo debe interpretarse y evaluarse este documento:
+
 - Stack tecnológico congelado en la Hora 1: PHP 8.3, Laravel 13, MySQL 8, Tailwind CSS v4, Vite. Ningún cambio de versión mayor durante el desarrollo.
 - Flujo de control de versiones de rama única: `master` protegida, todo cambio vía rama propia + Pull Request revisado, sin excepciones (`docs/01-REGLAS-DE-TRABAJO.md`).
 - Ventana de desarrollo fija de la competencia (viernes 17:00 → sábado 16:00), incluyendo una pausa académica obligatoria sábado 07:00–12:00.
@@ -142,6 +192,8 @@ El sistema además expone dos interfaces externas activas: una **API REST v1** d
 - Esquema de base de datos, `routes/` y `app/Models/` congelados desde la Hora 1 salvo autorización expresa.
 
 ### 2.5 Suposiciones y Dependencias
+
+La correcta operación del sistema durante la evaluación depende de un conjunto de supuestos externos que el equipo de desarrollo no controla directamente, pero que se han verificado como estables durante todo el desarrollo:
 
 - Disponibilidad del servicio de mosaicos (*tiles*) de OpenStreetMap para el mapa interactivo durante la demostración en vivo.
 - El dominio público (`kin-solar-guatemala.duckdns.org`, vía DuckDNS apuntando a una Elastic IP de AWS) y el certificado TLS de Let's Encrypt permanecen vigentes durante la evaluación.
@@ -152,6 +204,8 @@ El sistema además expone dos interfaces externas activas: una **API REST v1** d
 ---
 
 ## 3. Requerimientos Específicos
+
+Esta sección constituye el núcleo técnico y contractual del documento. Se organiza en tres bloques: primero se describen las interfaces externas del sistema (con qué tipos de usuario, hardware, software y canales de comunicación interactúa); después se especifican los requerimientos funcionales, cada uno con su actor, entrada, proceso, salida, criterio de aceptación verificable y prioridad; y finalmente los requerimientos no funcionales, expresados siempre como métricas cuantificables y no como declaraciones de intención.
 
 ### 3.1 Interfaces Externas
 
@@ -390,6 +444,8 @@ Cada requerimiento incluye actor(es), entrada, proceso, salida, criterio de acep
 
 ## 4. Restricciones de Diseño y Cumplimiento
 
+Además de las restricciones generales descritas en §2.4, el diseño e implementación del sistema están sujetos a un conjunto de estándares, restricciones tecnológicas y consideraciones legales que se detallan a continuación y que fueron verificadas, no solo declaradas, durante el desarrollo.
+
 ### 4.1 Estándares Aplicables
 - **IEEE 830-1998** e **ISO/IEC/IEEE 29148:2018** — estructura y verificabilidad de este documento.
 - **ISO/IEC 25010:2011 (SQuaRE)** — modelo de atributos de calidad (Sección 5).
@@ -402,7 +458,7 @@ Cada requerimiento incluye actor(es), entrada, proceso, salida, criterio de acep
 Stack congelado en la Hora 1 (PHP 8.3, Laravel 13, MySQL 8, Tailwind CSS v4, Vite); rama única `master` con flujo obligatorio de Pull Request; ningún *push* directo a `master`; ninguna dependencia nueva sin registrar su justificación en el PR correspondiente.
 
 ### 4.3 Requerimientos Legales y de Privacidad
-Guatemala no cuenta con una ley general de protección de datos equivalente al RGPD europeo; no obstante, el sistema aplica principios de **minimización de datos por diseño**: las familias beneficiadas se registran únicamente como conteo agregado (explícitamente fuera de alcance su identificación nominal, §1.2), las contraseñas se almacenan con *hash* bcrypt y ningún secreto (claves de API, contraseñas de *seeders*) se versiona en el repositorio — se inyectan mediante variables de entorno (`.env`, no versionado) y se documentan en `04-BITACORA-PROMPTS.md` como decisión de seguridad (OWASP A02/A07).
+Guatemala no cuenta con una ley general de protección de datos equivalente al RGPD europeo; no obstante, el sistema aplica principios de **minimización de datos por diseño**: las familias beneficiadas se registran únicamente como conteo agregado (explícitamente fuera de alcance su identificación nominal, §1.3), las contraseñas se almacenan con *hash* bcrypt y ningún secreto (claves de API, contraseñas de *seeders*) se versiona en el repositorio — se inyectan mediante variables de entorno (`.env`, no versionado) y se documentan en `04-BITACORA-PROMPTS.md` como decisión de seguridad (OWASP A02/A07).
 
 ---
 
@@ -424,6 +480,8 @@ La siguiente tabla presenta las ocho características del modelo de calidad de p
 ---
 
 ## 6. Apéndices
+
+Los apéndices reúnen la evidencia de trazabilidad y modelado formal del sistema: la matriz que vincula cada requerimiento con su caso de uso y prioridad, la narrativa y el diagrama UML de los doce casos de uso principales, el modelo de datos con su diagrama entidad-relación fiel al esquema real implementado, y la lista de verificación de calidad del propio documento.
 
 ### 6.1 Matriz de Trazabilidad de Requerimientos
 

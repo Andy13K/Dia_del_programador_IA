@@ -26,6 +26,23 @@
   h2{ font-size: 19px; color: var(--accent); border-bottom: 1px solid var(--line); padding-bottom: 6px; margin-top: 40px; page-break-before: always; }
   h1 + p, h1 + blockquote { page-break-before: avoid; }
   h2:first-of-type { page-break-before: avoid; }
+
+  /* Carátula: los primeros elementos del documento (logo, título, subtítulo, nombre del
+     proyecto) se centran y se tratan como portada; el resto del documento sigue el flujo normal. */
+  #content > p:nth-child(1) { text-align: center; margin-top: 30px; }
+  #content > p:nth-child(1) img { width: 300px; border: none; padding: 0; margin: 0 auto; }
+  #content > h1:nth-of-type(1) {
+    text-align: center; border: none; font-size: 27px; margin: 26px 0 2px; letter-spacing: .02em;
+  }
+  #content > h2:nth-of-type(1) {
+    text-align: center; border: none; color: #92400e; font-size: 20px; font-weight: 800;
+    margin-top: 0; page-break-before: avoid;
+  }
+  #content > p:nth-child(4) { text-align: center; color: #78350f; font-size: 12.5px; margin: 4px 0 20px; }
+  #content > h2:nth-of-type(2) {
+    text-align: center; border: none; color: #1a2338; font-size: 17px; margin-top: 6px;
+    page-break-before: avoid; padding-bottom: 0;
+  }
   h3{ font-size: 15.5px; color: #92400e; margin-top: 26px; }
   h4{ font-size: 14.5px; color: #1a2338; background: var(--accent-soft); padding: 6px 10px; border-left: 4px solid var(--accent); margin-top: 22px; margin-bottom: 8px; page-break-after: avoid; }
   p, li { color: var(--ink); }
