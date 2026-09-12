@@ -1,6 +1,6 @@
 # Plan Maestro — Competencia Día del Programador con IA
 
-**Equipo:** Andy Aquino · Carlos
+**Equipo:** Andy Fabricio Aquino Escobar (Carné 0909-22-1669) · Carlos Giovanni Martínez (Carné 0909-22-19157)
 **Reto publicado:** viernes 11/09, 17:00
 **Presentación:** sábado 12/09, ~16:00
 **Agentes disponibles:** 5 (Claude Code ×2, Codex, Antigravity ×2)

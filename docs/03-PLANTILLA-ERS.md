@@ -12,15 +12,15 @@
 |---|---|---|---|
 | **Proyecto** | K'in Solar Guatemala | **Versión** | 2.0 |
 | **Organización** | Universidad Mariano Gálvez de Guatemala — Facultad de Ingeniería en Sistemas, sede Puerto Barrios | **Fecha** | 12/09/2026 |
-| **Autores** | Andy Fabricio Aquino Escobar (Carné 0909-22-1669) · Carlos | **Estado** | Aprobado — Post-desarrollo |
+| **Autores** | Andy Fabricio Aquino Escobar (Carné 0909-22-1669) · Carlos Giovanni Martínez (Carné 0909-22-19157) | **Estado** | Aprobado — Post-desarrollo |
 | **Contexto** | Competencia de Programación con IA — Día del Programador 2026 | **Revisado por** | Equipo de desarrollo (autorevisión cruzada) |
 
 ### Control de versiones del documento
 
 | Versión | Fecha | Autor | Descripción del cambio |
 |---|---|---|---|
-| 1.0 | 11/09/2026 | Andy Aquino & Carlos | Versión inicial, congelada en la Hora 1, basada en el pliego del reto nacional de generación solar. |
-| 2.0 | 12/09/2026 | Andy Aquino & Carlos (con asistencia de IA — ver `04-BITACORA-PROMPTS.md`) | Documento post-desarrollo: carátula con identidad visual del sistema, sección de Objetivos dedicada, interfaces externas, requerimientos ampliados con actor/entrada/proceso/salida/prioridad, 12 RNF, sección de Atributos de Calidad (ISO/IEC 25010), matriz de trazabilidad con casos de uso, doce casos de uso con narrativa completa (flujo normal, alternos y postcondiciones) agrupados en tres diagramas UML, diagrama entidad-relación, diagrama de secuencia y diagrama de actividades, checklist final del documento. |
+| 1.0 | 11/09/2026 | Andy Aquino & Carlos Martínez | Versión inicial, congelada en la Hora 1, basada en el pliego del reto nacional de generación solar. |
+| 2.0 | 12/09/2026 | Andy Aquino & Carlos Martínez (con asistencia de IA — ver `04-BITACORA-PROMPTS.md`) | Documento post-desarrollo: carátula con identidad visual del sistema, sección de Objetivos dedicada, interfaces externas, requerimientos ampliados con actor/entrada/proceso/salida/prioridad, 12 RNF, sección de Atributos de Calidad (ISO/IEC 25010), matriz de trazabilidad con casos de uso, doce casos de uso con narrativa completa (flujo normal, alternos y postcondiciones) agrupados en tres diagramas UML, diagrama entidad-relación, diagrama de secuencia y diagrama de actividades, checklist final del documento. |
 
 ---
 
@@ -39,6 +39,7 @@
     - [2.3 Características de los Usuarios](#23-características-de-los-usuarios)
     - [2.4 Restricciones Generales](#24-restricciones-generales)
     - [2.5 Suposiciones y Dependencias](#25-suposiciones-y-dependencias)
+    - [2.6 Roles del Equipo y Distribución de Responsabilidades](#26-roles-del-equipo-y-distribución-de-responsabilidades)
 3. [Requerimientos Específicos](#3-requerimientos-específicos)
     - [3.1 Interfaces Externas](#31-interfaces-externas)
     - [3.2 Requerimientos Funcionales (RF-01 a RF-19)](#32-requerimientos-funcionales)
@@ -156,6 +157,10 @@ El sistema además expone dos interfaces externas activas: una **API REST v1** d
 
 Desde la perspectiva del negocio, K'in Solar Guatemala se ubica como un sistema de registro y monitoreo (no de control físico): no opera hardware de generación ni sustituye a un SCADA industrial real, sino que provee la capa de gestión, trazabilidad y proyección que hoy no existe de forma centralizada para la generación solar departamental guatemalteca. Su valor no está únicamente en el CRUD de activos, sino en las tres capas de inteligencia de negocio que se aplican sobre esos datos: el cómputo ambiental normativo (RF-10), la detección autónoma de anomalías (RF-14) y la proyección estadística estacional (RF-15).
 
+El siguiente diagrama de despliegue muestra la infraestructura física descrita: la capa de clientes, el tránsito HTTPS/DNS hacia AWS, y dentro de la instancia EC2 el servidor web, el servidor de aplicaciones (Laravel y el servidor MCP propio) y la base de datos.
+
+![Diagrama de Arquitectura y Despliegue Físico — K'in Solar Guatemala](diagramas/arquitectura-despliegue.png)
+
 ### 2.2 Funciones del Producto
 
 Las funciones del sistema se agrupan en diez módulos operativos, ocho de ellos correspondientes a los 17 requerimientos funcionales congelados en la Hora 1 y dos adicionales que documentan honestamente el valor añadido construido durante el desarrollo (§3.2, RF-18 y RF-19):
@@ -201,6 +206,15 @@ La correcta operación del sistema durante la evaluación depende de un conjunto
 - El factor de conversión CO₂ (0.40 kg/kWh) es un valor de referencia fijo aceptado por las bases de la competencia; no se conecta a un servicio externo de factor de emisión en tiempo real.
 - Los datos de demostración (departamentos, granjas, mediciones) se cargan mediante *seeders* deterministas; el jurado no necesita registrar datos desde cero para evaluar el sistema.
 - El servidor MCP asume que el cliente de IA (p. ej. Claude Desktop) soporta el transporte estándar del SDK `@modelcontextprotocol/sdk` y posee la clave de autenticación entregada de forma segura, no publicada en el repositorio.
+
+### 2.6 Roles del Equipo y Distribución de Responsabilidades
+
+Conforme a lo exigido por la rúbrica de la competencia, la siguiente tabla documenta explícitamente las tareas realizadas por cada integrante del equipo y el rol que desempeñó durante el desarrollo, incluyendo los agentes de inteligencia artificial que operó cada uno bajo el esquema de propiedad de carpetas descrito en `docs/00-PLAN-MAESTRO.md` (§2).
+
+| Integrante | Rol en el Proyecto | Tareas Principales Realizadas | Agentes de IA Operados |
+|---|---|---|---|
+| **Andy Fabricio Aquino Escobar** | Co-Arquitecto e Integrador (Agente E) · Frontend / UI-UX (Agente C) | Diseño del esquema de base de datos, autorización y Policies (junto con el Agente A); maquetación de vistas Blade; diseño del sistema visual con Tailwind CSS v4; integración del mapa interactivo con Leaflet.js; resolución de conflictos y merge de Pull Requests; documentación técnica y corrección de detalles del ERS. | Claude Code (Agente E) · Antigravity (Agente C) |
+| **Carlos Giovanni Martínez** | Arquitecto Principal e Integrador (Agente A) · Backend y DevOps (Agentes B y D) | Migraciones, modelos Eloquent y Policies de autorización; controladores y FormRequests; lógica de servicios desacoplados (`CarbonOffsetService`, `AlertEvaluationService`, `ForecastService`); implementación de telemetría; pipeline de despliegue en AWS EC2; auditoría de seguridad OWASP Top 10:2025 y servidor MCP propio. | Claude Code (Agente A) · Codex (Agente B) · Antigravity (Agente D) |
 
 ---
 
@@ -783,4 +797,4 @@ El sistema persiste su información en nueve entidades relacionales (además de 
 
 Documento versión 1.0 aprobado a las 18:00 del viernes 11 de septiembre de 2026. Versión 2.0 (post-desarrollo) aprobada a las 12:00 del sábado 12 de septiembre de 2026.
 
-**Equipo:** Andy Fabricio Aquino Escobar (Carné 0909-22-1669) · Carlos
+**Equipo:** Andy Fabricio Aquino Escobar (Carné 0909-22-1669) · Carlos Giovanni Martínez (Carné 0909-22-19157)

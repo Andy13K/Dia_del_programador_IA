@@ -163,7 +163,7 @@
                 Orador: Carlos
             </span>
             <span id="targetTimeBadge" class="px-2.5 py-1 rounded bg-slate-800 text-slate-300 text-xs font-mono">
-                0:00 - 0:45
+                0:00 - 0:40
             </span>
         </div>
 
@@ -181,7 +181,7 @@
 
             <!-- Slide Counter -->
             <div class="text-xs font-mono text-slate-400">
-                <span id="currentSlideNum" class="text-solar-400 font-bold">1</span> / <span id="totalSlidesNum">13</span>
+                <span id="currentSlideNum" class="text-solar-400 font-bold">1</span> / <span id="totalSlidesNum">15</span>
             </div>
 
             <!-- Theme toggle: usa la misma paleta de variables (claro/oscuro) del sistema real -->
@@ -306,11 +306,11 @@
 
             <div class="my-auto space-y-6">
                 <div>
-                    <h2 class="text-3xl sm:text-4xl font-black text-white">Cinco Elementos Clave de <span class="text-gradient">K'in Solar</span></h2>
+                    <h2 class="text-3xl sm:text-4xl font-black text-white">Seis Elementos Clave de <span class="text-gradient">K'in Solar</span></h2>
                     <p class="text-sm sm:text-base text-slate-400 mt-1">Ingeniería diseñada específicamente para el contexto geográfico y energético guatemalteco.</p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div class="glass-panel p-5 rounded-xl border border-slate-800 hover:border-solar-500/50 transition-all flex flex-col justify-between">
                         <div class="space-y-2">
                             <span class="text-2xl">🇬🇹</span>
@@ -354,6 +354,15 @@
                             <p class="text-xs text-slate-300 leading-relaxed">Protocolo Model Context Protocol nativo que permite a LLMs consultar y registrar mediciones.</p>
                         </div>
                         <span class="mt-4 text-[10px] uppercase font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded inline-block font-bold">20% Originalidad</span>
+                    </div>
+
+                    <div class="glass-panel p-5 rounded-xl border border-slate-800 hover:border-solar-500/50 transition-all flex flex-col justify-between">
+                        <div class="space-y-2">
+                            <span class="text-2xl">🗿</span>
+                            <h3 class="text-sm font-bold text-white">Identidad Maya-Solar</h3>
+                            <p class="text-xs text-slate-400 leading-relaxed">Nombre, glifo y paleta ámbar como síntesis conceptual del producto, no solo del código.</p>
+                        </div>
+                        <span class="mt-4 text-[10px] uppercase font-mono text-solar-400 bg-solar-500/10 px-2 py-0.5 rounded inline-block">Originalidad Propia</span>
                     </div>
                 </div>
             </div>
@@ -430,205 +439,118 @@
             </div>
         </section>
 
-        <!-- SLIDE 4: Demostración en Vivo: Dashboard & Mapa -->
-        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Andy" data-speaker-class="speaker-badge-andy" data-time="3:00 - 4:15">
+        <!-- SLIDE 5: Estandares y Normas: ERS + ERD -->
+        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Andy" data-speaker-class="speaker-badge-andy" data-time="2:30 - 3:00">
             <div class="flex items-center justify-between border-b border-slate-800/60 pb-4">
-                <span class="text-xs uppercase tracking-widest text-solar-400 font-bold">05 · Demostración en Vivo: Dashboard & Territorio</span>
-                <span class="text-xs text-slate-500 font-mono">3:00 - 4:15</span>
+                <span class="text-xs uppercase tracking-widest text-solar-400 font-bold">05 · Cumplimiento Normativo</span>
+                <span class="text-xs text-slate-500 font-mono">2:30 - 3:00</span>
             </div>
 
-            <div class="my-auto space-y-6">
-                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                    <div>
-                        <h2 class="text-3xl sm:text-4xl font-black text-white">Monitoreo Territorial en <span class="text-gradient">Tiempo Real</span></h2>
-                        <p class="text-sm text-slate-400 mt-1">Visualización unificada de la matriz energética en los 22 departamentos.</p>
+            <div class="my-auto grid grid-cols-1 lg:grid-cols-5 gap-6 items-center">
+                <div class="lg:col-span-3 space-y-2.5">
+                    <h2 class="text-2xl sm:text-3xl font-black text-white mb-2">Estándares Aplicados y los <span class="text-gradient">Artefactos</span> que Construimos</h2>
+                    <div class="glass-panel p-3 rounded-xl border border-slate-800">
+                        <div class="text-solar-400 font-mono text-xs font-bold">IEEE 830-1998 / ISO 29148:2018</div>
+                        <div class="text-xs text-slate-300">ERS — Especificación de Requerimientos de Software: objetivos, 19 RF, 12 RNF, 12 casos de uso.</div>
                     </div>
-                    <div class="flex gap-2">
-                        <a href="/" target="_blank" class="px-4 py-2 bg-solar-500 hover:bg-solar-400 text-slate-950 font-bold text-xs rounded-lg transition-colors flex items-center space-x-2">
-                            <span>Abrir Dashboard</span>
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                        </a>
-                        <a href="/map" target="_blank" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs rounded-lg transition-colors flex items-center space-x-2 border border-slate-700">
-                            <span>Ver Mapa Leaflet</span>
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
-                        </a>
+                    <div class="glass-panel p-3 rounded-xl border border-slate-800">
+                        <div class="text-solar-400 font-mono text-xs font-bold">UML 2.5</div>
+                        <div class="text-xs text-slate-300">ERD — Diagrama Entidad-Relación + Casos de Uso, Secuencia y Actividades.</div>
                     </div>
-                </div>
-
-                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-                    <div class="glass-panel p-4 rounded-xl text-center">
-                        <span class="text-xs text-slate-400 uppercase font-mono">Generación Total</span>
-                        <div class="text-xl sm:text-2xl font-black text-solar-400 mt-1">1.84 GWh</div>
+                    <div class="glass-panel p-3 rounded-xl border border-slate-800">
+                        <div class="text-solar-400 font-mono text-xs font-bold">ISO/IEC 25010:2011 (SQuaRE)</div>
+                        <div class="text-xs text-slate-300">Sección de Atributos de Calidad del ERS (§5): 8 características de producto de software.</div>
                     </div>
-                    <div class="glass-panel p-4 rounded-xl text-center">
-                        <span class="text-xs text-slate-400 uppercase font-mono">CO₂ Mitigado</span>
-                        <div class="text-xl sm:text-2xl font-black text-emerald-400 mt-1">736 Ton</div>
-                    </div>
-                    <div class="glass-panel p-4 rounded-xl text-center">
-                        <span class="text-xs text-slate-400 uppercase font-mono">Granjas Activas</span>
-                        <div class="text-xl sm:text-2xl font-black text-white mt-1">22 Deptos</div>
-                    </div>
-                    <div class="glass-panel p-4 rounded-xl text-center">
-                        <span class="text-xs text-slate-400 uppercase font-mono">Paneles Instalados</span>
-                        <div class="text-xl sm:text-2xl font-black text-white mt-1">3,400+</div>
-                    </div>
-                    <div class="glass-panel p-4 rounded-xl text-center">
-                        <span class="text-xs text-slate-400 uppercase font-mono">Capacidad Total</span>
-                        <div class="text-xl sm:text-2xl font-black text-cyan-400 mt-1">1,940 kW</div>
-                    </div>
-                    <div class="glass-panel p-4 rounded-xl text-center">
-                        <span class="text-xs text-slate-400 uppercase font-mono">Hogares Suministrados</span>
-                        <div class="text-xl sm:text-2xl font-black text-purple-400 mt-1">7,200+</div>
+                    <div class="glass-panel p-3 rounded-xl border border-slate-800">
+                        <div class="text-solar-400 font-mono text-xs font-bold">OWASP Top 10:2025 · PSR-12 · Conventional Commits</div>
+                        <div class="text-xs text-slate-300">Documento de seguridad + checklist por PR · estilo de código · historial auditable.</div>
                     </div>
                 </div>
-
-                <div class="glass-panel p-5 rounded-xl border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4">
-                    <div class="space-y-1">
-                        <h4 class="text-sm font-bold text-white flex items-center space-x-2">
-                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                            <span>Aspectos Clave para la Evaluación del Jurado:</span>
-                        </h4>
-                        <p class="text-xs text-slate-400">Gráfico de doble curva (Generación Real vs Estimada), ranking departamental por participación porcentual y sin scroll horizontal.</p>
-                    </div>
-                    <div class="shrink-0 flex gap-2">
-                        <span class="text-xs font-mono text-solar-400 bg-solar-500/10 px-3 py-1.5 rounded-lg border border-solar-500/30">Cero Retraso en Carga</span>
-                    </div>
+                <div class="lg:col-span-2 glass-panel p-3 rounded-2xl border border-slate-800">
+                    <img src="/images/diagrama-entidad-relacion.png" alt="Diagrama ERD real del sistema" class="w-full h-auto rounded-lg border border-slate-700">
+                    <p class="text-[10px] text-slate-500 text-center mt-2 italic">ERD real — 9 entidades, database/migrations/</p>
                 </div>
             </div>
 
             <div class="text-xs text-slate-500 flex justify-between items-center pt-4 border-t border-slate-800/60">
                 <span>Orador: Andy</span>
-                <span>Demostración en Vivo</span>
+                <span>ERS + ERD + OWASP + ISO</span>
             </div>
         </section>
 
-        <!-- SLIDE 5: Demostración en Vivo: Operación y Alertas -->
-        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Andy" data-speaker-class="speaker-badge-andy" data-time="4:15 - 5:30">
+        <!-- SLIDE 6: Estructura de la Documentacion del Proyecto -->
+        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Andy" data-speaker-class="speaker-badge-andy" data-time="3:00 - 3:25">
             <div class="flex items-center justify-between border-b border-slate-800/60 pb-4">
-                <span class="text-xs uppercase tracking-widest text-solar-400 font-bold">06 · Demostración en Vivo: Operación & Alertas</span>
-                <span class="text-xs text-slate-500 font-mono">4:15 - 5:30</span>
+                <span class="text-xs uppercase tracking-widest text-solar-400 font-bold">06 · Documentación (10%)</span>
+                <span class="text-xs text-slate-500 font-mono">3:00 - 3:25</span>
             </div>
 
-            <div class="my-auto space-y-6">
-                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                    <div>
-                        <h2 class="text-3xl sm:text-4xl font-black text-white">Detección Autónoma de <span class="text-red-400">Anomalías</span></h2>
-                        <p class="text-sm text-slate-400 mt-1">Flujo completo de registro de medición, disparo de alerta y resolución trazable.</p>
-                    </div>
-                    <div class="flex gap-2">
-                        <a href="/alerts" target="_blank" class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white font-bold text-xs rounded-lg transition-colors flex items-center space-x-2">
-                            <span>Ver Centro de Alertas</span>
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
-                        </a>
-                        <a href="/reports" target="_blank" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs rounded-lg transition-colors flex items-center space-x-2 border border-slate-700">
-                            <span>Descargar CSV UTF-8</span>
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                        </a>
-                    </div>
+            <div class="my-auto space-y-3">
+                <h2 class="text-2xl sm:text-3xl font-black text-white">Estructura Completa de la Documentación <span class="text-gradient">(docs/)</span></h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 text-xs">
+                    <div class="glass-panel p-2.5 rounded-lg border border-slate-800"><span class="text-solar-400 font-mono font-bold">00</span> <span class="text-white font-bold">PLAN-MAESTRO</span><p class="text-slate-400 mt-0.5">Cronograma y roles</p></div>
+                    <div class="glass-panel p-2.5 rounded-lg border border-slate-800"><span class="text-solar-400 font-mono font-bold">01</span> <span class="text-white font-bold">REGLAS-DE-TRABAJO</span><p class="text-slate-400 mt-0.5">Git, ramas, PRs</p></div>
+                    <div class="glass-panel p-2.5 rounded-lg border border-slate-800"><span class="text-solar-400 font-mono font-bold">02</span> <span class="text-white font-bold">SEGURIDAD-OWASP</span><p class="text-slate-400 mt-0.5">Los 10 controles</p></div>
+                    <div class="glass-panel p-2.5 rounded-lg border border-slate-800"><span class="text-solar-400 font-mono font-bold">03</span> <span class="text-white font-bold">PLANTILLA-ERS</span><p class="text-slate-400 mt-0.5">ERS completo</p></div>
+                    <div class="glass-panel p-2.5 rounded-lg border border-slate-800"><span class="text-solar-400 font-mono font-bold">04</span> <span class="text-white font-bold">BITACORA-PROMPTS</span><p class="text-slate-400 mt-0.5">Evidencia de IA</p></div>
+                    <div class="glass-panel p-2.5 rounded-lg border border-slate-800"><span class="text-solar-400 font-mono font-bold">05</span> <span class="text-white font-bold">CHECKLIST-RUBRICA</span><p class="text-slate-400 mt-0.5">Auditoría honesta</p></div>
+                    <div class="glass-panel p-2.5 rounded-lg border border-slate-800"><span class="text-solar-400 font-mono font-bold">06</span> <span class="text-white font-bold">CONTRATOS-HORA-1</span><p class="text-slate-400 mt-0.5">Esquema congelado</p></div>
+                    <div class="glass-panel p-2.5 rounded-lg border border-slate-800"><span class="text-solar-400 font-mono font-bold">07</span> <span class="text-white font-bold">PLAN-DESPLIEGUE</span><p class="text-slate-400 mt-0.5">AWS EC2</p></div>
+                    <div class="glass-panel p-2.5 rounded-lg border border-slate-800"><span class="text-solar-400 font-mono font-bold">08</span> <span class="text-white font-bold">GUION-PRESENTACION</span><p class="text-slate-400 mt-0.5">Guion completo</p></div>
+                    <div class="glass-panel p-2.5 rounded-lg border border-slate-800"><span class="text-solar-400 font-mono font-bold">09</span> <span class="text-white font-bold">MANUAL-USUARIO</span><p class="text-slate-400 mt-0.5">Credenciales por rol</p></div>
+                    <div class="glass-panel p-2.5 rounded-lg border border-slate-800"><span class="text-solar-400 font-mono font-bold">10</span> <span class="text-white font-bold">TAREA-MCP-SERVER</span><p class="text-slate-400 mt-0.5">Spec del MCP</p></div>
+                    <div class="glass-panel p-2.5 rounded-lg border border-slate-800"><span class="text-solar-400 font-mono font-bold">11</span> <span class="text-white font-bold">DIAPOSITIVAS</span><p class="text-slate-400 mt-0.5">Mapeo a la rúbrica</p></div>
                 </div>
+                <p class="text-[11px] text-slate-500 italic">+ OPERACION-COBERTURA-DEMO.md · todo enlazado desde README.md · exportado también a Word y PDF en docs/export/</p>
+            </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="glass-panel p-5 rounded-xl border border-slate-800 space-y-3">
-                        <div class="text-solar-400 font-mono text-xs font-bold uppercase">Paso 1 · Registro</div>
-                        <h4 class="text-sm font-bold text-white">Ingreso de Medición</h4>
-                        <p class="text-xs text-slate-400 leading-relaxed">
-                            Se registra una medición mediante FormRequest. El sistema calcula inmediatamente el ahorro de CO₂ (kWh × 0.40) y almacena el registro bajo transacción atómica.
-                        </p>
+            <div class="text-xs text-slate-500 flex justify-between items-center pt-4 border-t border-slate-800/60">
+                <span>Orador: Andy</span>
+                <span>13 Documentos Versionados</span>
+            </div>
+        </section>
+
+        <!-- SLIDE 7: Como Trabajamos el Repositorio: Ramas, PRs y Commits -->
+        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Carlos" data-speaker-class="speaker-badge-carlos" data-time="3:25 - 3:55">
+            <div class="flex items-center justify-between border-b border-slate-800/60 pb-4">
+                <span class="text-xs uppercase tracking-widest text-solar-400 font-bold">07 · Control de Versiones</span>
+                <span class="text-xs text-slate-500 font-mono">3:25 - 3:55</span>
+            </div>
+
+            <div class="my-auto space-y-4">
+                <h2 class="text-2xl sm:text-3xl font-black text-white">Cómo Trabajamos el Repositorio: <span class="text-gradient">Ramas, PRs y Commits</span></h2>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                    <div class="glass-panel p-4 rounded-xl border border-slate-800">
+                        <h4 class="text-xs font-bold text-solar-400 uppercase mb-2">10 Reglas del Proyecto</h4>
+                        <p class="text-[11px] text-slate-400 leading-relaxed">1. Nunca push directo a master · 2. Zona de propiedad por agente · 3. Esquema congelado desde Hora 1 · 4. Commit cada 20-30 min · 5. Checklist OWASP obligatorio · 6. Prompts documentados antes del PR · 7. Plantilla de PR completa · 8. Verificar en el navegador · 9. Avisar antes de instalar dependencias · 10. No ampliar alcance sin registrarlo</p>
                     </div>
+                    <div class="glass-panel p-4 rounded-xl border border-slate-800">
+                        <h4 class="text-xs font-bold text-solar-400 uppercase mb-2">Conventional Commits</h4>
+                        <pre class="text-[10px] text-slate-300 font-mono leading-relaxed whitespace-pre-wrap">feat(alertas): agregar umbral de desviación
 
-                    <div class="glass-panel p-5 rounded-xl border border-red-900/40 bg-red-950/10 space-y-3">
-                        <div class="text-red-400 font-mono text-xs font-bold uppercase">Paso 2 · Evaluación</div>
-                        <h4 class="text-sm font-bold text-white">Déficit ≥ 20% (Alerta Roja)</h4>
-                        <p class="text-xs text-slate-300 leading-relaxed">
-                            Si la generación real es ≤ 80% de la esperada, `AlertEvaluationService` dispara una alerta con severidad 'critica' y bloqueo a nivel de fila (`lockForUpdate`).
-                        </p>
+fix(mapa): corregir popup en modo oscuro
+
+Co-Authored-By: Claude Sonnet 5
+&lt;noreply@anthropic.com&gt;</pre>
                     </div>
-
-                    <div class="glass-panel p-5 rounded-xl border border-emerald-900/40 bg-emerald-950/10 space-y-3">
-                        <div class="text-emerald-400 font-mono text-xs font-bold uppercase">Paso 3 · Resolución</div>
-                        <h4 class="text-sm font-bold text-white">Cierre Trazable con Notas</h4>
-                        <p class="text-xs text-slate-300 leading-relaxed">
-                            El operador o admin documenta la causa técnica de la falla (ej. inversor desconectado). Queda registrado el usuario resolutor y timestamp exacto.
-                        </p>
+                    <div class="glass-panel p-4 rounded-xl border border-slate-800">
+                        <h4 class="text-xs font-bold text-solar-400 uppercase mb-2">Evidencia en Números</h4>
+                        <p class="text-[11px] text-slate-400 leading-relaxed">Decenas de Pull Requests fusionados<br>5 agentes de IA en ramas propias<br>Bitácora de +1000 líneas<br>0 pushes directos a master<br>Cada PR = 1 checklist OWASP firmado</p>
                     </div>
                 </div>
             </div>
 
             <div class="text-xs text-slate-500 flex justify-between items-center pt-4 border-t border-slate-800/60">
-                <span>Orador: Andy</span>
-                <span>Operación y Alertas</span>
+                <span>Orador: Carlos</span>
+                <span>Disciplina de Equipo</span>
             </div>
         </section>
 
-        <!-- SLIDE 6: Inteligencia Predictiva: Modelo SMA-SF -->
-        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Andy" data-speaker-class="speaker-badge-andy" data-time="5:30 - 6:30">
-            <div class="flex items-center justify-between border-b border-slate-800/60 pb-4">
-                <span class="text-xs uppercase tracking-widest text-solar-400 font-bold">07 · Inteligencia Predictiva: Modelo SMA-SF</span>
-                <span class="text-xs text-slate-500 font-mono">5:30 - 6:30</span>
-            </div>
-
-            <div class="my-auto space-y-6">
-                <div>
-                    <h2 class="text-3xl sm:text-4xl font-black text-white">Modelo Matemático <span class="text-gradient">SMA-SF</span></h2>
-                    <p class="text-sm text-slate-400 mt-1">Seasonal Moving Average - Solar Forecast adaptado al clima de Guatemala.</p>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div class="glass-panel p-6 rounded-2xl space-y-4">
-                        <h3 class="text-sm font-bold text-solar-400 uppercase tracking-wider">Fórmula Predictiva Ponderada</h3>
-                        
-                        <div class="p-4 rounded-xl bg-slate-950 font-mono text-xs text-solar-300 border border-slate-800 space-y-2">
-                            <div>Base = (0.50 × M<sub>t-1</sub>) + (0.30 × M<sub>t-2</sub>) + (0.20 × M<sub>t-3</sub>)</div>
-                            <div class="text-emerald-400 font-bold">Proyección Final = Base × Factor Estacional</div>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-3 text-xs">
-                            <div class="p-3 rounded-lg bg-slate-900 border border-slate-800">
-                                <span class="text-amber-400 font-bold block">Época Seca (Nov - Abr)</span>
-                                <span class="text-slate-400">Factor = <strong>1.20</strong> (+20% radiación directa)</span>
-                            </div>
-                            <div class="p-3 rounded-lg bg-slate-900 border border-slate-800">
-                                <span class="text-cyan-400 font-bold block">Época Lluviosa (May - Oct)</span>
-                                <span class="text-slate-400">Factor = <strong>0.88</strong> (-12% cobertura nubosa)</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="glass-panel p-6 rounded-2xl space-y-4 flex flex-col justify-between">
-                        <div>
-                            <h3 class="text-sm font-bold text-white uppercase tracking-wider">Fallback Nominal y Verificación</h3>
-                            <p class="text-xs text-slate-300 mt-2 leading-relaxed">
-                                Si una granja solar es nueva y no cuenta con 3 registros históricos mensuales, el sistema aplica el cálculo normativo solar de Guatemala:
-                            </p>
-                            <div class="mt-3 p-3 rounded-xl bg-slate-950 font-mono text-xs text-cyan-300 border border-slate-800">
-                                Fallback = Capacidad (kW) × 140 Horas Sol Pico (HSP)
-                            </div>
-                            <p class="text-xs text-slate-400 mt-3">
-                                En la pantalla <code class="text-solar-400">/forecasts</code> se sincroniza automáticamente el valor real (<code class="text-slate-200">actual_kwh</code>) al cierre de cada mes para calcular el error de proyección.
-                            </p>
-                        </div>
-
-                        <div class="pt-2">
-                            <a href="/forecasts" target="_blank" class="inline-flex items-center space-x-2 text-xs font-bold text-solar-400 hover:text-solar-300">
-                                <span>Ver Pantalla de Proyecciones</span>
-                                <span>→</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="text-xs text-slate-500 flex justify-between items-center pt-4 border-t border-slate-800/60">
-                <span>Orador: Andy</span>
-                <span>Proyecciones RF-15</span>
-            </div>
-        </section>
-
-        <!-- SLIDE 7: Innovación de Alto Impacto: Servidor MCP Propio -->
-        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Carlos" data-speaker-class="speaker-badge-carlos" data-time="6:30 - 7:15">
+        <!-- SLIDE 8: Innovación de Alto Impacto: Servidor MCP Propio -->
+        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Carlos" data-speaker-class="speaker-badge-carlos" data-time="3:55 - 4:30">
             <div class="flex items-center justify-between border-b border-slate-800/60 pb-4">
                 <span class="text-xs uppercase tracking-widest text-emerald-400 font-bold">08 · Criterio de Originalidad (20%): Servidor MCP Propio</span>
-                <span class="text-xs text-slate-500 font-mono">6:30 - 7:15</span>
+                <span class="text-xs text-slate-500 font-mono">3:55 - 4:30</span>
             </div>
 
             <div class="my-auto space-y-6">
@@ -683,10 +605,10 @@
         </section>
 
         <!-- SLIDE 9: Elementos Plus (mas alla de las 17 RF originales) -->
-        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Andy" data-speaker-class="speaker-badge-andy" data-time="7:15 - 8:00">
+        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Andy" data-speaker-class="speaker-badge-andy" data-time="4:30 - 5:00">
             <div class="flex items-center justify-between border-b border-slate-800/60 pb-4">
                 <span class="text-xs uppercase tracking-widest text-solar-400 font-bold">09 · Elementos Plus: Más Allá de lo Pedido</span>
-                <span class="text-xs text-slate-500 font-mono">7:15 - 8:00</span>
+                <span class="text-xs text-slate-500 font-mono">4:30 - 5:00</span>
             </div>
 
             <div class="my-auto space-y-6">
@@ -736,10 +658,10 @@
         </section>
 
         <!-- SLIDE 10: Seguridad OWASP 2025 -->
-        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Carlos" data-speaker-class="speaker-badge-carlos" data-time="8:00 - 8:45">
+        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Carlos" data-speaker-class="speaker-badge-carlos" data-time="5:00 - 5:20">
             <div class="flex items-center justify-between border-b border-slate-800/60 pb-4">
                 <span class="text-xs uppercase tracking-widest text-solar-400 font-bold">10 · Seguridad: OWASP Top 10:2025</span>
-                <span class="text-xs text-slate-500 font-mono">8:00 - 8:45</span>
+                <span class="text-xs text-slate-500 font-mono">5:00 - 5:20</span>
             </div>
 
             <div class="my-auto space-y-6">
@@ -805,11 +727,42 @@
             </div>
         </section>
 
-        <!-- SLIDE 9: Metodología: 5 Agentes de IA en Paralelo -->
-        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Carlos" data-speaker-class="speaker-badge-carlos" data-time="8:45 - 9:45">
+        <!-- SLIDE 11: Evidencia en vivo del control de acceso (403) -->
+        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Carlos" data-speaker-class="speaker-badge-carlos" data-time="5:20 - 5:35">
             <div class="flex items-center justify-between border-b border-slate-800/60 pb-4">
-                <span class="text-xs uppercase tracking-widest text-solar-400 font-bold">11 · Criterio Uso de IA (20%): Desarrollo Incremental</span>
-                <span class="text-xs text-slate-500 font-mono">8:45 - 9:45</span>
+                <span class="text-xs uppercase tracking-widest text-solar-400 font-bold">11 · Evidencia en Vivo</span>
+                <span class="text-xs text-slate-500 font-mono">5:20 - 5:35</span>
+            </div>
+
+            <div class="my-auto grid grid-cols-1 lg:grid-cols-5 gap-6 items-center">
+                <div class="lg:col-span-3 glass-panel p-2 rounded-2xl border border-slate-800">
+                    <img src="/images/presentacion/09-error-403.png" alt="Error 403: usuario visualizador sin acceso a crear granjas" class="w-full h-auto rounded-lg border border-slate-700">
+                    <p class="text-[10px] text-slate-500 text-center mt-1.5 italic">Usuario Visualizador intentando crear una granja: acceso denegado</p>
+                </div>
+                <div class="lg:col-span-2 space-y-3">
+                    <h2 class="text-2xl font-black text-white">Control de Acceso Real: <span class="text-red-400">Error 403</span> por Rol</h2>
+                    <div class="glass-panel p-3 rounded-xl border border-slate-800">
+                        <h4 class="text-xs font-bold text-solar-400 uppercase mb-1">Lo que pasó</h4>
+                        <p class="text-[11px] text-slate-400 leading-relaxed">El usuario <code class="text-slate-200">evaluador@umg.edu.gt</code> (Visualizador) navegó directamente a <code class="text-slate-200">/farms/create</code>. El sistema lo bloqueó aunque conociera la URL exacta.</p>
+                    </div>
+                    <div class="glass-panel p-3 rounded-xl border border-slate-800">
+                        <h4 class="text-xs font-bold text-solar-400 uppercase mb-1">Lo que queda registrado</h4>
+                        <p class="text-[11px] text-slate-400 leading-relaxed">El intento se guarda en <code class="text-slate-200">audit_logs</code> con usuario, IP y timestamp exacto — control A09 de OWASP Top 10:2025.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-xs text-slate-500 flex justify-between items-center pt-4 border-t border-slate-800/60">
+                <span>Orador: Carlos</span>
+                <span>OWASP A01 + A09</span>
+            </div>
+        </section>
+
+        <!-- SLIDE 12: Metodología: 5 Agentes de IA en Paralelo -->
+        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Carlos" data-speaker-class="speaker-badge-carlos" data-time="5:35 - 6:15">
+            <div class="flex items-center justify-between border-b border-slate-800/60 pb-4">
+                <span class="text-xs uppercase tracking-widest text-solar-400 font-bold">12 · Criterio Uso de IA (20%): Desarrollo Incremental</span>
+                <span class="text-xs text-slate-500 font-mono">5:35 - 6:15</span>
             </div>
 
             <div class="my-auto space-y-6">
@@ -861,11 +814,73 @@
             </div>
         </section>
 
-        <!-- SLIDE 10: Roles del Equipo, Conclusión y Preguntas -->
-        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Andy & Carlos" data-speaker-class="speaker-badge-both" data-time="9:45 - 10:45">
+        <!-- SLIDE 13: Modulos del Sistema -> Transicion a la Demostracion en Vivo -->
+        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Andy & Carlos" data-speaker-class="speaker-badge-both" data-time="6:15 - 6:35">
             <div class="flex items-center justify-between border-b border-slate-800/60 pb-4">
-                <span class="text-xs uppercase tracking-widest text-solar-400 font-bold">12 · Roles del Equipo & Conclusión</span>
-                <span class="text-xs text-slate-500 font-mono">9:45 - 10:45</span>
+                <span class="text-xs uppercase tracking-widest text-solar-400 font-bold">13 · Transición a la Demostración</span>
+                <span class="text-xs text-slate-500 font-mono">6:15 - 6:35</span>
+            </div>
+
+            <div class="my-auto space-y-4">
+                <h2 class="text-2xl sm:text-3xl font-black text-white">Los Módulos que Vamos a <span class="text-gradient">Presentar en Vivo</span></h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div class="glass-panel p-3 rounded-xl border border-slate-800">
+                        <span class="w-6 h-6 rounded-full bg-solar-500 text-slate-950 text-xs font-black flex items-center justify-center">1</span>
+                        <h4 class="text-xs font-bold text-white mt-2">Dashboard Nacional</h4>
+                        <p class="text-[10px] text-slate-400 mt-0.5">6 KPIs + ranking departamental</p>
+                    </div>
+                    <div class="glass-panel p-3 rounded-xl border border-slate-800">
+                        <span class="w-6 h-6 rounded-full bg-solar-500 text-slate-950 text-xs font-black flex items-center justify-center">2</span>
+                        <h4 class="text-xs font-bold text-white mt-2">Mapa Interactivo</h4>
+                        <p class="text-[10px] text-slate-400 mt-0.5">22 departamentos, pines por kW</p>
+                    </div>
+                    <div class="glass-panel p-3 rounded-xl border border-slate-800">
+                        <span class="w-6 h-6 rounded-full bg-solar-500 text-slate-950 text-xs font-black flex items-center justify-center">3</span>
+                        <h4 class="text-xs font-bold text-white mt-2">Granjas y Paneles</h4>
+                        <p class="text-[10px] text-slate-400 mt-0.5">CRUD con capacidad automática</p>
+                    </div>
+                    <div class="glass-panel p-3 rounded-xl border border-slate-800">
+                        <span class="w-6 h-6 rounded-full bg-solar-500 text-slate-950 text-xs font-black flex items-center justify-center">4</span>
+                        <h4 class="text-xs font-bold text-white mt-2">Registro de Generación</h4>
+                        <p class="text-[10px] text-slate-400 mt-0.5">CO₂ automático + validación</p>
+                    </div>
+                    <div class="glass-panel p-3 rounded-xl border border-slate-800">
+                        <span class="w-6 h-6 rounded-full bg-solar-500 text-slate-950 text-xs font-black flex items-center justify-center">5</span>
+                        <h4 class="text-xs font-bold text-white mt-2">Alertas de Desviación</h4>
+                        <p class="text-[10px] text-slate-400 mt-0.5">Detección ≥20% + campanita</p>
+                    </div>
+                    <div class="glass-panel p-3 rounded-xl border border-slate-800">
+                        <span class="w-6 h-6 rounded-full bg-solar-500 text-slate-950 text-xs font-black flex items-center justify-center">6</span>
+                        <h4 class="text-xs font-bold text-white mt-2">Reportes Departamentales</h4>
+                        <p class="text-[10px] text-slate-400 mt-0.5">PDF, Excel y CSV</p>
+                    </div>
+                    <div class="glass-panel p-3 rounded-xl border border-slate-800">
+                        <span class="w-6 h-6 rounded-full bg-solar-500 text-slate-950 text-xs font-black flex items-center justify-center">7</span>
+                        <h4 class="text-xs font-bold text-white mt-2">Proyección SMA-SF</h4>
+                        <p class="text-[10px] text-slate-400 mt-0.5">Estacionalidad guatemalteca</p>
+                    </div>
+                    <div class="glass-panel p-3 rounded-xl border border-slate-800">
+                        <span class="w-6 h-6 rounded-full bg-solar-500 text-slate-950 text-xs font-black flex items-center justify-center">8</span>
+                        <h4 class="text-xs font-bold text-white mt-2">API REST + Servidor MCP</h4>
+                        <p class="text-[10px] text-slate-400 mt-0.5">Consumo externo e IA activa</p>
+                    </div>
+                </div>
+                <div class="glass-panel p-3 rounded-xl border border-solar-500/40 bg-solar-500/10 text-center">
+                    <p class="text-sm font-bold text-solar-400">A continuación: demostración en vivo sobre la URL pública — no localhost, no un video de respaldo.</p>
+                </div>
+            </div>
+
+            <div class="text-xs text-slate-500 flex justify-between items-center pt-4 border-t border-slate-800/60">
+                <span>Orador: Ambos</span>
+                <span>kin-solar-guatemala.duckdns.org</span>
+            </div>
+        </section>
+
+        <!-- SLIDE 14: Roles del Equipo y Conclusión -->
+        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Andy & Carlos" data-speaker-class="speaker-badge-both" data-time="10:35 - 11:20">
+            <div class="flex items-center justify-between border-b border-slate-800/60 pb-4">
+                <span class="text-xs uppercase tracking-widest text-solar-400 font-bold">14 · Roles del Equipo & Conclusión</span>
+                <span class="text-xs text-slate-500 font-mono">10:35 - 11:20</span>
             </div>
 
             <div class="my-auto space-y-6">
@@ -942,10 +957,10 @@
         </section>
 
         <!-- SLIDE 13: Ronda de Preguntas -->
-        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Andy & Carlos" data-speaker-class="speaker-badge-both" data-time="10:45 - 12:00">
+        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Andy & Carlos" data-speaker-class="speaker-badge-both" data-time="11:20 - 12:00">
             <div class="flex items-center justify-between border-b border-slate-800/60 pb-4">
-                <span class="text-xs uppercase tracking-widest text-solar-400 font-bold">13 · Ronda de Preguntas del Jurado</span>
-                <span class="text-xs text-slate-500 font-mono">10:45 - 12:00</span>
+                <span class="text-xs uppercase tracking-widest text-solar-400 font-bold">15 · Ronda de Preguntas del Jurado</span>
+                <span class="text-xs text-slate-500 font-mono">11:20 - 12:00</span>
             </div>
 
             <div class="my-auto space-y-3 overflow-y-auto">

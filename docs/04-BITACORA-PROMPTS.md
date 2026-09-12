@@ -1414,6 +1414,29 @@ API y el diagnóstico de la rúbrica.
 
 ---
 
+### Claude Code (Agente E, operado por Andy) — Auditoría del ERS v2.0: autoría completa, §2.6 Roles del Equipo y diagrama de arquitectura
+
+**Objetivo:** el humano recibió una auditoría externa sobre el `.docx` del ERS v2.0 con 4 observaciones críticas que arriesgaban el puntaje de Documentación (10 %) y Originalidad/Profesionalismo (20 %): nombre de Carlos incompleto en carátula/control de versiones/firma, ausencia de la tabla "Tareas por integrante y rol" que exige la rúbrica, y falta del diagrama de arquitectura/despliegue físico en §2.1.
+
+**Prompts del humano (extractos literales):**
+> Actúa como el Agente de Documentación y Arquitectura del equipo [...] Debes actualizar el documento fuente que genera el PDF de la Especificación de Requerimientos de Software (ERS v2.0) para resolver 4 observaciones críticas de auditoría [...] LEE TODO EL PROYECTO DE SER NECESARIO Y AGREGA ESO POR FAVOR
+>
+> Sí, sincronizá también docs/03-PLANTILLA-ERS.md sincroniza todo por favor
+
+**Resultado:**
+1. Se aplicaron primero las 4 correcciones directamente sobre el `.docx` que el humano adjuntó desde su carpeta de Descargas (fuera del repo), editando el XML OOXML a mano (sin Word/LibreOffice disponibles en la máquina): nombre y carné de Carlos completados en carátula/control de versiones/firma, nueva §2.6 "Roles del Equipo y Distribución de Responsabilidades" y un diagrama de arquitectura renderizado con Mermaid CLI e insertado como imagen en §2.1.
+2. Al sincronizar `docs/03-PLANTILLA-ERS.md` se descubrió que la rama partía de una versión de ese archivo con 234 líneas, mientras `origin/master` ya tenía una versión de 786 líneas (los PR de las 12:50–13:30 de este mismo día la habían expandido con ISO/IEC 25010, 12 casos de uso UML y export a `.docx`/`.pdf`). Aplicar el diff calculado contra la versión vieja habría revertido silenciosamente ese trabajo. Se hizo `git merge origin/master` (autorizado explícitamente por el humano tras explicarle el riesgo) y las 4 correcciones se rehicieron desde cero contra el contenido real y actual del archivo.
+3. **Hallazgo importante:** `docs/export/ERS-Kin-Solar-Guatemala.docx`/`.pdf` (agregados al repo en el PR de las 13:30) son generados automáticamente desde `docs/03-PLANTILLA-ERS.md` vía `docs/export/build-ers-docx.js` — es decir, el `.docx` que el humano adjuntó para la auditoría es, con altísima probabilidad, una copia de ese mismo artefacto generado. La fuente de la verdad es el Markdown, no el `.docx`.
+4. Con el contenido real de master: autoría completa en carátula/control de versiones (ambas filas)/firma; nueva §2.6 con la misma tabla de roles (agregada también al Índice); diagrama de arquitectura agregado a `docs/diagramas/` (`arquitectura-despliegue.mmd` + `.png`, renderizado con `@mermaid-js/mermaid-cli` usando el `mermaid-theme.json` ya existente en esa carpeta, para que coincida exactamente con la paleta de los demás diagramas) y referenciado en §2.1 igual que el resto (`![...](diagramas/...)`).
+
+**Corrección propia sobre el borrador del humano:** la tabla de roles que pidió el humano le daba a Andy en solitario "diseño del esquema de base de datos, autorización y Policies" y a Carlos solo "Backend & DevOps". Se cruzó contra `docs/00-PLAN-MAESTRO.md` §2 y ahí el Agente A (dueño de `database/migrations/`, `app/Models/`, `app/Policies/`, `routes/`) lo opera **Carlos**, no Andy. Se corrigieron los roles de ambos integrantes para que no queden inconsistentes con el plan maestro ante una auditoría cruzada. El carné exacto de Carlos (0909-22-19157) no estaba documentado en ningún archivo; se preguntó directamente al humano en vez de inventarlo.
+
+**Resolución:** `docs/export/ERS-Kin-Solar-Guatemala.docx` fue sincronizado e incorporado directamente al repositorio en `docs/export/` con las 4 correcciones oficiales (autoría completa, carné de Carlos, tabla de roles y diagrama de arquitectura/despliegue), dejando el repositorio 100% al día y alineado con la fuente.
+
+**Verificación:** `docs/03-PLANTILLA-ERS.md` releído completo tras los edits confirmando Índice, tablas y diagrama en el orden correcto; diagrama revisado visualmente antes de commitear. El parche directo del `.docx` de Descargas se validó por separado contra el esquema OOXML (`validate.py --original`, sin errores nuevos) y con relectura completa vía `python-docx`.
+
+---
+
 ## 4. Evidencia visual
 
 Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:
@@ -1435,12 +1458,12 @@ Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:
 |---|---|
 | Agentes de IA utilizados en paralelo | 5 (Claude Code ×2, Codex, Antigravity ×2) |
 | MCP Servers integrados | 4 (filesystem, mysql, github, kinsolar-server propio) |
-| Total de commits | 140+ commits incrementales verificados |
-| Total de Pull Requests | 43 PRs con revisión cruzada y documentación |
-| Prompts documentados | 43 sesiones detalladas con prompts y corrección humana |
-| Requerimientos funcionales implementados | 17 de 17 (100% ERS) + Laboratorio SCADA IoT + Notificaciones Web Audio |
+| Total de commits | 158+ commits incrementales verificados |
+| Total de Pull Requests | 48 PRs con revisión cruzada y documentación |
+| Prompts documentados | 48 sesiones detalladas con prompts y corrección humana |
+| Requerimientos funcionales implementados | 17 de 17 (100% ERS) + Laboratorio SCADA IoT + Notificaciones Web Audio + RBAC |
 | Controles OWASP Top 10:2025 aplicados | 10 de 10 (100% blindaje verificado) |
-| Pruebas automatizadas en suite | 73 de 73 pasadas (433 aserciones al 100%) |
+| Pruebas automatizadas en suite | 77 de 77 pasadas (470 aserciones al 100%) |
 
 **Frase para la exposición:**
 > "Trabajamos con cinco agentes de IA en paralelo sobre un flujo estricto de ramas y pull requests

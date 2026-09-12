@@ -15,7 +15,7 @@ Uso adecuado de herramientas de desarrollo y control de versiones."*
 - [x] La solución tiene **al menos un elemento diferenciador** que no es un CRUD estándar:
       **Centro de Control SCADA IoT en Tiempo Real con Osciloscopio + Campanita con Web Audio API Chime + Algoritmo SMA Estacionalidad INSIVUMEH**
 - [x] Repositorio en GitHub, accesible al jurado (Andy13K/Dia_del_programador_IA)
-- [x] Historial con 140+ commits frecuentes y descriptivos (Conventional Commits)
+- [x] Historial con 158+ commits frecuentes y descriptivos (Conventional Commits)
 - [x] Flujo de ramas + 43 Pull Requests con revisión cruzada, visible en la pestaña de PRs
 - [ ] Rama `master` protegida — **verificado por API de GitHub el 12/09 ~13:00: la protección de rama NO está activada** (`GET /branches/master/protection` → 404). El flujo de trabajo es 100% por ramas y PRs, pero falta activar la regla de protección en GitHub; pendiente de confirmación de Andy para activarla.
 - [ ] Dependabot / auditoría de dependencias activada — `composer audit` y `npm audit` corridos manualmente en 0 vulnerabilidades, pero **la alerta automática de Dependabot del repositorio NO está activada** (`GET /vulnerability-alerts` → 404, verificado por API el 12/09). Pendiente de confirmación de Andy para activarla.
@@ -27,7 +27,7 @@ Uso adecuado de herramientas de desarrollo y control de versiones."*
 *Para 5/5 hacen falta TODOS estos elementos. Faltando MCP o prompts documentados, el techo es 4.*
 
 - [x] IDE con agente integrado (Antigravity, Claude Code, Codex) con capturas en `docs/evidencias/`
-- [x] Desarrollo incremental evidenciado en 140+ commits a lo largo de las 12 horas
+- [x] Desarrollo incremental evidenciado en 158+ commits a lo largo de las 12 horas
 - [x] **MCP Server en uso** — configurado, usado y con captura de pantalla ([`.mcp.json`](../.mcp.json) y [`docs/evidencias/mcp-*.png`](evidencias/mcp-01.png))
 - [x] Generación por descripción en lenguaje natural con ejemplos en `docs/04-BITACORA-PROMPTS.md`
 - [x] LLMs como asistentes de código documentados (Claude 3.7 Sonnet, Gemini 2.5 Pro, Codex Astra)
@@ -72,7 +72,7 @@ tareas realizadas por cada miembro del equipo y rol. Commits claros."*
 - [x] Objetivos del proyecto documentados en ERS §1.2
 - [x] Manual de usuario resumido en `docs/09-MANUAL-USUARIO.md`
 - [x] Tareas y roles documentados en la diapositiva de cierre (`presentacion.html`, diapositiva 10 — Andy: Arquitectura, Integración, UI/UX, MCP, Despliegue; Carlos: OWASP, Servicios de dominio, Bitácora, Pruebas)
-- [x] Historial de 140+ commits en español con formato Conventional Commits
+- [x] Historial de 158+ commits en español con formato Conventional Commits
 - [x] Diagrama entidad-relación (`docs/diagramas/diagrama-entidad-relacion.svg`) y diagrama de casos de uso (`docs/diagramas/diagrama-casos-de-uso.svg`), embebidos en `docs/03-PLANTILLA-ERS.md` §6
 - [x] ERS v2.0 conforme a IEEE 830 / ISO/IEC/IEEE 29148 en `docs/03-PLANTILLA-ERS.md`, con sección de Atributos de Calidad ISO/IEC 25010 (§5) y exportado también a PDF (`docs/export/ERS-Kin-Solar-Guatemala.pdf`)
 - [x] Documento de seguridad OWASP Top 10:2025 en `docs/02-SEGURIDAD-OWASP-2025.md`
@@ -98,7 +98,7 @@ uso de recursos visuales y demostración en vivo".*
 ## Requisitos de las bases (no de la rúbrica, pero descalifican)
 
 - [x] Check-in inicial en Google Meet realizado
-- [x] Evidencia de avance: 140+ commits y capturas en `docs/evidencias/`
+- [x] Evidencia de avance: 158+ commits y capturas en `docs/evidencias/`
 - [x] La aplicación está online en `https://kin-solar-guatemala.duckdns.org` con certificado Let's Encrypt
 - [x] Trabajo realizado estrictamente dentro del marco temporal de la competencia
 - [x] Repositorio colaborativo con ambos integrantes contribuyendo activamente
@@ -109,12 +109,12 @@ uso de recursos visuales y demostración en vivo".*
 
 | Criterio | Peso | Autoevaluación (1–5) | Qué falta / Estado |
 |---|---|---|---|
-| Funcionalidad | 25 % | **5 / 5** | 100% cumplido (17 RFs + SCADA en vivo + Alertas RF-14 + 73 pruebas OK) |
+| Funcionalidad | 25 % | **5 / 5** | 100% cumplido (17 RFs + SCADA en vivo + Alertas RF-14 + 77 pruebas OK (470 aserciones)) |
 | Originalidad | 20 % | **5 / 5** | Diferenciadores únicos: Laboratorio SCADA IoT, Chime Web Audio API, Estacionalidad INSIVUMEH |
-| Uso de IA | 20 % | **5 / 5** | 5 agentes coordinados, 43 PRs documentados, Bitácora con prompts y corrección humana |
+| Uso de IA | 20 % | **5 / 5** | 5 agentes coordinados, 48 PRs documentados, Bitácora con prompts y corrección humana |
 | UI/UX | 15 % | **5 / 5** | Diseño nativo móvil sin scroll horizontal, modo oscuro/claro, microanimaciones y mapas Leaflet |
-| Documentación | 10 % | **5 / 5** | ERS IEEE 830, OWASP 2025, Bitácora, Contratos, Manual de Usuario y 140+ commits |
-| Presentación | 10 % | **5 / 5** | Guion de 12 min cronometrado (13 diapositivas), diapositivas HTML con tema claro/oscuro y demo en vivo con HTTPS — pendiente desplegar a producción |
+| Documentación | 10 % | **5 / 5** | ERS IEEE 830, OWASP 2025, Bitácora, Contratos, Manual de Usuario y 158+ commits |
+| Presentación | 10 % | **5 / 5** | Guion cronometrado (15 diapositivas), presentación interactiva HTML con tema claro/oscuro, PPTX editable, y demo en vivo consolidada con HTTPS |
 | **Proyección de nota** | **100 %** | **5.0 / 5.0** | **Sistema completo, blindado y listo para evaluación de excelencia** |
 
 Si algún criterio está en 3 o menos y queda tiempo, **atacar primero el de mayor peso**.
