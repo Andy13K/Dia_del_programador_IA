@@ -1395,6 +1395,25 @@ API y el diagnóstico de la rúbrica.
 
 ---
 
+### [15:20] Claude Code (Andy) — Capturas reales del sistema, tabla ERS/ERD y reordenamiento hacia una demo en vivo consolidada
+
+**Objetivo:** corregir la sensación de "diapositivas vacías" señalada por Andy agregando capturas de pantalla reales del sistema (no maquetas), reestructurar la diapositiva de estándares para nombrar explícitamente el ERS y el ERD como artefactos concretos construidos bajo cada norma, y reordenar la presentación para que todo lo técnico/documental vaya primero y la demostración en vivo quede consolidada en una sola diapositiva de transición al final, en vez de tres diapositivas de detalle de demo intercaladas.
+
+1. **Capturas reales automatizadas:** se levantó el servidor Laravel local (`.claude/launch.json`) y se usó `puppeteer-core` (Chrome del sistema como motor) para iniciar sesión con los usuarios sembrados (`admin@solarguatemala.gob.gt`, `evaluador@umg.edu.gt`, contraseñas de `.env` local) y capturar 9 pantallas reales: login, dashboard, mapa, alertas, reportes, proyecciones, simulador SCADA, generaciones y el error 403 real al intentar acceso no autorizado — guardadas en `docs/evidencias/pptx/`.
+2. **Diapositiva de Estándares reestructurada:** en vez de solo nombrar las normas, cada fila ahora empareja el **estándar** con el **artefacto concreto** construido bajo él (IEEE 830/29148 → el ERS; UML 2.5 → el ERD y los demás diagramas; ISO/IEC 25010 → la sección de Atributos de Calidad del ERS; OWASP Top 10:2025 → el documento de seguridad y el checklist por PR), con el ERD real embebido como imagen junto a la tabla.
+3. **Reordenamiento estructural:** las tres diapositivas de detalle de demo (Dashboard, Alertas, Proyecciones) se consolidaron en una única diapositiva "Los Módulos que Vamos a Presentar en Vivo" — ocho módulos en tarjetas numeradas más una franja de cierre "A continuación: demostración en vivo sobre la URL pública" — posicionada justo antes del cierre, de forma que toda la parte técnica/documental se presenta primero y la demostración real del sistema ocurre al final, fuera de PowerPoint.
+4. **Diapositivas enriquecidas:** se agregaron capturas reales a Arquitectura (dashboard), Estándares (ERD) y Elementos Plus (simulador SCADA), y una diapositiva nueva de evidencia visual del error 403 para el bloque de seguridad OWASP — antes solo se describía en texto.
+5. Se detectó y corrigió un error de numeración en los rótulos de las diapositivas (dos diapositivas compartían el número "10" tras insertar la nueva diapositiva de evidencia del 403) antes de entregar el archivo.
+
+**Prompt clave:**
+> "Quiero que agregues capturas de pantalla del sistema en donde amerites [...] llena información detallada [...] quiero que menciones ahí que tenemos un ERS, tenemos un ERD, bajo estándares y normas [...] quiero que la presentación sea rápida para [...] hacer una introducción al sistema, y de último, poner [...] una diapositiva con todos los módulos del sistema y decir que vamos a presentar en vivo [...] vamos a agrupar todo lo técnico de documentación y vamos a dejar la presentación del sistema ya de último."
+
+**Resultado:** 15 diapositivas con 9 capturas reales del sistema en producción local, tabla Estándar → Artefacto explícita (ERS, ERD, ISO 25010, OWASP), y una única diapositiva de módulos como puente hacia la demostración en vivo, verificado abriendo el `.pptx` con PowerPoint y revisando cada diapositiva en el PDF exportado.
+
+**Intervención humana:** Andy pidió explícitamente evidencia visual real (no solo texto) en las diapositivas que sentía vacías, nombró "ERS" y "ERD" como artefactos que no podían faltar, y redefinió la narrativa completa de la presentación: todo lo documental primero, la demostración del sistema al final y fuera de las diapositivas.
+
+---
+
 ## 4. Evidencia visual
 
 Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:
