@@ -1,0 +1,19 @@
+flowchart LR
+    subgraph ACTORES["Actores"]
+        direction TB
+        A1(["Administrador"])
+        A2(["Operador"])
+    end
+
+    subgraph SISTEMA["Modulo I y II: Acceso y Activos"]
+        direction TB
+        UC1(["CU-01 Autenticarse y administrar roles"])
+        UC2(["CU-02 Administrar catalogo de paneles y granjas"])
+        UC3(["CU-03 Asociar paneles a una granja y calcular kW"])
+    end
+
+    A1 --> UC1
+    A1 --> UC2
+    A2 --> UC2
+    A2 --> UC3
+    UC2 -. incluye .-> UC3

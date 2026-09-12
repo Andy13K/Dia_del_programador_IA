@@ -1,0 +1,22 @@
+flowchart LR
+    subgraph ACTORES["Actores"]
+        direction TB
+        A1(["Operador"])
+        A2(["Sistema (automatico)"])
+    end
+
+    subgraph SISTEMA["Modulo III, VI y VII: Mediciones, Ambiente, Alertas y Proyeccion"]
+        direction TB
+        UC4(["CU-04 Registrar generacion real / esperada"])
+        UC5(["CU-05 Calcular CO2 evitado automaticamente"])
+        UC9(["CU-09 Gestionar alertas de desviacion"])
+        UC10(["CU-10 Consultar proyeccion de generacion"])
+    end
+
+    A1 --> UC4
+    A1 --> UC9
+    A1 --> UC10
+    A2 --> UC5
+    A2 --> UC9
+    UC4 -. incluye .-> UC5
+    UC4 -. incluye .-> UC9

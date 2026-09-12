@@ -1,0 +1,90 @@
+erDiagram
+    DEPARTMENTS ||--o{ SOLAR_FARMS : "ubica en"
+    SOLAR_FARMS ||--o{ FARM_PANEL : "instala"
+    SOLAR_PANELS ||--o{ FARM_PANEL : "es modelo de"
+    SOLAR_FARMS ||--o{ ENERGY_GENERATIONS : "reporta"
+    SOLAR_FARMS ||--o{ GENERATION_ALERTS : "genera"
+    SOLAR_FARMS ||--o{ GENERATION_FORECASTS : "proyecta"
+    ENERGY_GENERATIONS |o--o{ GENERATION_ALERTS : "dispara"
+    USERS ||--o{ SOLAR_FARMS : "registra (created_by)"
+    USERS ||--o{ ENERGY_GENERATIONS : "carga (created_by)"
+    USERS ||--o{ GENERATION_ALERTS : "resuelve (resolved_by)"
+    USERS ||--o{ AUDIT_LOGS : "produce"
+
+    DEPARTMENTS {
+        bigint id PK
+        string name
+        string code UK "3 letras"
+        decimal latitude
+        decimal longitude
+    }
+    SOLAR_PANELS {
+        bigint id PK
+        string brand
+        string model
+        decimal nominal_power_kw "kW por unidad"
+        enum status "active-inactive-maintenance"
+        timestamp deleted_at "soft delete"
+    }
+    SOLAR_FARMS {
+        bigint id PK
+        bigint department_id FK
+        string name
+        decimal latitude
+        decimal longitude
+        int benefited_families
+        enum status "active-inactive-maintenance"
+        bigint created_by FK
+        timestamp deleted_at "soft delete"
+    }
+    FARM_PANEL {
+        bigint id PK
+        bigint solar_farm_id FK
+        bigint solar_panel_id FK
+        int quantity "unidades instaladas"
+    }
+    ENERGY_GENERATIONS {
+        bigint id PK
+        bigint solar_farm_id FK
+        string period UK "YYYY-MM, unico por granja"
+        date record_date
+        decimal estimated_kwh
+        decimal real_kwh
+        decimal co2_kg "real_kwh x 0.40"
+        bigint created_by FK
+    }
+    GENERATION_ALERTS {
+        bigint id PK
+        bigint solar_farm_id FK
+        bigint energy_generation_id FK
+        string period
+        decimal estimated_kwh
+        decimal real_kwh
+        decimal deviation_percentage
+        enum status "active-resolved"
+        bigint resolved_by FK
+    }
+    GENERATION_FORECASTS {
+        bigint id PK
+        bigint solar_farm_id FK
+        string target_period
+        decimal forecasted_kwh
+        string method "SMA-SF o fallback HSP"
+        decimal actual_kwh "comparacion ex-post"
+    }
+    USERS {
+        bigint id PK
+        string name
+        string email UK
+        string password "bcrypt"
+        enum role "admin-operador-visualizador"
+    }
+    AUDIT_LOGS {
+        bigint id PK
+        bigint user_id FK
+        string action
+        string model_type
+        bigint model_id
+        string ip_address
+        json payload
+    }

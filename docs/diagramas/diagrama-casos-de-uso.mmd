@@ -1,0 +1,48 @@
+flowchart LR
+    subgraph ACTORES["Actores del sistema"]
+        direction TB
+        A1(["Administrador"])
+        A2(["Operador"])
+        A3(["Visualizador / Jurado"])
+        A4(["Agente de IA externo (via MCP)"])
+    end
+
+    subgraph SISTEMA["Sistema K'in Solar Guatemala"]
+        direction TB
+        UC1(["CU-01 Autenticarse y administrar roles"])
+        UC2(["CU-02 Administrar catalogo de paneles y granjas"])
+        UC3(["CU-03 Asociar paneles a una granja y calcular kW"])
+        UC4(["CU-04 Registrar generacion real / esperada"])
+        UC5(["CU-05 Calcular CO2 evitado automaticamente"])
+        UC6(["CU-06 Consultar dashboard nacional"])
+        UC7(["CU-07 Explorar mapa interactivo"])
+        UC8(["CU-08 Generar reportes departamentales"])
+        UC9(["CU-09 Gestionar alertas de desviacion"])
+        UC10(["CU-10 Consultar proyeccion de generacion"])
+        UC11(["CU-11 Consumir API REST v1"])
+        UC12(["CU-12 Registrar medicion via servidor MCP"])
+    end
+
+    A1 --> UC1
+    A1 --> UC2
+    A1 --> UC9
+    A1 --> UC6
+
+    A2 --> UC2
+    A2 --> UC3
+    A2 --> UC4
+    A2 --> UC9
+
+    A3 --> UC6
+    A3 --> UC7
+    A3 --> UC8
+    A3 --> UC10
+    A3 --> UC11
+
+    A4 --> UC11
+    A4 --> UC12
+
+    UC4 -. incluye .-> UC5
+    UC4 -. incluye .-> UC9
+    UC3 -. incluye .-> UC10
+    UC12 -. incluye .-> UC4

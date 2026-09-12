@@ -1299,6 +1299,121 @@ API y el diagnóstico de la rúbrica.
 
 ---
 
+### [12:50] Claude Code (Andy) — ERS v2.0 con ISO/IEC 25010, diagramas UML y exportación a PDF de ERS y presentación
+
+**Objetivo:** auditar el estado real del sistema contra el ERS de la Hora 1 y contra el ERS de referencia (Proyecto de Graduación I de Andy, estilo IEEE 830/29148) para producir una documentación final de nivel profesional, con casos de uso y modelo de datos diagramados, atributos de calidad ISO/IEC 25010 y exportables a PDF listos para entregar.
+
+1. **Auditoría de cumplimiento real vs. documentado:** verificación cruzada de los 17 RF originales contra controladores/servicios existentes (`app/Http/Controllers/`, `app/Services/`), confirmando implementación completa; se detectaron dos módulos construidos que no estaban documentados en el ERS 1.0 (`ScadaSimulatorController`, `TelemetrySimulationController`) y el servidor MCP propio ya construido (`mcp-server/`) — documentados con honestidad como RF-18 y RF-19 de valor añadido en vez de omitirse (Regla 10 del proyecto).
+2. **ERS v2.0 (`docs/03-PLANTILLA-ERS.md`):** reestructurado siguiendo el estándar del ERS de referencia — interfaces externas (§3.1), los 17 RF originales reformulados con actor/entrada/proceso/salida/prioridad, RNF ampliado de 6 a 12 categorías, sección nueva de Atributos de Calidad conforme a **ISO/IEC 25010:2011** (§5), matriz de trazabilidad con caso de uso asociado, 12 casos de uso narrados (CU-01 a CU-12) y checklist final del documento.
+3. **Diagramas UML generados (`docs/diagramas/`):** diagrama entidad-relación y diagrama de casos de uso, definidos en Mermaid (`.mmd`) a partir del esquema real de `database/migrations/` y renderizados a SVG con `@mermaid-js/mermaid-cli` (vía `npx`, usando el Chrome del sistema como motor de Puppeteer) con la paleta de marca de K'in Solar.
+4. **Exportación a PDF:**
+   - `docs/export/ERS-Kin-Solar-Guatemala.pdf`: generado desde una vista HTML (`docs/export/ers-print.html`) que renderiza el Markdown del ERS con `marked.js` y las fórmulas matemáticas con `KaTeX`, impreso con Chrome headless (`--print-to-pdf`).
+   - `docs/export/presentacion-kin-solar.pdf`: hoja de estilos de impresión añadida a `public/presentacion.html` (`@media print`) que fuerza las 10 diapositivas interactivas a paginarse una por página en lugar de ocultarse por JavaScript, impresa igualmente con Chrome headless.
+5. **Presentación:** añadida una mención breve al modelo de calidad ISO/IEC 25010 en la diapositiva 8 (Seguridad), sin alterar el resto del guion de 10 minutos ya aprobado.
+
+**Prompt clave:**
+> "Revisa cómo está el estado actual del proyecto versus el PDF inicial [...] actualices la presentación, también me generes una presentación en PDF, y [...] la documentación adaptada a este proyecto. Necesito un buen ERS con un buen diagrama ER [...] solamente genera los diagramas [...] de caso de uso más fáciles de hacer [...] quiero darle un plus a la documentación [...] factores [...] que cumplen nuestro proyecto en base a la ISO veinticinco mil."
+
+**Resultado:** ERS ampliado de 6 a 7 secciones formales con 19 requerimientos documentados (17 originales + 2 de valor añadido), 2 diagramas UML nuevos embebidos, sección ISO/IEC 25010 nueva, y dos PDF generados y verificados visualmente (contenido, tablas, fórmulas y diagramas renderizando correctamente, sin solapamientos de página).
+
+**Intervención humana:** Andy proporcionó el ERS de su Proyecto de Graduación I como referencia de formato y estándar a seguir, y acotó explícitamente el alcance de los diagramas a solo ER y casos de uso ("no quiero generar mucho") para no exceder el tiempo disponible antes de la presentación.
+
+---
+
+### [13:05] Claude Code (Andy) — Carátula formal, sección de Objetivos dedicada y prosa ampliada del ERS
+
+**Objetivo:** corregir la primera entrega del ERS v2.0, señalada por Andy como "un poco pobre" en comparación con el ERS de referencia — específicamente la ausencia de una carátula formal con identidad visual del sistema y de una sección de objetivos explícita, y en general una redacción demasiado condensada frente a la prosa completa del documento de referencia.
+
+1. **Carátula formal:** se añadió el logo real del sistema (`public/images/kin-logo-negro.png`, versión en negro apta para impresión) en la parte superior del documento, seguido de un título centrado a gran tamaño, la norma de referencia, el nombre del proyecto y las tablas de metadatos/control de versiones — tratados visualmente como una portada independiente tanto en la vista de GitHub como en el PDF (página propia, con salto de página forzado antes del Índice).
+2. **Sección 1.2 Objetivos (nueva):** separada de Alcance, con Objetivo General (1 oración) y siete Objetivos Específicos numerados, redactados explícitamente a partir de lo que ya se documentaba de forma implícita.
+3. **Renumeración de la Sección 1:** Propósito (1.1), Objetivos (1.2, nuevo), Alcance (1.3), Definiciones (1.4), Referencias (1.5), Resumen del Documento (1.6) — todas las referencias cruzadas internas (`§1.2`, `§1.3`) se actualizaron en consecuencia.
+4. **Prosa ampliada:** el Propósito pasó de 3 a 4 párrafos con contexto del problema real que resuelve el sistema; se añadieron párrafos introductorios antes de las tablas en §2.2, §2.4, §2.5, al inicio de la Sección 3, la Sección 4 y la Sección 6, evitando que el documento se sienta como una sucesión de tablas sin narrativa.
+5. **Índice detallado:** se expandió para listar también las subsecciones (1.1 a 7), corrigiendo además un error de formato Markdown (los sub-ítems "1.1." no se anidaban correctamente como lista; se resolvió usando viñetas anidadas bajo cada elemento numerado).
+6. Se regeneró `docs/export/ERS-Kin-Solar-Guatemala.pdf` y se verificó visualmente la carátula, el índice anidado y la nueva sección de objetivos.
+
+**Prompt clave:**
+> "Mira, el RS, el ERS, yo lo necesito bien hecho, tal cual el que yo te mandé, tanto la carátula, en vez del logo de la u, utiliza el logo de del sistema, y todo bien detallado. [...] Porque necesito una buena documentación, pero buena documentación. porque la veo un poco pobre."
+
+**Resultado:** carátula profesional con el logo real del sistema, sección de Objetivos dedicada (general + 7 específicos), Índice anidado y prosa sustancialmente más desarrollada en las seis secciones principales, verificado visualmente en el PDF regenerado.
+
+**Intervención humana:** Andy rechazó explícitamente la primera versión por considerarla insuficientemente detallada y pidió fidelidad al nivel de detalle del ERS de referencia, además de corregir el uso del logo institucional de la universidad por el logo propio del sistema en la portada.
+
+---
+
+### [13:30] Claude Code (Andy) — Doce casos de uso narrados, tres diagramas UML adicionales y exportación a .docx con tipografía institucional UMG
+
+**Objetivo:** aplicar al ERS el estándar tipográfico de la guía de formato de documentos académicos de UMG Puerto Barrios (Arial 12pt, justificado, interlineado 1.5, sangría por nivel de título con tab-stop) conservando la numeración decimal propia del documento en vez del esquema I./A./1. de la guía; expandir los doce casos de uso a narrativa completa (flujo normal, alternos, postcondiciones) grounded en la implementación real; añadir tres diagramas de casos de uso (en vez de uno solo saturado), un diagrama de secuencia y uno de actividades; y entregar el resultado en formato `.docx`.
+
+1. **Doce casos de uso con narrativa completa:** cada CU-01 a CU-12 se documentó con tabla de Módulo/Requerimientos relacionados/Actor(es)/Precondiciones, flujo normal numerado y postcondiciones, citando literalmente las clases reales del código (`EnergyGenerationService::store()`, `AlertEvaluationService`, `lockForUpdate()`, `CarbonOffsetService`, `ForecastService`, `AuthenticateMcpKey`, etc.), agrupados en tres diagramas UML por afinidad de actor en vez de un único diagrama de 12 casos de uso.
+2. **Dos diagramas nuevos:** un diagrama de secuencia (registro de generación → cálculo de CO₂ → evaluación de alerta, con sus ramas `alt` de validación/duplicado/umbral) y un diagrama de actividades (ciclo de vida completo de una alerta de desviación desde el registro hasta la resolución humana), ambos definidos en Mermaid y renderizados con `@mermaid-js/mermaid-cli`.
+3. **Generador de `.docx` a medida (`docs/export/build-ers-docx.js`):** script Node con la librería `docx`, instalada en una carpeta de trabajo separada (no en el proyecto Laravel), que parsea el Markdown del ERS y produce un documento de 3 secciones (carátula sin numeración, índice con `TableOfContents` automático de Word, cuerpo con número de página) replicando la tipografía de la guía UMG (Arial 12, justificado, interlineado 1.5, sangría/hanging/tab-stop por nivel de título) pero conservando la numeración decimal del documento en lugar de I./A./1.
+4. **Verificación real, no solo "compila":** el `.docx` generado se abrió y exportó a PDF mediante automatización COM de Microsoft Word (actualizando los campos del índice) para confirmar visualmente que el documento no estaba corrupto, que el índice automático resuelve números de página reales, que las tablas, el código en monoespaciado y las imágenes se ven correctamente, y se corrigieron dos defectos de paginación encontrados en esa verificación (filas de tabla partidas entre páginas, imágenes de diagramas cortadas en el salto de página) antes de entregarlo.
+
+**Prompt clave:**
+> "necesito que agarres este formato, pero solamente [aplica] el nivel de los títulos [...] pero siempre conserva la estructura actual de la numeración de uno uno punto uno [...] necesito que cada caso de uso tenga su narrativa bien detallada de cómo funciona en base a los requerimientos y cómo está hecho el sistema [...] solamente déjame tres diagramas de caso de uso [...] agrega un diagrama e r [...] y también otros dos diagramas, como de secuencia y de actividades [...] dámelo de formato docx."
+
+**Resultado:** ERS de 67 páginas en Word con doce casos de uso narrados, tres diagramas de casos de uso, un diagrama de secuencia, un diagrama de actividades y el diagrama entidad-relación, con tipografía y numeración exactamente como se pidió, verificado visualmente en Word/PDF antes de entregarlo.
+
+**Intervención humana:** Andy proporcionó su propia guía de formato de documentos de otra materia (Seminario de Tecnologías de Información) y especificó con precisión qué tomar de ella (tipografía) y qué no (el esquema de numeración I./A./1., que debía conservarse como estaba).
+
+---
+
+### [14:30] Claude Code (Andy) — Presentación ampliada a 13 diapositivas / 12 minutos, tema claro/oscuro real y guion mapeado a la rúbrica
+
+**Objetivo:** rediseñar la presentación oficial (`public/presentacion.html` + `docs/08-GUION-PRESENTACION.md` + `docs/11-DIAPOSITIVAS-PRESENTACION.md`) para que cubra explícitamente los seis criterios de la rúbrica oficial (`Rubrica de Evaluación.pdf`, extraída y verificada en esta sesión), no solo el criterio de Presentación: el origen y significado cultural del nombre "K'in Solar" (Originalidad, 20%), un recorrido explícito por la documentación del repositorio (Documentación, 10%), un bloque consolidado de funciones construidas más allá del alcance original (Originalidad + Uso de IA), y un tema claro/oscuro funcional construido con los tokens de color reales del sistema (`--kin-bg`, `--kin-ink`, `--kin-accent`, etc. de `resources/css/app.css`), no una paleta inventada.
+
+1. **Verificación directa contra la rúbrica oficial:** se extrajo el texto de `Rubrica de Evaluación.pdf` (fuera del repositorio, en Descargas) para confirmar la redacción exacta de cada criterio antes de mapear las diapositivas contra ella — no se confió en la paráfrasis ya existente en `docs/05-CHECKLIST-RUBRICA.md`.
+2. **3 diapositivas nuevas insertadas** en `public/presentacion.html` (de 10 a 13 diapositivas totales, de 10 a 12 minutos): "¿Por qué K'in?" (origen maya del nombre, con el logo real como pieza central), "Elementos Plus" (SCADA, campanita, tema claro/oscuro, cliente API, identidad propia) y "Ronda de Preguntas" (banco de respuestas visible en pantalla). La diapositiva de Arquitectura se amplió para incluir explícitamente la documentación del proyecto.
+3. **Tema claro/oscuro real y funcional:** botón de alternancia en la barra superior que aplica `data-theme` sobre `<html>` y una hoja de anulación CSS dirigida a las clases de Tailwind más repetidas del documento (`.text-white`, `.bg-slate-900`, `.border-slate-800`, `.glass-panel`, etc.), usando los valores hexadecimales reales del tema claro y oscuro del sistema — no aproximados. Persistido en `localStorage`. Verificado visualmente slide por slide contra un servidor Laravel local real (no solo `file://`, para que la ruta absoluta del logo se resolviera igual que en producción).
+4. Actualización de todos los `data-time`, contadores de diapositiva y el cronómetro por defecto (10:00 → 12:00) para que coincidan con el nuevo guion.
+5. Reescritura completa de `docs/08-GUION-PRESENTACION.md` (palabra por palabra, con nueva tabla de mapeo criterio-de-rúbrica → bloque) y `docs/11-DIAPOSITIVAS-PRESENTACION.md`, incluyendo una tabla explícita de qué archivos `.md` conviene tener abiertos durante la presentación y cuándo mostrarlos.
+6. Regeneración de `docs/export/presentacion-kin-solar.pdf` contra un servidor local real para que las imágenes con ruta absoluta se incluyeran correctamente en el PDF.
+
+**Prompt clave:**
+> "Quiero una buena presentación [...] quiero que detallar todo cómo está hecho el sistema [...] las mejoras que le dimos extra, los plus, la creatividad, el detalle de qué significa KIN solar [...] evalúala [contra la rúbrica] [...] Utiliza los colores [...] de tema blanco y de tema oscuro del sistema para hacer la presentación [...] Y también, luego de eso, ya puedes actualizar la presentación que está en la web."
+
+**Resultado:** presentación de 13 diapositivas / 12 minutos con tema claro/oscuro funcional, guion completo mapeado criterio por criterio contra la rúbrica oficial, y una recomendación explícita de qué documentación tener a la mano. Pendiente de despliegue a la URL pública de producción — esta sesión no tiene acceso a la instancia AWS EC2, por lo que el cambio queda listo en el repositorio para que el equipo lo despliegue con su proceso habitual.
+
+**Intervención humana:** Andy pidió explícitamente que la presentación demostrara el sistema de diseño dual (claro/oscuro) del propio producto en vez de usar solo la paleta oscura ya existente, y que se verificara contra la rúbrica oficial en PDF en vez de solo contra el checklist interno del equipo.
+
+---
+
+### [15:05] Claude Code (Andy) — Presentación oficial en PowerPoint editable, 16 diapositivas alternando tema oscuro/claro
+
+**Objetivo:** entregar la presentación en formato `.pptx` real (no HTML ni PDF) para que el equipo pueda abrirla y editarla directamente en PowerPoint, alternando cada diapositiva entre tema oscuro y tema claro siguiendo el diseño del sistema, e incorporando explícitamente detalles que Andy señaló como "fáciles de olvidar" en vivo: el origen del nombre, las normas ISO/IEEE aplicadas, la estructura completa de la documentación y cómo se trabajó el repositorio (ramas, PRs, commits).
+
+1. **Generador a medida (`docs/export/build-presentacion-pptx.js`):** script Node con la librería `pptxgenjs` (instalada en una carpeta de trabajo separada, no en el proyecto Laravel) que construye 16 diapositivas en formato 16:9, alternando explícitamente entre una paleta oscura y una clara construidas con los valores hexadecimales reales de `resources/css/app.css` (`--kin-bg`, `--kin-ink`, `--kin-accent`, etc.), con el logo correspondiente (blanco sobre oscuro, negro sobre claro) en cada una.
+2. **3 diapositivas nuevas** respecto a la versión HTML: "Estándares y Normas que Rigen el Proyecto" (IEEE 830-1998, ISO/IEC/IEEE 29148:2018, ISO/IEC 25010:2011, OWASP Top 10:2025, PSR-12, Conventional Commits, UML 2.5), "Estructura Completa de la Documentación (docs/)" (los 13 documentos del proyecto con una línea de descripción cada uno) y "Cómo Trabajamos el Repositorio: Ramas, PRs y Commits" (las 10 reglas del proyecto, ejemplos reales de Conventional Commits con trailer de coautoría de IA, y la plantilla de Pull Request obligatoria).
+3. **Verificación real:** el `.pptx` generado se abrió con PowerPoint por automatización COM, se exportó a PDF, y se revisaron las 16 diapositivas una por una para confirmar que el texto no se desbordaba, que el patrón oscuro/claro alternaba correctamente y que las tres diapositivas nuevas (las más densas en texto) no tenían overflow.
+
+**Prompt clave:**
+> "Dame tú la presentación en archivo PowerPoint [...] quiero que la presentación vayas alternando diapositivas en color oscuro y en color blanco [...] necesito que en la presentación pongas detalles importantes que se me pueden olvidar, como [...] el nombre de dónde surge [...] las pruebas de OWASP, todas las normas y estándares ISO que ocupamos, la documentación que tenemos, cómo trabajamos el tema del repositorio, la documentación, las reglas, cómo hicimos los commits, todos los MDs que están en el proyecto, su estructura."
+
+**Resultado:** `docs/export/Presentacion-Kin-Solar-Guatemala.pptx`, 16 diapositivas editables, alternancia oscuro/claro verificada visualmente diapositiva por diapositiva, con las tres diapositivas de "detalles que se olvidan" añadidas y verificadas sin overflow.
+
+**Intervención humana:** Andy especificó que necesitaba el archivo en formato PowerPoint real (no HTML ni PDF) explícitamente para poder abrirlo y editarlo él mismo antes de presentar, y enumeró de memoria la lista completa de detalles de proceso/documentación que temía olvidar en vivo.
+
+---
+
+### [15:20] Claude Code (Andy) — Capturas reales del sistema, tabla ERS/ERD y reordenamiento hacia una demo en vivo consolidada
+
+**Objetivo:** corregir la sensación de "diapositivas vacías" señalada por Andy agregando capturas de pantalla reales del sistema (no maquetas), reestructurar la diapositiva de estándares para nombrar explícitamente el ERS y el ERD como artefactos concretos construidos bajo cada norma, y reordenar la presentación para que todo lo técnico/documental vaya primero y la demostración en vivo quede consolidada en una sola diapositiva de transición al final, en vez de tres diapositivas de detalle de demo intercaladas.
+
+1. **Capturas reales automatizadas:** se levantó el servidor Laravel local (`.claude/launch.json`) y se usó `puppeteer-core` (Chrome del sistema como motor) para iniciar sesión con los usuarios sembrados (`admin@solarguatemala.gob.gt`, `evaluador@umg.edu.gt`, contraseñas de `.env` local) y capturar 9 pantallas reales: login, dashboard, mapa, alertas, reportes, proyecciones, simulador SCADA, generaciones y el error 403 real al intentar acceso no autorizado — guardadas en `docs/evidencias/pptx/`.
+2. **Diapositiva de Estándares reestructurada:** en vez de solo nombrar las normas, cada fila ahora empareja el **estándar** con el **artefacto concreto** construido bajo él (IEEE 830/29148 → el ERS; UML 2.5 → el ERD y los demás diagramas; ISO/IEC 25010 → la sección de Atributos de Calidad del ERS; OWASP Top 10:2025 → el documento de seguridad y el checklist por PR), con el ERD real embebido como imagen junto a la tabla.
+3. **Reordenamiento estructural:** las tres diapositivas de detalle de demo (Dashboard, Alertas, Proyecciones) se consolidaron en una única diapositiva "Los Módulos que Vamos a Presentar en Vivo" — ocho módulos en tarjetas numeradas más una franja de cierre "A continuación: demostración en vivo sobre la URL pública" — posicionada justo antes del cierre, de forma que toda la parte técnica/documental se presenta primero y la demostración real del sistema ocurre al final, fuera de PowerPoint.
+4. **Diapositivas enriquecidas:** se agregaron capturas reales a Arquitectura (dashboard), Estándares (ERD) y Elementos Plus (simulador SCADA), y una diapositiva nueva de evidencia visual del error 403 para el bloque de seguridad OWASP — antes solo se describía en texto.
+5. Se detectó y corrigió un error de numeración en los rótulos de las diapositivas (dos diapositivas compartían el número "10" tras insertar la nueva diapositiva de evidencia del 403) antes de entregar el archivo.
+
+**Prompt clave:**
+> "Quiero que agregues capturas de pantalla del sistema en donde amerites [...] llena información detallada [...] quiero que menciones ahí que tenemos un ERS, tenemos un ERD, bajo estándares y normas [...] quiero que la presentación sea rápida para [...] hacer una introducción al sistema, y de último, poner [...] una diapositiva con todos los módulos del sistema y decir que vamos a presentar en vivo [...] vamos a agrupar todo lo técnico de documentación y vamos a dejar la presentación del sistema ya de último."
+
+**Resultado:** 15 diapositivas con 9 capturas reales del sistema en producción local, tabla Estándar → Artefacto explícita (ERS, ERD, ISO 25010, OWASP), y una única diapositiva de módulos como puente hacia la demostración en vivo, verificado abriendo el `.pptx` con PowerPoint y revisando cada diapositiva en el PDF exportado.
+
+**Intervención humana:** Andy pidió explícitamente evidencia visual real (no solo texto) en las diapositivas que sentía vacías, nombró "ERS" y "ERD" como artefactos que no podían faltar, y redefinió la narrativa completa de la presentación: todo lo documental primero, la demostración del sistema al final y fuera de las diapositivas.
+
+---
+
 ## 4. Evidencia visual
 
 Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:

@@ -1,0 +1,20 @@
+flowchart TD
+    Start([Inicio: Operador registra generacion del periodo]) --> Validar[Validar formulario: FormRequest]
+    Validar --> EsValido{Datos validos?}
+    EsValido -- No --> ErrorForm[Mostrar errores por campo] --> FinError([Fin])
+    EsValido -- Si --> Duplicado{Periodo ya existe para la granja?}
+    Duplicado -- Si --> ErrorDup[Rechazar: periodo duplicado] --> FinError
+    Duplicado -- No --> Guardar[Guardar generacion real y esperada]
+    Guardar --> CalcularCO2[Calcular CO2 evitado: real_kWh x 0.40]
+    CalcularCO2 --> Bloqueo[Bloquear fila de la granja: lockForUpdate]
+    Bloqueo --> CalcularDesv[Calcular desviacion porcentual]
+    CalcularDesv --> Umbral{Desviacion >= 20%?}
+    Umbral -- No --> Actualizar[Actualizar dashboard e indicadores] --> FinOk([Fin: registro exitoso])
+    Umbral -- Si --> CrearAlerta[Crear alerta activa]
+    CrearAlerta --> Notificar[Mostrar alerta en bandeja y dashboard]
+    Notificar --> Revision{Administrador u operador revisa la alerta}
+    Revision -- Pendiente --> Espera[Alerta permanece activa]
+    Espera --> Revision
+    Revision -- Resuelta --> Justificar[Registrar nota de resolucion]
+    Justificar --> Auditar[Registrar evento en audit_logs]
+    Auditar --> FinOk
