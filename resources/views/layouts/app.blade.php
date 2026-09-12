@@ -6,6 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="theme-color" content="#0B0F17">
     <title>{{ $title ?? 'Panorama nacional' }} — K'in Solar Guatemala</title>
+    <link rel="icon" type="image/png" href="{{ asset('images/kin-icon-dorado.png') }}">
     <script>
         const savedTheme = localStorage.getItem('theme');
         document.documentElement.classList.toggle('dark', savedTheme ? savedTheme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches);
