@@ -615,7 +615,7 @@ navegador antes de commitear).
 
 ---
 
-### [21:55] Antigravity (Andy) — Menú a la Izquierda, Selector GPS en Registro y Navegación Bidireccional de Granjas — PR #15 (Iteración 2)
+### [21:55] Antigravity (Andy) — Menú a la Izquierda, Selector GPS en Registro y Navegación Bidireccional de Granjas — PR #16 (Iteración 1)
 
 **Objetivo:** mover el menú drawer lateral hacia la izquierda con animación suave mediante curva cúbica, optimizar el listado de granjas en móviles con tarjetas limpias ("Ver detalles") que eliminan el scroll horizontal, ajustar la altura del mapa para eliminar el scroll vertical con tipografía compacta, enlazar la vista de detalle de granja directamente con el mapa para resaltar automáticamente su departamento y abrir su ficha interactiva, e integrar un selector de mapa GPS interactivo en el formulario de creación y edición de granjas solares con sincronización bidireccional.
 
@@ -637,7 +637,7 @@ navegador antes de commitear).
 
 ---
 
-### [22:15] Antigravity (Andy) — Menú Lateral Compacto Cero Scroll, Mapa en Una Sola Línea y Scrollbar Estético — PR #15 (Iteración 3)
+### [22:15] Antigravity (Andy) — Menú Lateral Compacto Cero Scroll, Mapa en Una Sola Línea y Scrollbar Estético — PR #16 (Iteración 2)
 
 **Objetivo:** asegurar que la opción "Mapa de Guatemala" en el menú de navegación de escritorio se muestre en una sola línea estricta sin saltos ni desbordes, compactar el menú lateral izquierdo en computadoras/laptops reduciendo espaciados y encabezados para que todos los enlaces y el footer quepan sin requerir scroll vertical, e implementar un scrollbar personalizado y estético en toda la aplicación (Dashboard, tablas y páginas) con acento solar ámbar suave que armonice con el tema de SolarGT.
 
