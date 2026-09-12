@@ -30,8 +30,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // HTTPS obligatorio en producción (OWASP A02). No afecta el entorno local.
-        if ($this->app->isProduction()) {
+        // HTTPS en producción (OWASP A02) solo si está activo por FORCE_HTTPS o si el request ya es HTTPS.
+        // Permite funcionar correctamente en IPs públicas HTTP sin certificado (ej. AWS EC2 demo).
+        if ($this->app->isProduction() && (env('FORCE_HTTPS', false) || request()->isSecure())) {
             URL::forceScheme('https');
         }
 
