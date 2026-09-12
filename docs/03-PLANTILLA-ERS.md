@@ -10,7 +10,7 @@
 | **Versión** | 1.0 (Congelada Hora 1) |
 | **Fecha** | 11/09/2026 |
 | **Organización** | Universidad Mariano Gálvez de Guatemala — Facultad de Ingeniería en Sistemas, sede Puerto Barrios |
-| **Autores** | Andy Fabricio Aquino Escobar (0909-22-1669) · Carlos |
+| **Autores** | Andy Fabricio Aquino Escobar (0909-22-1669) · Carlos Giovanni Martínez (0909-22-19157) |
 | **Contexto** | Competencia de Programación con IA — Día del Programador 2026 |
 | **Estado** | Aprobado y Congelado |
 
@@ -18,7 +18,7 @@
 
 | Versión | Fecha | Autor | Descripción del cambio |
 |---|---|---|---|
-| 1.0 | 11/09/2026 | Andy Aquino & Carlos | Versión inicial completa basada en el pliego del reto nacional de generación solar |
+| 1.0 | 11/09/2026 | Andy Aquino & Carlos Martínez | Versión inicial completa basada en el pliego del reto nacional de generación solar |
 
 ---
 
@@ -58,6 +58,47 @@ El software es un sistema web autónomo desplegado en la nube pública bajo arqu
 2. **Capa de Negocio (Laravel Services):** Servicios desacoplados de cálculo ambiental (`CarbonOffsetService`), alertas automáticas (`AlertEvaluationService`) y proyección estacional (`SolarForecastService`).
 3. **Capa de Persistencia (MySQL 8):** Modelo relacional normalizado con integridad referencial, índices espaciales/temporales y tabla de auditoría.
 
+**Diagrama de Arquitectura y Despliegue Físico:**
+
+```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#FFF7D6', 'primaryBorderColor':'#D97706', 'primaryTextColor':'#1a1a1a', 'lineColor':'#B45309', 'secondaryColor':'#FFF7D6', 'tertiaryColor':'#FFFBEB', 'clusterBkg':'#FFFBEB', 'clusterBorder':'#F2B705', 'fontFamily':'Arial' }}}%%
+graph TB
+    subgraph CLIENTES ["Capa de Clientes"]
+        Browser["Navegador Web (Chrome/Firefox/Edge)<br/>Blade + Tailwind CSS v4 + Leaflet.js"]
+        ExternalAPI["Consumidores Externos REST<br/>(MINEM, Municipalidades, ONG)"]
+        AIAssistant["Asistente de IA (Claude Desktop / Agentes)<br/>Protocolo stdio / JSON-RPC"]
+    end
+
+    subgraph RED ["Seguridad y Tránsito"]
+        DNS["DuckDNS (kin-solar-guatemala.duckdns.org)<br/>Elastic IP AWS"]
+        TLS["Terminación TLS / HTTPS<br/>Let's Encrypt (Certbot)"]
+    end
+
+    subgraph AWS_EC2 ["Instancia AWS EC2 (Ubuntu 24.04 LTS)"]
+        subgraph WEB_SERVER ["Servidor Web"]
+            Nginx["Nginx 1.24 (Reverse Proxy)<br/>Headers OWASP + Compresión Gzip"]
+        end
+
+        subgraph APP_SERVER ["Servidor de Aplicaciones"]
+            FPM["PHP-FPM 8.3"]
+            Laravel["Laravel 13 Core<br/>MVC + FormRequests + Policies"]
+            NodeMCP["Servidor MCP Propio (Node.js)<br/>@modelcontextprotocol/sdk"]
+        end
+
+        subgraph PERSISTENCIA ["Base de Datos"]
+            MySQL[("MySQL 8.0<br/>8 Tablas + Índices + SoftDeletes")]
+        end
+    end
+
+    Browser -->|HTTPS :443| TLS
+    ExternalAPI -->|"HTTPS :443 /api/v1/*"| TLS
+    AIAssistant -->|stdio / Tools| NodeMCP
+    TLS --> DNS --> Nginx
+    Nginx -->|FastCGI unix socket| FPM --> Laravel
+    NodeMCP -->|"POST /api/v1/generations (X-MCP-Key)"| Nginx
+    Laravel -->|PDO TCP:3306| MySQL
+```
+
 ### 2.2 Características de los Usuarios
 
 | Rol | Responsabilidades | Nivel Técnico | Módulos con Acceso |
@@ -65,6 +106,13 @@ El software es un sistema web autónomo desplegado en la nube pública bajo arqu
 | **Administrador** | Gestión de infraestructura, departamentos, usuarios, parámetros ambientales y auditoría. | Alto | 100 % del sistema |
 | **Operador** | Registro de granjas, asignación de paneles, carga periódica de generación y seguimiento de alertas. | Medio | Granjas, paneles, mediciones y alertas |
 | **Visualizador** | Consulta de tableros, mapa interactivo, reportes ejecutivos, proyecciones y API pública. | Básico | Dashboard, mapa, reportes, API |
+
+### 2.3 Roles del Equipo y Distribución de Responsabilidades
+
+| Integrante | Rol en el Proyecto | Tareas Principales Realizadas | Agentes de IA Operados |
+|---|---|---|---|
+| **Andy Fabricio Aquino Escobar** | Co-Arquitecto e Integrador (Agente E) · Frontend / UI-UX (Agente C) | Diseño del esquema de base de datos, autorización y Policies (junto con el Agente A); maquetación de vistas Blade; diseño del sistema visual con Tailwind CSS v4; integración del mapa interactivo con Leaflet.js; resolución de conflictos y merge de Pull Requests; documentación técnica y corrección de detalles del ERS. | Claude Code (Agente E) · Antigravity (Agente C) |
+| **Carlos Giovanni Martínez** | Arquitecto Principal e Integrador (Agente A) · Backend y DevOps (Agentes B y D) | Migraciones, modelos Eloquent y Policies de autorización; controladores y FormRequests; lógica de servicios desacoplados (`CarbonOffsetService`, `AlertEvaluationService`, `ForecastService`); implementación de telemetría; pipeline de despliegue en AWS EC2; auditoría de seguridad OWASP Top 10:2025 y servidor MCP propio. | Claude Code (Agente A) · Codex (Agente B) · Antigravity (Agente D) |
 
 ---
 
@@ -182,4 +230,4 @@ El software es un sistema web autónomo desplegado en la nube pública bajo arqu
 
 ## 6. Firma de Aprobación
 Documento aprobado a las 18:00 del viernes 11 de septiembre de 2026.
-**Equipo:** Andy Fabricio Aquino Escobar · Carlos
+**Equipo:** Andy Fabricio Aquino Escobar (Carné 0909-22-1669) · Carlos Giovanni Martínez (Carné 0909-22-19157)

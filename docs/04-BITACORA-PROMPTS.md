@@ -1299,6 +1299,27 @@ API y el diagnóstico de la rúbrica.
 
 ---
 
+### Claude Code (Agente E, operado por Andy) — Auditoría del ERS v2.0: autoría completa, §Roles del Equipo y diagrama de arquitectura
+
+**Objetivo:** el humano recibió una auditoría externa sobre el `.docx` fuente del ERS v2.0 (`ERS-Kin-Solar-Guatemala.docx`, fuera del repo, en Descargas) con 4 observaciones críticas que arriesgaban el puntaje de Documentación (10%) y Originalidad/Profesionalismo (20%): nombre de Carlos incompleto en carátula/control de versiones/firma, ausencia de la tabla "Tareas por integrante y rol" que exige la rúbrica, y falta del diagrama de arquitectura/despliegue físico en §2.1.
+
+**Prompts del humano (extractos literales):**
+> Actúa como el Agente de Documentación y Arquitectura del equipo [...] Debes actualizar el documento fuente que genera el PDF de la Especificación de Requerimientos de Software (ERS v2.0) para resolver 4 observaciones críticas de auditoría [...] LEE TODO EL PROYECTO DE SER NECESARIO Y AGREGA ESO POR FAVOR
+>
+> Sí, sincronizá también docs/03-PLANTILLA-ERS.md sincroniza todo por favor
+
+**Resultado:**
+1. **`.docx` (fuera del repo, en Descargas):** se editó directamente el XML (`word/document.xml`) tras descomprimir el paquete OOXML — sin herramientas de Word/LibreOffice disponibles en la máquina. Los 4 puntos: (a) nombre y carné de Carlos completados en carátula, tabla de control de versiones y firma final; (b) nueva §2.6 "Roles del Equipo y Distribución de Responsabilidades" insertada antes de la Sección 3, con tabla de 4 columnas; (c) diagrama de arquitectura/despliegue renderizado con Mermaid CLI (mismo esquema de color ámbar que los diagramas ER/casos de uso ya existentes en el documento, para no desentonar) e insertado como imagen al final de §2.1; (d) documento revalidado contra el esquema OOXML.
+2. **`docs/03-PLANTILLA-ERS.md` (dentro del repo):** mismas 4 correcciones adaptadas a esta plantilla más corta (llega solo hasta §2.2, no tiene §2.3–2.5 como el `.docx`): autoría completa en carátula/versiones/firma, nueva §2.3 "Roles del Equipo y Distribución de Responsabilidades" antes de "3. Requerimientos Funcionales Específicos", y el mismo diagrama embebido nativamente como bloque ` ```mermaid ` (aquí sí es editable/versionable, a diferencia del `.docx`).
+
+**Corrección propia sobre el borrador del humano:** la tabla de roles que pidió el humano le daba a Andy en solitario "diseño del esquema de base de datos, autorización y Policies" y a Carlos solo "Backend & DevOps". Se cruzó contra `docs/00-PLAN-MAESTRO.md` §2 y ahí el Agente A (dueño de `database/migrations/`, `app/Models/`, `app/Policies/`, `routes/`) lo opera **Carlos**, no Andy. Se corrigieron los roles de ambos integrantes en las dos tablas (`.docx` y `.md`) para que no queden inconsistentes con el plan maestro ante una auditoría cruzada. El carné exacto de Carlos (0909-22-19157) no estaba documentado en ningún archivo del repo ni del `.docx`; se preguntó directamente al humano en vez de inventarlo.
+
+**Riesgo evitado:** se intentó forzar `<w:updateFields>` en `settings.xml` para que Word recalculara automáticamente los números de página del índice (campo TOC real) tras la nueva sección; rompió la validación contra el esquema OOXML por orden de elementos incorrecto y se revirtió de inmediato. Queda pendiente que el humano actualice el índice manualmente en Word (Ctrl+A → F9) antes de exportar a PDF.
+
+**Verificación:** `.docx` — descompresión/edición/reempaquetado del XML, validación de esquema OOXML (`validate.py --original`, sin errores nuevos), relectura completa con `python-docx` confirmando texto, tabla e imagen en la posición correcta, e inspección visual directa del PNG del diagrama antes de insertarlo. `.md` — relectura completa del archivo tras los 5 edits confirmando que las tablas y el bloque Mermaid quedan bien formados y en el orden esperado. Se hizo respaldo del `.docx` original (`ERS-Kin-Solar-Guatemala.ANTES-DE-AUDITORIA.*.docx`) antes de sobrescribirlo en Descargas.
+
+---
+
 ## 4. Evidencia visual
 
 Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:
