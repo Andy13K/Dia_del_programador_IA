@@ -40,4 +40,22 @@ class User extends Authenticatable
     {
         return $this->hasMany(AuditLog::class);
     }
+
+    /**
+     * "role" queda fuera de $fillable a propósito (OWASP A01): solo se asigna
+     * por asignación directa de atributo (p. ej. en seeders), nunca por
+     * mass assignment desde datos de un formulario.
+     */
+    public function hasRole(string $role): bool
+    {
+        return $this->role === $role;
+    }
+
+    /**
+     * @param list<string> $roles
+     */
+    public function hasAnyRole(array $roles): bool
+    {
+        return in_array($this->role, $roles, true);
+    }
 }
