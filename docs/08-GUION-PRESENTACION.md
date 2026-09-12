@@ -88,7 +88,7 @@
 ### Secuencia exacta de clics (4 minutos)
 
 **[2:30–2:55] — Login y Dashboard**
-1. Navegar a `http://3.238.198.77` (ya abierto en una pestaña)
+1. Navegar a `https://kin-solar-guatemala.duckdns.org` (ya abierto en una pestaña)
 2. Ingresar como admin: `admin@solarguatemala.gob.gt` / `Solar2026!Admin`
 3. Mostrar el Dashboard con los 6 KPIs
 4. Decir: *"Este es el tablero ejecutivo. En un vistazo, el administrador ve toda la red solar nacional: [leer los 6 KPIs en voz alta]."*
@@ -129,14 +129,14 @@
 29. Decir: *"El algoritmo aplica Promedio Móvil Ponderado ajustado por estacionalidad solar guatemalteca. Diferencia entre época seca — noviembre a abril — con mayor irradiancia, y época lluviosa — mayo a octubre — con nubosidad frecuente. El resultado es una proyección estadísticamente justificable ante cualquier revisor."*
 
 **[5:30–6:00] — API REST (RF-16)**
-30. Abrir una pestaña nueva y navegar a `http://3.238.198.77/api/v1/statistics`
+30. Abrir una pestaña nueva y navegar a `https://kin-solar-guatemala.duckdns.org/api/v1/statistics`
 31. Mostrar el JSON de respuesta
-32. Navegar a `http://3.238.198.77/api-docs` y mostrar la documentación
+32. Navegar a `https://kin-solar-guatemala.duckdns.org/api-docs` y mostrar la documentación
 33. Decir: *"La API REST pública expone todos los datos en formato JSON estándar. Cualquier sistema externo — del MINEM, de municipalidades o de ONGs — puede consumir estos datos sin credenciales."*
 
 **[6:00–6:30] — Responsividad**
 34. Tomar el celular (ya preparado con el wifi del salón)
-35. Abrir `http://3.238.198.77` desde el celular
+35. Abrir `https://kin-solar-guatemala.duckdns.org` desde el celular
 36. Mostrar el dashboard y el mapa en la pantalla del celular
 37. Decir: *"Verificado desde 360 px de ancho — el tamaño de pantalla más pequeño. Todo el sistema es responsivo sin una línea de CSS custom innecesaria."*
 
@@ -155,7 +155,7 @@
 
 **Demo en vivo (45 segundos):**
 
-1. Con el usuario `evaluador@umg.edu.gt` ya logueado en otra pestaña, escribir en la barra de direcciones: `http://3.238.198.77/farms/create`
+1. Con el usuario `evaluador@umg.edu.gt` ya logueado en otra pestaña, escribir en la barra de direcciones: `https://kin-solar-guatemala.duckdns.org/farms/create`
    → Aparece **403 Prohibido** ← decir: *"Control de acceso. El visualizador no puede crear granjas, y el sistema lo impide aunque conozca la URL exacta."*
 
 2. Cambiar a la pestaña del admin → ir al log de auditoría (si está expuesto en la UI) o decir:
@@ -227,13 +227,13 @@
 
 ## Checklist previo a subir al frente
 
-- [ ] Sesión admin abierta en pestaña 1: `http://3.238.198.77`
+- [ ] Sesión admin abierta en pestaña 1: `https://kin-solar-guatemala.duckdns.org`
 - [ ] Sesión evaluador abierta en pestaña 2 (para la demo de 403)
 - [ ] Pestaña 3: repositorio GitHub → **Pull Requests**
-- [ ] Pestaña 4: `http://3.238.198.77/api/v1/statistics` (JSON visible)
-- [ ] Pestaña 5: `http://3.238.198.77/api-docs`
+- [ ] Pestaña 4: `https://kin-solar-guatemala.duckdns.org/api/v1/statistics` (JSON visible)
+- [ ] Pestaña 5: `https://kin-solar-guatemala.duckdns.org/api-docs`
 - [ ] Diagrama ER listo (en `docs/06-CONTRATOS-HORA-1.md` o imagen)
-- [ ] Celular con WiFi del salón, `http://3.238.198.77` cargado y sesión iniciada
+- [ ] Celular con WiFi del salón, `https://kin-solar-guatemala.duckdns.org` cargado y sesión iniciada
 - [ ] Video de respaldo accesible en 10 segundos (guardado en celular y en la laptop)
 - [ ] Notificaciones del sistema operativo silenciadas
 - [ ] Zoom del navegador al **100 %** (o 110 % si la pantalla del salón es pequeña)

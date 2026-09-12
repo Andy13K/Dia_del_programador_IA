@@ -692,6 +692,56 @@ navegador antes de commitear).
 
 ---
 
+### [04:53] Claude Code (Andy) — Dominio gratuito, Elastic IP y HTTPS con Let's Encrypt — PR #18
+
+**Objetivo:** eliminar el incumplimiento literal de la base del reto ("la aplicación deberá estar
+desplegada en la nube y ser accesible mediante una URL con nombre de dominio"), que hasta este
+punto se servía sobre la IP pública pelada de EC2 (`http://3.238.198.77`) sin certificado TLS.
+
+**Prompt (resumen de la sesión, guiada paso a paso por Andy desde MobaXterm):**
+> "Ayúdame con lo del dominio... me gustaría poder conseguir uno gratis para mañana y así generar
+> el certificado para HTTPS." Seguido de capturas de la consola de AWS y la terminal de MobaXterm
+> en cada paso, pidiendo la instrucción exacta a ejecutar.
+
+**Resultado:**
+1. **Elastic IP** asignada y asociada a la instancia `i-0ddc9cd7ed1e085c6` desde la consola de AWS
+   (EC2 → Direcciones IP elásticas), fijando la IP pública en `75.101.181.76` — ya no cambia si la
+   instancia se reinicia.
+2. **Subdominio gratuito** creado en [DuckDNS](https://www.duckdns.org):
+   `kin-solar-guatemala.duckdns.org`, apuntado por registro A a `75.101.181.76`.
+3. Confirmado que el puerto **443** ya estaba abierto en el Security Group (`sg-0d62716266003f876`),
+   junto al 22 y 80, todos con origen `0.0.0.0/0`.
+4. `server_name` en `/etc/nginx/sites-available/solar-guatemala` actualizado de `_` (comodín) al
+   dominio real, para que Certbot identificara el bloque correcto.
+5. **Certbot + plugin de Nginx** instalado y ejecutado (`sudo certbot --nginx -d kin-solar-guatemala.duckdns.org`):
+   emitió el certificado de Let's Encrypt, configuró `listen 443 ssl` y agregó automáticamente el
+   redirect 301 de HTTP a HTTPS. Renovación automática programada por Certbot (vence el 11/12/2026).
+6. `.env` de producción actualizado: `APP_URL=https://kin-solar-guatemala.duckdns.org` y
+   `SESSION_SECURE_COOKIE=true` (antes en `false`, porque no había HTTPS). Cachés de Laravel
+   reconstruidas (`config:cache`, `route:cache`, `view:cache`).
+7. `README.md`, `docs/08-GUION-PRESENTACION.md` y `docs/09-MANUAL-USUARIO.md` actualizados con el
+   dominio nuevo en reemplazo de la IP; se agregó la sección "9.1 Dominio gratuito y certificado
+   HTTPS" al procedimiento de despliegue del `README.md` para que el paso quede reproducible.
+8. **Verificación en producción tras el cambio:**
+   - `curl -sI https://kin-solar-guatemala.duckdns.org` → `200 OK`, con `Strict-Transport-Security`
+     y las cabeceras de seguridad ya existentes intactas.
+   - `curl http://kin-solar-guatemala.duckdns.org` → `301` (redirige a HTTPS).
+   - `curl https://kin-solar-guatemala.duckdns.org/.env` → `403` (sigue bloqueado).
+   - Cookies de sesión ahora con la bandera `secure` presente (antes ausente, por estar en HTTP).
+
+**Intervención humana:** Andy ejecutó cada comando en el servidor real vía MobaXterm y confirmó
+con capturas de pantalla el resultado de cada paso (consola de AWS, salida de Certbot, verificación
+final con `curl`) antes de continuar al siguiente. El agente detectó y corrigió sobre la marcha dos
+supuestos incorrectos: la ruta del proyecto no era `/var/www/solar` sino `/var/www/solar-guatemala`,
+y el archivo de Nginx real se llamaba `solar-guatemala`, no `solar` — ambos verificados con `ls` y
+`cat` antes de tocar cualquier configuración, en vez de asumir la ruta de la documentación original.
+
+**Iteraciones:** 6 (asignación de Elastic IP → creación del subdominio → apertura de puerto →
+corrección de rutas reales del servidor → emisión del certificado → actualización de `.env` y
+documentación).
+
+---
+
 ### Codex (Carlos) — Rediseño K'in Solar Guatemala y verificación adaptable
 
 **Objetivo:** renovar la interfaz de Blade con identidad K'in Solar Guatemala, navegación móvil, dashboard bento y coherencia visual, conservando los contratos del backend. Rama `feat/carlos-codex/kin-solar-ui`, worktree aislado desde `origin/master` (`e49c7d5`).
@@ -717,6 +767,7 @@ navegador antes de commitear).
 **Verificación pública pendiente del rediseño:** se abrió `https://kin-solar-guatemala.duckdns.org/` y respondió con la interfaz anterior. Esta rama no está desplegada; la validación final de su interfaz en producción queda pendiente tras integración. No se declara auditoría WCAG completa ni verificación productiva de este cambio.
 
 ---
+
 ## 4. Evidencia visual
 
 Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:
