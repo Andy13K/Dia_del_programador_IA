@@ -11,6 +11,7 @@ use App\Services\BackendAccessService;
 use App\Services\BackendAuditService;
 use App\Services\GenerationAlertService;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -68,5 +69,41 @@ class GenerationAlertController extends Controller
         });
 
         return redirect()->route('alerts.index')->with('success', 'Alerta resuelta correctamente.');
+    }
+
+    public function notifications(Request $request): JsonResponse
+    {
+        Gate::authorize('viewAny', GenerationAlert::class);
+        $farms = $this->access->farms($request->user());
+
+        $alerts = GenerationAlert::query()
+            ->whereIn('solar_farm_id', $farms->modelKeys())
+            ->where('status', 'active')
+            ->with(['solarFarm.department'])
+            ->orderByDesc('created_at')
+            ->orderByDesc('id')
+            ->take(15)
+            ->get();
+
+        $items = $alerts->map(function ($alert) {
+            return [
+                'id' => $alert->id,
+                'farm_name' => $alert->solarFarm?->name ?? 'Granja Solar',
+                'department_name' => $alert->solarFarm?->department?->name ?? 'Guatemala',
+                'period' => $alert->period,
+                'deviation_percentage' => (float) $alert->deviation_percentage,
+                'estimated_kwh' => number_format((float) $alert->estimated_kwh, 1),
+                'real_kwh' => number_format((float) $alert->real_kwh, 1),
+                'notes' => $alert->notes ?? 'Déficit de generación fotovoltaica ≥ 20%.',
+                'created_at_human' => $alert->created_at ? $alert->created_at->diffForHumans() : 'Reciente',
+                'show_url' => route('alerts.show', $alert),
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'count' => $items->count(),
+            'alerts' => $items,
+        ]);
     }
 }

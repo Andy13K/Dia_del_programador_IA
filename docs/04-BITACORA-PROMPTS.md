@@ -1178,6 +1178,32 @@ API y el diagnóstico de la rúbrica.
 
 ---
 
+### [11:55] Antigravity (Andy) — Campanita de Notificaciones, Sonido Web Audio API y Contador Dinámico — PR #41
+
+**Objetivo:** dotar a la barra superior (topbar) de un centro de notificaciones interactivo en tiempo real con:
+1. **Contador badge dinámico (`1, 2, 3...`)**: que contabiliza con exactitud las alertas de generación no atendidas/no abiertas.
+2. **Sonido de notificación nativo (Web Audio API)**: sintetizador de audio polifónico armónico (G5 784 Hz a C6 1046 Hz) que emite un chime audible y elegante cada vez que una nueva alerta es detectada o inyectada por el SCADA, sin dependencias de archivos `.mp3` ni bloqueos de red/CORS.
+3. **Menú pop-up desplegable (Dropdown)**: con diseño responsive (en móvil y escritorio), mostrando el resumen de anomalías críticas, porcentaje de déficit, granja solar, departamento y tiempo transcurrido relativo.
+4. **Acción "Más detalles"**: marca de inmediato la alerta individual como leída/atendida en el cliente (`localStorage`), decrementa instantáneamente el contador numérico de la campanita y redirige a la vista completa de la alerta (`/alerts/{id}`).
+5. **Acción "Marcar todas leídas"**: limpia el badge y actualiza el estado de lectura en un solo clic.
+6. **Sincronización bidireccional con el Laboratorio SCADA**: cuando se inyecta o resuelve un incidente desde `/simulator`, la campanita se refresca de inmediato disparando el timbre y actualizando la bandeja.
+
+**Prompt clave:**
+> "Necesito que arriba, en la campanita de notificaciones, cuando haya una alerta se reciba y suene un sonido de notificación. Y en la alerta muestre un pequeño detalle en un menú pop-up de la alerta y un botón que diga más detalles y que te redirija al apartado correspondiente de la alerta. Así para que todas las alertas que caigan vayan sumando ahí y no más se abra y se le dé clic, ya digamos tiene que mostrarse esa alerta como que ya fue abierta, porque vaya mostrando numeritos, uno, dos, tres, cuatro, según las alertas que hayan y que no hayan sido atendidas o abiertas."
+
+**Resultado:**
+- Endpoint `/alerts/notifications` en `app/Http/Controllers/GenerationAlertController.php` protegido con `auth` y acotado por `BackendAccessService` (OWASP A01).
+- Componente Blade `resources/views/components/notification-bell.blade.php` con sintetizador Web Audio API, manejo de estado en `localStorage` (sin alterar migraciones, cumpliendo Regla 3), popover animado y polling eficiente a 5s con hook global `window.refreshNotifications`.
+- Integración en el layout principal `resources/views/layouts/app.blade.php` sustituyendo el ícono estático.
+- Enlace reactivo en `resources/views/simulator/index.blade.php` disparando `window.refreshNotifications?.()` en inyecciones y reseteos SCADA.
+- Suite de pruebas de integración `tests/Feature/NotificationBellTest.php` (4 pruebas, 23 aserciones) verificando protección de autenticación, formato JSON, estructura de respuesta y exclusión de alertas resueltas.
+- Suite global de pruebas al 100% (**71 tests pasados de 71, 414 aserciones**).
+- Assets compilados con Vite (`npm run build`).
+
+**Intervención humana:** Andy solicitó explícitamente la campanita reactiva con conteo incremental de alertas no atendidas, el sonido audible en tiempo real, el menú pop-up con detalles y el botón de redirección que descuente del contador cada alerta consultada.
+
+---
+
 ## 4. Evidencia visual
 
 Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:
