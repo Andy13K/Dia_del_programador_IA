@@ -433,6 +433,108 @@ de pruebas PHPUnit para cubrir todos los escenarios.
 
 ---
 
+### [20:15] Claude Code (Agente A) — Hardening OWASP y auditoría de seguridad — PR #11
+
+**Objetivo:** verificar que la auditoría (`audit_logs`) cubra login, CRUD de granjas/paneles y
+resolución de alertas; cerrar huecos de IDOR en Policies/Gates; y auditar el código actual
+contra los 10 puntos de `docs/02-SEGURIDAD-OWASP-2025.md`, corrigiendo lo que aplique.
+
+**Prompt:**
+> Trabajemos en la rama feat/carlos-claude/hardening-owasp-auditoria. Lee AGENTS.md antes de
+> empezar. Tareas: 1) Hardening y verificación de Logs de Auditoría (OWASP A09) — login,
+> CRUD de granjas/paneles, resolución de alertas. 2) Políticas y Gates de Seguridad (OWASP
+> A01) — sin IDOR, Gate::authorize() según rol. 3) Auditoría OWASP Top 10:2025 completa
+> (A01 a A10) + verificar APP_DEBUG=false en producción. 4) Documentar hallazgos y prompts.
+
+**Resultado:** se usó un `git worktree` nuevo (mismo motivo que el PR anterior: la sesión de
+Codex sigue commiteando en el checkout compartido) con base de datos propia
+(`solar_guatemala_claude_hardening`), `composer install` + `npm install && npm run build`
+para poder probar el stack completo (login, dashboard, mapa, CRUDs) con los assets reales
+compilados, no solo con el fallback de desarrollo.
+
+**Hallazgos y qué se corrigió (lo más valioso de esta tarea):**
+
+1. **Bug crítico de RBAC (A01):** `GenerationAlertController::resolve()` (Agente B, ya en
+   `master`) autoriza con `Gate::authorize('update', $alert)`, pero `GenerationAlertPolicy`
+   solo tenía `resolve()`. Sin un método `update()`, Laravel denegaba **siempre** con 403
+   —incluso a `admin`— dejando RF-14 (resolución de alertas) completamente inoperante desde
+   que se integraron las rutas reales (PR #5). Se agregó `update()` con el mismo criterio.
+   Verificado resolviendo una alerta real de punta a punta en el navegador.
+2. **IDOR (A01):** se confirmó (no solo por lectura de código, sino probando con los 3
+   roles reales) que un `operador` que intenta editar una granja creada por otro usuario
+   recibe **404**, no 403 ni los datos ajenos — `BackendAccessService::farms()` (Agente B)
+   ya escopa por `created_by` salvo `admin`. `visualizador` correctamente bloqueado con 403
+   (y la UI ya oculta el botón de creación para ese rol, sin depender solo de eso).
+3. **A09 incompleto:** login/logout, CRUD de granjas/paneles/mediciones y resolución de
+   alertas ya quedaban en `audit_logs` (vía `AuditService` y `BackendAuditService` de
+   Agente B) — verificado end-to-end, no solo por lectura de código. Faltaba lo que pide
+   el checklist explícitamente: "intentos de acceso denegado (403)". Se agregó un
+   `renderable` en `bootstrap/app.php` que registra cada 403 en la auditoría (nota técnica:
+   `AuthorizationException` ya llega convertida a `AccessDeniedHttpException` cuando pasa
+   por los renderable callbacks — hay que capturar ese tipo, no el original).
+4. **A02:** faltaban cabeceras de seguridad (`X-Content-Type-Options`, `X-Frame-Options`,
+   `Referrer-Policy`, `Content-Security-Policy`) y `URL::forceScheme('https')` en
+   producción — ninguna existía. Se agregaron. La CSP quedó con `'unsafe-inline'` en
+   `script-src` a propósito: el dashboard y el mapa (Agente C) inicializan Chart.js/Leaflet
+   con `<script>` inline con datos del servidor, y bloquearlo sin nonces por request rompía
+   ambas pantallas — probado primero estricto, se relajó tras ver los errores de consola.
+5. **A10 — el hallazgo más serio de la tarea:** `routes/web.php` (PR #5, ya en `master`)
+   atrapaba **cualquier** `\Throwable` en los handlers de dashboard, mapa y exportación CSV
+   y los reemplazaba con cifras de demostración fijas — incluso cuando la consulta sí
+   funcionaba pero devolvía cifras reales en cero (`$total > 0 ? $total : 10`). Ante el
+   jurado, una base de datos caída o una consulta legítimamente vacía se hubiera visto
+   idéntica a un sistema funcionando con datos reales. Se quitaron los tres `try/catch`
+   (dos de ellos con "fallback" que en la práctica eran catches vacíos, prohibidos por la
+   regla 5). La causa original era que `tests/Feature/ExampleTest.php` pegaba a `/` sin
+   `RefreshDatabase` contra SQLite en memoria sin tablas; se corrigió la causa real
+   (se habilitó `RefreshDatabase`) en vez de tapar el síntoma en el código de producción.
+6. **Vista de login rota (regresión propia, PR #4):** al compilar los assets con
+   `npm run build` para esta auditoría, la página de login quedó sin ningún estilo — su
+   `<style>` de respaldo solo se cargaba cuando *no* existía `public/build/manifest.json`;
+   apenas existe, el preflight de Tailwind resetea inputs/botones sin que la vista aporte
+   clases propias. Se quitó la condición.
+7. **Sin páginas de error personalizadas (A10):** no existía `resources/views/errors/`, así
+   que un 500 real habría mostrado el detalle de Laravel. Se agregaron 403/404/419/500,
+   autocontenidas (sin `@vite`, sin depender de sesión/BD).
+8. **`.env.example`:** no documentaba `SESSION_SECURE_COOKIE`/`HTTP_ONLY`/`SAME_SITE` (A02).
+   Se agregó, en `false` para local (con HTTP, `true` rompe el login) y comentario para
+   producción — coincide con lo que `docs/07-PLAN-DESPLIEGUE.md` ya pedía para el hosting real.
+9. **`APP_DEBUG=false` en producción:** no se pudo verificar un `.env` real porque
+   **todavía no existe ningún despliegue** — la tabla "Decisión del equipo" de
+   `docs/07-PLAN-DESPLIEGUE.md` sigue vacía. Pendiente crítico, fuera del alcance de este PR
+   (Agente D). Nota aparte: `resources/views/api-docs/index.blade.php` (Agente C) tiene
+   hardcodeada la URL `http://3.238.198.77/api/v1` (HTTP, no HTTPS, e IP fija en vez de
+   `config('app.url')`) — si esa IP es un despliegue real, viola HTTPS obligatorio de A02;
+   si no, es un placeholder que conviene reemplazar antes de la demo. No se tocó (zona de
+   Agente C), se deja señalado.
+10. **A03/A08 (no corregido, señalado):** `lucide@latest` y `chart.js` (sin versión) se
+    cargan desde CDN sin `integrity` (SRI) ni versión fijada, violando la regla explícita
+    "nada de CDNs de terceros para JS crítico" — a diferencia de Leaflet, que sí tiene
+    versión fijada e `integrity`. No se corrigió: requiere que Agente C decida entre fijar
+    versión+SRI o migrar a paquetes npm empaquetados por Vite, y no se podía probar a fondo
+    cada interacción de su capa de JS sin arriesgar romper el dashboard/mapa para el equipo.
+
+**Checklist OWASP Top 10:2025 tras esta auditoría:**
+
+| # | Estado | Nota |
+|---|---|---|
+| A01 Broken Access Control | ✅ Corregido | Policy de alertas + IDOR verificado con los 3 roles |
+| A02 Security Misconfiguration | ✅ Corregido (parcial) | Headers + HTTPS forzado + cookies documentadas; falta el `.env` real de producción (no existe despliegue aún) |
+| A03 Supply Chain | ⚠️ Señalado | `composer audit`/`npm audit` limpios; CDNs sin SRI pendientes (Agente C) |
+| A04 Cryptographic Failures | ✅ Verificado | bcrypt vía cast `hashed`, sin secretos en código |
+| A05 Injection | ✅ Verificado | Sin SQL crudo, sin `{!! !!}`, FormRequests completos |
+| A06 Insecure Design | ✅ Verificado | `throttle:5,1`, transacciones + `lockForUpdate`, mensaje de login genérico |
+| A07 Authentication Failures | ✅ Verificado | `regenerate()`/`invalidate()`, CSRF activo |
+| A08 Integrity Failures | ⚠️ Señalado | Mismo hallazgo de CDNs sin SRI que A03 |
+| A09 Logging & Alerting | ✅ Corregido | Faltaba registrar los 403; ya se verificó login/CRUD/resolución end-to-end |
+| A10 Exceptional Conditions | ✅ Corregido | Se eliminó el fail-open de dashboard/mapa/CSV; páginas de error propias agregadas |
+
+**Iteraciones:** 1 (todos los hallazgos se investigaron y corrigieron —o documentaron cuando
+no correspondía corregirlos yo— dentro de la misma pasada, verificando cada fix en el
+navegador antes de commitear).
+
+---
+
 ## 4. Evidencia visual
 
 Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:
