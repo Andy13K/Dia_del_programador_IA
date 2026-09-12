@@ -20,26 +20,29 @@
 @section('content')
 <div class="space-y-3 sm:space-y-4">
 
-    <!-- Encabezado y Filtros Rápidos -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white dark:bg-slate-900 p-3 sm:p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
-        <div>
-            <div class="flex items-center gap-1.5">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">Requerimiento Obligatorio RF-13</span>
+    <!-- Encabezado y Filtros Rápidos (Compacto en móvil para cero scroll) -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3 bg-white dark:bg-slate-900 p-2.5 sm:p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
+        <div class="flex items-center justify-between sm:block">
+            <div>
+                <div class="flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span class="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">Requerimiento RF-13</span>
+                </div>
+                <h2 class="text-xs sm:text-base md:text-lg font-bold text-slate-900 dark:text-white leading-tight mt-0.5">
+                    Distribución Geográfica de Granjas Solares
+                </h2>
             </div>
-            <h2 class="text-sm sm:text-base md:text-lg font-bold text-slate-900 dark:text-white mt-0.5 leading-tight">
-                Distribución Geográfica de Granjas Solares
-            </h2>
-            <p class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                Visualización satelital y cartográfica en los 22 departamentos de Guatemala.
-            </p>
+            <!-- Botón Centrar en móvil compacto -->
+            <button type="button" onclick="resetMap()" class="sm:hidden p-1.5 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition active:scale-95 flex items-center gap-1" title="Centrar Guatemala">
+                <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-amber-500"></i>
+            </button>
         </div>
 
         <!-- Controles / Filtros -->
-        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-2.5 w-full sm:w-auto">
-            <div class="relative w-full sm:w-auto">
-                <select id="departmentFilter" onchange="filterFarms()" class="w-full sm:w-auto pl-3 pr-8 py-2 text-xs font-semibold rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500">
-                    <option value="all">Todos los Departamentos (22)</option>
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+            <div class="relative flex-1 sm:flex-initial sm:w-auto">
+                <select id="departmentFilter" onchange="filterFarms()" class="w-full sm:w-auto pl-2.5 pr-8 py-1.5 sm:py-2 text-xs font-semibold rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500">
+                    <option value="all">Todos los Deptos (22)</option>
                     @if(isset($departments) && $departments->count() > 0)
                         @foreach($departments as $dept)
                             <option value="{{ $dept->id }}" data-name="{{ $dept->name }}" data-lat="{{ $dept->latitude }}" data-lng="{{ $dept->longitude }}">{{ $dept->name }}</option>
@@ -71,53 +74,53 @@
                 </select>
             </div>
 
-            <button type="button" onclick="resetMap()" class="w-full sm:w-auto justify-center px-3 py-2 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition flex items-center gap-1.5 active:scale-95">
+            <button type="button" onclick="resetMap()" class="hidden sm:flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition active:scale-95">
                 <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
                 <span>Centrar Guatemala</span>
             </button>
         </div>
     </div>
 
-    <!-- Contenedor del Mapa con Paneles Flotantes (Cero scroll) -->
-    <div class="relative w-full h-[calc(100vh-270px)] min-h-[380px] md:h-[calc(100vh-220px)] md:min-h-[520px] rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200/80 dark:border-slate-800 shadow-xl bg-slate-900">
+    <!-- Contenedor del Mapa con Paneles Flotantes (Cero scroll garantizado) -->
+    <div class="relative w-full h-[calc(100vh-190px)] min-h-[300px] md:h-[calc(100vh-220px)] md:min-h-[520px] rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200/80 dark:border-slate-800 shadow-xl bg-slate-900">
         
         <!-- Mapa Leaflet -->
         <div id="guatemalaMap" class="w-full h-full z-10"></div>
 
-        <!-- Leyenda Flotante -->
-        <div class="absolute bottom-3 left-3 z-20 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md p-2.5 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-lg text-[10px] sm:text-xs space-y-1 sm:space-y-2 max-w-[170px] sm:max-w-xs">
-            <div class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5 sm:gap-2">
-                <i data-lucide="layers" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500"></i>
-                <span class="truncate">Leyenda Solares</span>
+        <!-- Leyenda Flotante (Siempre visible y contenida en pantalla) -->
+        <div class="absolute bottom-2 left-2 sm:bottom-3 sm:left-3 z-20 bg-slate-900/95 text-white backdrop-blur-md p-2 sm:p-3.5 rounded-xl sm:rounded-2xl border border-slate-700/80 shadow-2xl text-[9px] sm:text-xs space-y-1 sm:space-y-1.5 max-w-[145px] sm:max-w-xs select-none">
+            <div class="font-bold text-amber-400 flex items-center gap-1 leading-none text-[10px] sm:text-xs">
+                <i data-lucide="layers" class="w-3 h-3 sm:w-4 sm:h-4 text-amber-400"></i>
+                <span>Leyenda Solar</span>
             </div>
-            <div class="flex items-center gap-1.5 sm:gap-2 text-slate-600 dark:text-slate-300">
-                <span class="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 rounded-full bg-amber-500 ring-2 sm:ring-4 ring-amber-500/20 inline-block flex-shrink-0"></span>
-                <span class="truncate">Activa (Gen)</span>
+            <div class="flex items-center gap-1.5 text-slate-200 leading-none">
+                <span class="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-amber-500 ring-2 ring-amber-500/30 inline-block flex-shrink-0"></span>
+                <span class="truncate">Activa</span>
             </div>
-            <div class="flex items-center gap-1.5 sm:gap-2 text-slate-600 dark:text-slate-300">
-                <span class="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 rounded-full bg-rose-500 ring-2 sm:ring-4 ring-rose-500/20 inline-block flex-shrink-0"></span>
+            <div class="flex items-center gap-1.5 text-slate-200 leading-none">
+                <span class="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-rose-500 ring-2 ring-rose-500/30 inline-block flex-shrink-0"></span>
                 <span class="truncate">Déficit (≥20%)</span>
             </div>
-            <div class="flex items-center gap-1.5 sm:gap-2 text-slate-600 dark:text-slate-300">
-                <span class="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 rounded-full bg-slate-400 inline-block flex-shrink-0"></span>
+            <div class="flex items-center gap-1.5 text-slate-200 leading-none">
+                <span class="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-slate-400 inline-block flex-shrink-0"></span>
                 <span class="truncate">Mantenimiento</span>
             </div>
-            <div class="hidden sm:block pt-2 border-t border-slate-200 dark:border-slate-800 text-[11px] text-slate-400">
-                Factor CO₂: <strong class="text-emerald-500">0.40 kg / kWh</strong>
+            <div class="hidden sm:block pt-1.5 border-t border-slate-700 text-[10px] text-slate-400">
+                Factor CO₂: <strong class="text-emerald-400">0.40 kg/kWh</strong>
             </div>
         </div>
 
         <!-- Contador flotante inferior derecho -->
-        <div class="absolute bottom-3 right-3 z-20 flex gap-2">
-            <div class="bg-white/95 dark:bg-slate-900/95 backdrop-blur-md px-2.5 py-1.5 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-lg text-[10px] sm:text-xs flex items-center gap-2 sm:gap-3">
+        <div class="absolute bottom-2 right-2 sm:bottom-3 sm:right-3 z-20 select-none">
+            <div class="bg-slate-900/95 text-white backdrop-blur-md px-2.5 py-1.5 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl border border-slate-700/80 shadow-2xl text-[9px] sm:text-xs flex items-center gap-2 sm:gap-3">
                 <div>
-                    <div class="text-[9px] sm:text-[10px] uppercase font-bold text-slate-400">Granjas</div>
-                    <div class="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white" id="visibleFarmsCount">12</div>
+                    <div class="text-[8px] sm:text-[10px] uppercase font-bold text-slate-400 leading-none">Granjas</div>
+                    <div class="text-xs sm:text-sm font-extrabold text-white leading-tight mt-0.5" id="visibleFarmsCount">12</div>
                 </div>
-                <div class="w-px h-5 sm:h-6 bg-slate-200 dark:border-slate-800"></div>
+                <div class="w-px h-4 sm:h-6 bg-slate-700"></div>
                 <div>
-                    <div class="text-[9px] sm:text-[10px] uppercase font-bold text-slate-400">Potencia</div>
-                    <div class="text-xs sm:text-sm font-extrabold text-amber-500" id="visiblePowerCount">8,450 kW</div>
+                    <div class="text-[8px] sm:text-[10px] uppercase font-bold text-slate-400 leading-none">Potencia</div>
+                    <div class="text-xs sm:text-sm font-extrabold text-amber-400 leading-tight mt-0.5" id="visiblePowerCount">8,450 kW</div>
                 </div>
             </div>
         </div>
@@ -403,13 +406,15 @@
                 filterFarms();
             }
 
+            // Zoom suave y moderado (alrededor de 9.8) para ver todo el departamento delimitado y la granja sin zoom exagerado
             setTimeout(() => {
-                map.flyTo([targetFarm.lat, targetFarm.lng], 13.5, { duration: 1.4 });
+                const moderateZoom = 9.8;
+                map.flyTo([targetFarm.lat, targetFarm.lng], moderateZoom, { duration: 1.0 });
                 setTimeout(() => {
                     if (farmMarkersMap[targetFarm.id]) {
                         farmMarkersMap[targetFarm.id].openPopup();
                     }
-                }, 1500);
+                }, 1000);
             }, 350);
         }
     }

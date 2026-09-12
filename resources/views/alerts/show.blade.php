@@ -19,7 +19,17 @@
             </p>
         </div>
 
-        <div>
+        <div class="flex flex-wrap items-center gap-2">
+            @if($alert->solarFarm)
+                <a href="{{ route('farms.show', $alert->solarFarm) }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs font-bold text-slate-700 dark:text-slate-200 hover:border-amber-400 hover:text-amber-500 transition shadow-sm">
+                    <i data-lucide="sun" class="w-3.5 h-3.5 text-amber-500"></i>
+                    <span>Ver Granja</span>
+                </a>
+                <a href="{{ route('map.index') }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs font-bold text-slate-700 dark:text-slate-200 hover:border-emerald-400 hover:text-emerald-500 transition shadow-sm">
+                    <i data-lucide="map-pin" class="w-3.5 h-3.5 text-emerald-500"></i>
+                    <span>Ver en Mapa</span>
+                </a>
+            @endif
             @if($alert->status === 'active')
                 <x-badge variant="danger" size="md">Alerta Activa</x-badge>
             @else

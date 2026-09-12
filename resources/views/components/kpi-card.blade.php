@@ -43,7 +43,7 @@
     $v = $variants[$variant] ?? $variants['solar'];
 @endphp
 
-<div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl p-3.5 sm:p-5 shadow-sm hover:shadow-md transition-all duration-200 {{ $v['border'] }} relative overflow-hidden group">
+<div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl p-3.5 sm:p-5 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 {{ $v['border'] }} relative overflow-hidden group">
     <div class="flex items-start justify-between gap-2">
         <div class="min-w-0">
             <span class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 block mb-0.5 sm:mb-1 truncate">

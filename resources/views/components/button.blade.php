@@ -7,7 +7,7 @@
 ])
 
 @php
-    $base = 'inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none shadow-sm cursor-pointer';
+    $base = 'inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none shadow-sm cursor-pointer';
     
     $sizes = [
         'sm' => 'px-3 py-1.5 text-xs gap-1.5',

@@ -654,6 +654,44 @@ navegador antes de commitear).
 
 ---
 
+### [22:18] Antigravity (Andy) — Menú Ampliado y Espaciado, Micro-Animaciones, Tabla con Solo Ojito y Zoom Moderado — PR #16 (Iteración 3)
+
+**Objetivo:** ampliar y espaciar adecuadamente el menú lateral izquierdo de escritorio para una mayor legibilidad y armonía visual, incorporar micro-animaciones en botones, tarjetas y transiciones de página, optimizar la tabla de granjas para que los nombres largos quepan en una sola línea con coordenadas GPS y potencia alineadas en una línea, sustituir el texto del botón "Ver detalles" por el icono del ojo en la vista web, y calibrar el zoom al ir del detalle de la granja al mapa para que sea moderado y muestre tanto el departamento delimitado como la granja sin acercamientos desmedidos.
+
+**Prompt:**
+> El menú izquierdo lo hiciste un poco pequeño, hazlo un poco más grande, por favor, solo un poco, o que esté mejor espaciado entre cada funciones. Mejor espaciado entre funciones. Necesito más animaciones en todo el sistema. Hay algunos botones, si me voy por ejemplo a granjas solares, el botón de ver detalles no se ve bien. Ahí en la vista web quiero que solo se muestre el ojito, por favor. Y que la granja quepa su nombre en línea, por ejemplo, Granja Solar Sur Chiquimula Sur, que todo su nombre pueda caber en una sola línea, o sea, para el detalle de la granja solar que admita más caracteres. Ordena un poco mejor esa tabla, por favor. Y también lo GPS, coordenada GPS y potencia kilovatio en una sola línea, o sea, quiero que todo quede en una sola línea y las tablas bien centradas y justificadas. Por otra parte, por otra parte Necesito que cuando le dé a ver mapa y me lleve a la granja, no haga un zoom tan exagerado, sino que solamente muestre el departamento señalizado y la granja, y haga un poco de zoom, no mucho.
+
+**Resultado:**
+- Menú lateral de escritorio ampliado a proporciones cómodas (`h-16` en cabecera, `px-3.5 py-2.5`, espaciado `space-y-1`, tipografía en `text-[13px] font-semibold`, `pt-2.5 pb-1 text-[11px]` en categorías) con animaciones al pasar el cursor (`hover:translate-x-1`, `group-hover:scale-110`).
+- Sistema de animaciones globales integrado: animación de entrada `animate-fade-in` en `<main>`, elevación y sombra dinámica en `<x-button>` (`hover:scale-[1.02] active:scale-[0.98] hover:shadow-md`) y `<x-kpi-card>` (`hover:shadow-lg hover:-translate-y-1`).
+- Tabla de granjas solares reestructurada con perfecta simetría: nombres largos en una sola línea sin desbordes (`whitespace-nowrap text-[13px] font-bold`), coordenadas GPS en una sola línea (`number_format° N, number_format° W`), potencia kW en badge mono-línea, columnas centradas y justificadas uniformemente, y sustitución del botón textual de ver detalles en escritorio por un botón limpio y redondeado con únicamente el icono del ojo (`<i data-lucide="eye"></i>`) con efecto `hover:scale-110`.
+- Enfoque interactivo en mapa (`focusFarmById`) reconfigurado con zoom moderado a nivel `9.8` (en vez de `13.5`), permitiendo visualizar el departamento completo delimitado en contorno dorado junto con la granja solar y su ficha técnica abierta.
+- Pruebas PHPUnit (19/19) aprobadas y compilación de Vite completada.
+
+**Intervención humana:** Andy corrigió el tamaño excesivamente compacto del menú lateral solicitando mejor espaciado entre funciones, exigió la adición de animaciones y micro-interacciones en botones y tarjetas en todo el sistema, demandó que la tabla de granjas mostrara exclusivamente el icono del ojo para ver detalles, garantizó que nombres largos y coordenadas cupieran en una sola línea justificada, y corrigió el zoom del mapa al enlace de granjas para que no fuera exagerado sino que mostrara armónicamente el departamento completo y la planta.
+
+---
+
+### [22:25] Antigravity (Andy) — Mapa Móvil Cero Scroll con Leyendas Visibles, Botón Cerrar Sesión y Tarjetas de Alertas con Botón Rojo — PR #17 (Iteración 4)
+
+**Objetivo:** asegurar que en la vista móvil el mapa de Guatemala contenga absolutamente todas las leyendas de estado (activa, déficit, mantenimiento) y los contadores (granjas y potencia) dentro de la pantalla sin requerir scroll alguno, integrar el botón de cierre de sesión seguro mediante POST con protección CSRF tanto en el Topbar como en el Drawer móvil de usuario, y transformar el listado de alertas en dispositivos móviles en tarjetas limpias sin barras de desplazamiento horizontal que incluyan un botón rojo destacado "Ver más detalles" hacia la ficha de la alerta con todas sus opciones y acciones de resolución técnica.
+
+**Prompt:**
+> En la vista móvil, el mapa siempre necesita hacer scroll para ver las leyendas solares de activa, déficit, mantenimiento, granjas y potencia. Necesito que no tenga que hacer scroll, que toda esa información o toda esa pantalla esté contenida dentro de esa pantalla sin necesidad de tener que hacer scroll para ver esas leyendas hasta abajo. También, no veo ningún botón de cerrar sesión en el usuario, agrégalo, por favor. Otro detalle, en las alertas, quiero que se muestre igual que la granja, que no aparezca una barra deslizable, sino que solo aparezca el detalle como de la alerta y el botón de ver más detalles en rojo. Y ahí sí ya que aparezca todas las opciones y los demás estados y atender y ver y todo eso, por favor.
+
+**Resultado:**
+- En la vista móvil de `map/index.blade.php`, se compactó la cabecera a una sola fila con botón de centrado y se ajustó la altura del mapa mediante `h-[calc(100vh-190px)] min-h-[300px]`, combinándose con `<main class="... overflow-hidden">` cuando la ruta activa es de mapa. Los paneles flotantes de la leyenda solar (`bottom-2 left-2`) y los contadores de granjas y potencia (`bottom-2 right-2`) se rediseñaron con fuentes compactas y dimensiones reducidas (`p-2 text-[9px]`), quedando 100% contenidos dentro del visor de cualquier teléfono móvil sin desbordes verticales ni necesidad de scroll.
+- Se agregó el botón de cierre de sesión (`POST /logout` con directiva `@csrf`) en dos ubicaciones estratégicas:
+  1. En la barra superior (`Topbar`), al lado del nombre y avatar del usuario autenticado, con icono `log-out` en color carmesí/rojo y efecto de realce interactivo.
+  2. En el encabezado del menú lateral móvil desplegable (`Mobile Drawer`), dentro de la tarjeta de perfil, con botón rotulado "Salir" y confirmación visual.
+- El módulo de alertas (`alerts/index.blade.php`) fue dotado de una vista móvil responsiva mediante tarjetas estilizadas (`md:hidden`) idéntica a la experiencia de granjas solares: muestra ID de alerta, período, granja, departamento, porcentaje de déficit crítico, badge de estado, y el **botón rojo "Ver más detalles"** (`bg-rose-600 hover:bg-rose-700 text-white`) con icono `chevron-right` sin ninguna barra de scroll horizontal. La tabla completa de 9 columnas se conserva exclusivamente para pantallas de escritorio (`hidden md:block`).
+- En la vista de detalle `alerts/show.blade.php`, se enriqueció la cabecera con accesos rápidos a "Ver Granja" y "Ver en Mapa", junto con la visualización del estado y el panel de atención técnica y resolución con notas correctivas para operadores autorizados (`@can('manage-alerts')`).
+- Compilación de assets de producción con Vite (`npm run build`) y ejecución completa del banco de pruebas PHPUnit con resultado 100% satisfactorio (19/19 pruebas, 121 aserciones).
+
+**Intervención humana:** Andy corrigió el comportamiento de la pantalla de mapa en celulares donde las leyendas quedaban cortadas exigiendo scroll, solicitó expresamente la incorporación de los botones de cerrar sesión para el usuario, demandó sustituir la tabla ancha con scroll horizontal en alertas móviles por tarjetas limpias con un botón rojo "Ver más detalles", y enriqueció el flujo hacia la resolución y detalle completo de la anomalía.
+
+---
+
 ## 4. Evidencia visual
 
 Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:

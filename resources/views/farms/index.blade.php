@@ -116,92 +116,122 @@
         @endif
     </div>
 
-    <!-- VISTA ESCRITORIO: Tabla Completa (hidden md:block) -->
+    <!-- VISTA ESCRITORIO: Tabla Completa Estética, Centrada y Justificada (hidden md:block) -->
     <div class="hidden md:block bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm overflow-hidden">
-        <x-table>
-            <thead class="bg-slate-50 dark:bg-slate-800/80 text-[11px] uppercase font-extrabold text-slate-400 tracking-wider">
-                <tr>
-                    <th class="px-6 py-4">Granja Solar</th>
-                    <th class="px-6 py-4">Departamento</th>
-                    <th class="px-6 py-4">Coordenadas GPS</th>
-                    <th class="px-6 py-4 text-right">Potencia (kW)</th>
-                    <th class="px-6 py-4 text-right">Familias</th>
-                    <th class="px-6 py-4 text-center">Estado</th>
-                    <th class="px-6 py-4 text-right">Acciones</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
-                @forelse($farms as $farm)
-                    <tr class="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition">
-                        <td class="px-6 py-4">
-                            <div class="flex items-center gap-2">
-                                <div class="w-8 h-8 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-500 flex-shrink-0">
-                                    <i data-lucide="sun" class="w-4 h-4"></i>
-                                </div>
-                                <div>
-                                    <a href="{{ route('farms.show', $farm) }}" class="font-bold text-slate-900 dark:text-white hover:text-amber-600 dark:hover:text-amber-400 transition">
-                                        {{ $farm->name }}
-                                    </a>
-                                    <span class="block text-[11px] text-slate-400">
-                                        {{ $farm->solarPanels->sum('pivot.quantity') }} paneles instalados
-                                    </span>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 font-semibold text-slate-700 dark:text-slate-300">
-                            {{ $farm->department->name ?? 'N/A' }}
-                        </td>
-                        <td class="px-6 py-4 font-mono text-slate-500 text-[11px]">
-                            {{ number_format((float)$farm->latitude, 4) }}, {{ number_format((float)$farm->longitude, 4) }}
-                        </td>
-                        <td class="px-6 py-4 text-right font-extrabold text-amber-600 dark:text-amber-400">
-                            {{ number_format((float)$farm->calculated_capacity_kw, 1) }} kW
-                        </td>
-                        <td class="px-6 py-4 text-right font-semibold text-slate-700 dark:text-slate-300">
-                            {{ number_format($farm->benefited_families) }}
-                        </td>
-                        <td class="px-6 py-4 text-center">
-                            @if($farm->status === 'active')
-                                <x-badge variant="success">Activa</x-badge>
-                            @elseif($farm->status === 'maintenance')
-                                <x-badge variant="warning">Mantenimiento</x-badge>
-                            @else
-                                <x-badge variant="neutral">Inactiva</x-badge>
-                            @endif
-                        </td>
-                        <td class="px-6 py-4 text-right">
-                            <div class="inline-flex items-center gap-2">
-                                <a href="{{ route('farms.show', $farm) }}" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs transition flex items-center gap-1">
-                                    <i data-lucide="eye" class="w-3.5 h-3.5"></i>
-                                    <span>Ver detalles</span>
-                                </a>
-                                @can('manage-farms')
-                                    <a href="{{ route('farms.edit', $farm) }}" class="p-1.5 rounded-lg hover:bg-amber-50 dark:hover:bg-amber-950/40 text-amber-600 hover:text-amber-700 transition" title="Editar">
-                                        <i data-lucide="edit-3" class="w-4 h-4"></i>
-                                    </a>
-                                    <form method="POST" action="{{ route('farms.destroy', $farm) }}" class="inline" onsubmit="return confirm('¿Confirmas que deseas eliminar esta granja solar?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="p-1.5 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/40 text-rose-500 hover:text-rose-700 transition" title="Eliminar">
-                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                        </button>
-                                    </form>
-                                @endcan
-                            </div>
-                        </td>
-                    </tr>
-                @empty
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-slate-50/80 dark:bg-slate-800/80 border-b border-slate-200/80 dark:border-slate-800 text-[11px] uppercase font-bold text-slate-500 dark:text-slate-400 tracking-wider">
                     <tr>
-                        <td colspan="7" class="px-6 py-12 text-center text-slate-400">
-                            <div class="flex flex-col items-center justify-center space-y-3">
-                                <i data-lucide="sun" class="w-10 h-10 text-slate-300"></i>
-                                <p class="text-sm font-medium">No se encontraron granjas solares con los filtros seleccionados.</p>
-                            </div>
-                        </td>
+                        <th scope="col" class="px-6 py-4 text-left whitespace-nowrap">Granja Solar</th>
+                        <th scope="col" class="px-6 py-4 text-left whitespace-nowrap">Departamento</th>
+                        <th scope="col" class="px-6 py-4 text-center whitespace-nowrap">Coordenadas GPS</th>
+                        <th scope="col" class="px-6 py-4 text-center whitespace-nowrap">Potencia (kW)</th>
+                        <th scope="col" class="px-6 py-4 text-center whitespace-nowrap">Familias</th>
+                        <th scope="col" class="px-6 py-4 text-center whitespace-nowrap">Estado</th>
+                        <th scope="col" class="px-6 py-4 text-center whitespace-nowrap">Acciones</th>
                     </tr>
-                @endforelse
-            </tbody>
-        </x-table>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
+                    @forelse($farms as $farm)
+                        <tr class="hover:bg-amber-50/40 dark:hover:bg-slate-800/60 transition-colors duration-150">
+                            <!-- Granja Solar (Nombre en una sola línea que admite más caracteres) -->
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-500 flex-shrink-0 shadow-sm">
+                                        <i data-lucide="sun" class="w-4 h-4"></i>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <a href="{{ route('farms.show', $farm) }}" class="font-bold text-slate-900 dark:text-white hover:text-amber-600 dark:hover:text-amber-400 transition-colors whitespace-nowrap text-[13px]">
+                                            {{ $farm->name }}
+                                        </a>
+                                        <span class="block text-[11px] text-slate-400 whitespace-nowrap">
+                                            {{ $farm->solarPanels->sum('pivot.quantity') }} paneles instalados
+                                        </span>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <!-- Departamento -->
+                            <td class="px-6 py-4 whitespace-nowrap font-semibold text-slate-700 dark:text-slate-300 text-left">
+                                <span class="inline-flex items-center gap-1.5">
+                                    <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400"></i>
+                                    {{ $farm->department->name ?? 'N/A' }}
+                                </span>
+                            </td>
+
+                            <!-- Coordenadas GPS (En una sola línea, centrado) -->
+                            <td class="px-6 py-4 whitespace-nowrap text-center">
+                                <span class="font-mono text-[11px] px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 border border-slate-200/60 dark:border-slate-700/60 whitespace-nowrap inline-block">
+                                    {{ number_format((float)$farm->latitude, 4) }}°, {{ number_format((float)$farm->longitude, 4) }}°
+                                </span>
+                            </td>
+
+                            <!-- Potencia (kW) (En una sola línea, centrado) -->
+                            <td class="px-6 py-4 whitespace-nowrap text-center">
+                                <span class="font-extrabold text-amber-600 dark:text-amber-400 text-xs whitespace-nowrap px-2.5 py-1 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-200/60 dark:border-amber-800/50 inline-block">
+                                    {{ number_format((float)$farm->calculated_capacity_kw, 1) }} kW
+                                </span>
+                            </td>
+
+                            <!-- Familias (Centrado) -->
+                            <td class="px-6 py-4 whitespace-nowrap text-center font-semibold text-slate-700 dark:text-slate-300">
+                                {{ number_format($farm->benefited_families) }}
+                            </td>
+
+                            <!-- Estado (Centrado) -->
+                            <td class="px-6 py-4 whitespace-nowrap text-center">
+                                @if($farm->status === 'active')
+                                    <x-badge variant="success">Activa</x-badge>
+                                @elseif($farm->status === 'maintenance')
+                                    <x-badge variant="warning">Mantenimiento</x-badge>
+                                @else
+                                    <x-badge variant="neutral">Inactiva</x-badge>
+                                @endif
+                            </td>
+
+                            <!-- Acciones (Solo el ojito para ver detalles en vista web, más editar/eliminar) -->
+                            <td class="px-6 py-4 whitespace-nowrap text-center">
+                                <div class="inline-flex items-center justify-center gap-1.5">
+                                    <!-- Botón Solo Ojito -->
+                                    <a href="{{ route('farms.show', $farm) }}" 
+                                       class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-amber-500 hover:text-slate-950 dark:bg-slate-800 dark:hover:bg-amber-500 dark:hover:text-slate-950 text-slate-600 dark:text-slate-300 flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 shadow-2xs" 
+                                       title="Ver detalles completos">
+                                        <i data-lucide="eye" class="w-4 h-4"></i>
+                                    </a>
+
+                                    @can('manage-farms')
+                                        <a href="{{ route('farms.edit', $farm) }}" 
+                                           class="w-8 h-8 rounded-xl bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/40 dark:hover:bg-amber-900/60 text-amber-600 dark:text-amber-400 flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 shadow-2xs" 
+                                           title="Editar granja">
+                                            <i data-lucide="edit-3" class="w-4 h-4"></i>
+                                        </a>
+
+                                        <form method="POST" action="{{ route('farms.destroy', $farm) }}" class="inline" onsubmit="return confirm('¿Confirmas que deseas eliminar esta granja solar?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" 
+                                                    class="w-8 h-8 rounded-xl bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-400 flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 shadow-2xs" 
+                                                    title="Eliminar granja">
+                                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                            </button>
+                                        </form>
+                                    @endcan
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="7" class="px-6 py-12 text-center text-slate-400">
+                                <div class="flex flex-col items-center justify-center space-y-3">
+                                    <i data-lucide="sun" class="w-10 h-10 text-slate-300"></i>
+                                    <p class="text-sm font-medium">No se encontraron granjas solares con los filtros seleccionados.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
 
         @if($farms->hasPages())
             <div class="p-4 border-t border-slate-100 dark:border-slate-800">

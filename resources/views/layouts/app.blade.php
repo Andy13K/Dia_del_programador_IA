@@ -61,129 +61,137 @@
         .dark * {
             scrollbar-color: rgba(100, 116, 139, 0.35) transparent;
         }
+        /* Animaciones globales suaves */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
     </style>
 </head>
 <body class="h-full flex flex-col md:flex-row overflow-hidden">
 
-    <!-- SIDEBAR DE NAVEGACIÓN (Desktop - Compacto, cero scroll y Mapa en una sola línea) -->
+    <!-- SIDEBAR DE NAVEGACIÓN (Desktop - Espaciado óptimo, animado y confortable) -->
     <aside id="sidebar" class="hidden md:flex md:w-64 lg:w-72 bg-slate-900 text-slate-300 flex-shrink-0 flex-col z-30 border-r border-slate-800 transition-all duration-200 select-none">
         
         <!-- Logo / Marca -->
-        <div class="h-14 px-5 flex items-center justify-between border-b border-slate-800/80 bg-slate-950/40">
-            <a href="{{ route('home') }}" class="flex items-center gap-2.5 group">
-                <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-500 via-amber-400 to-emerald-400 p-0.5 shadow-md shadow-amber-500/20 group-hover:scale-105 transition-transform">
-                    <div class="w-full h-full bg-slate-950 rounded-[9px] flex items-center justify-center">
-                        <i data-lucide="sun" class="w-4 h-4 text-amber-400 animate-pulse"></i>
+        <div class="h-16 px-5 flex items-center justify-between border-b border-slate-800/80 bg-slate-950/40">
+            <a href="{{ route('home') }}" class="flex items-center gap-3 group">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 via-amber-400 to-emerald-400 p-0.5 shadow-md shadow-amber-500/20 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+                    <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
+                        <i data-lucide="sun" class="w-4.5 h-4.5 text-amber-400 animate-pulse"></i>
                     </div>
                 </div>
                 <div>
-                    <span class="text-sm font-bold tracking-tight text-white flex items-center gap-1.5">
+                    <span class="text-base font-bold tracking-tight text-white flex items-center gap-1.5">
                         Solar<span class="text-amber-400">GT</span>
-                        <span class="text-[9px] uppercase tracking-wider px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-semibold border border-emerald-500/30">Nube</span>
+                        <span class="text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-semibold border border-emerald-500/30">Nube</span>
                     </span>
-                    <span class="text-[10px] text-slate-400 block -mt-0.5 font-medium">Monitoreo 22 Dptos</span>
+                    <span class="text-[11px] text-slate-400 block -mt-0.5 font-medium">Monitoreo 22 Dptos</span>
                 </div>
             </a>
         </div>
 
-        <!-- Menú de Enlaces (Compacto para eliminar scroll en laptops) -->
-        <nav class="flex-1 px-3 py-2 space-y-0.5 overflow-hidden">
+        <!-- Menú de Enlaces (Espaciado equilibrado, interactivo y con micro-animaciones) -->
+        <nav class="flex-1 px-3.5 py-2.5 space-y-1 overflow-y-auto">
             
-            <div class="px-3 pt-1.5 pb-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 select-none">
+            <div class="px-3 pt-2 pb-1 text-[11px] font-bold uppercase tracking-wider text-slate-400 select-none">
                 Principal
             </div>
 
             <!-- Dashboard -->
             <a href="{{ route('dashboard') }}" 
-               class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors {{ request()->routeIs('dashboard', 'home') ? 'bg-amber-500/15 text-amber-400 font-bold border-r-2 border-amber-400' : 'text-slate-300 hover:bg-slate-800/60 hover:text-white' }}">
-                <i data-lucide="layout-dashboard" class="w-4 h-4 text-amber-400 flex-shrink-0"></i>
+               class="flex items-center gap-3 px-3.5 py-2 rounded-xl text-[13px] font-semibold transition-all duration-200 hover:translate-x-1 group {{ request()->routeIs('dashboard', 'home') ? 'bg-amber-500/15 text-amber-400 font-bold border-r-2 border-amber-400 shadow-sm' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
+                <i data-lucide="layout-dashboard" class="w-4 h-4 text-amber-400 flex-shrink-0 group-hover:scale-110 transition-transform"></i>
                 <span class="whitespace-nowrap truncate">Dashboard Nacional</span>
             </a>
 
             <!-- Mapa Interactivo (En una sola línea garantizada) -->
             <a href="{{ route('map.index') }}" 
-               class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors {{ request()->routeIs('map.*') ? 'bg-amber-500/15 text-amber-400 font-bold border-r-2 border-amber-400' : 'text-slate-300 hover:bg-slate-800/60 hover:text-white' }}">
-                <i data-lucide="map-pin" class="w-4 h-4 text-emerald-400 flex-shrink-0"></i>
+               class="flex items-center gap-3 px-3.5 py-2 rounded-xl text-[13px] font-semibold transition-all duration-200 hover:translate-x-1 group {{ request()->routeIs('map.*') ? 'bg-amber-500/15 text-amber-400 font-bold border-r-2 border-amber-400 shadow-sm' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
+                <i data-lucide="map-pin" class="w-4 h-4 text-emerald-400 flex-shrink-0 group-hover:scale-110 transition-transform"></i>
                 <span class="flex-1 whitespace-nowrap">Mapa de Guatemala</span>
                 <span class="text-[9px] bg-emerald-500/20 text-emerald-300 font-bold px-1.5 py-0.5 rounded border border-emerald-500/30 flex-shrink-0">GPS</span>
             </a>
 
-            <div class="px-3 pt-2 pb-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 select-none">
+            <div class="px-3 pt-2.5 pb-1 text-[11px] font-bold uppercase tracking-wider text-slate-400 select-none">
                 Gestión de Activos
             </div>
 
             <!-- Granjas Solares -->
             <a href="{{ route('farms.index') }}" 
-               class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors {{ request()->routeIs('farms.*') ? 'bg-amber-500/15 text-amber-400 font-bold border-r-2 border-amber-400' : 'text-slate-300 hover:bg-slate-800/60 hover:text-white' }}">
-                <i data-lucide="zap" class="w-4 h-4 text-amber-400 flex-shrink-0"></i>
+               class="flex items-center gap-3 px-3.5 py-2 rounded-xl text-[13px] font-semibold transition-all duration-200 hover:translate-x-1 group {{ request()->routeIs('farms.*') ? 'bg-amber-500/15 text-amber-400 font-bold border-r-2 border-amber-400 shadow-sm' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
+                <i data-lucide="zap" class="w-4 h-4 text-amber-400 flex-shrink-0 group-hover:scale-110 transition-transform"></i>
                 <span class="whitespace-nowrap truncate">Granjas Solares</span>
             </a>
 
             <!-- Catálogo de Paneles -->
             <a href="{{ route('panels.index') }}" 
-               class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors {{ request()->routeIs('panels.*') ? 'bg-amber-500/15 text-amber-400 font-bold border-r-2 border-amber-400' : 'text-slate-300 hover:bg-slate-800/60 hover:text-white' }}">
-                <i data-lucide="grid" class="w-4 h-4 text-sky-400 flex-shrink-0"></i>
+               class="flex items-center gap-3 px-3.5 py-2 rounded-xl text-[13px] font-semibold transition-all duration-200 hover:translate-x-1 group {{ request()->routeIs('panels.*') ? 'bg-amber-500/15 text-amber-400 font-bold border-r-2 border-amber-400 shadow-sm' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
+                <i data-lucide="grid" class="w-4 h-4 text-sky-400 flex-shrink-0 group-hover:scale-110 transition-transform"></i>
                 <span class="whitespace-nowrap truncate">Modelos de Panel</span>
             </a>
 
             <!-- Generación Energética -->
             <a href="{{ route('generations.index') }}" 
-               class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors {{ request()->routeIs('generations.*') ? 'bg-amber-500/15 text-amber-400 font-bold border-r-2 border-amber-400' : 'text-slate-300 hover:bg-slate-800/60 hover:text-white' }}">
-                <i data-lucide="activity" class="w-4 h-4 text-emerald-400 flex-shrink-0"></i>
+               class="flex items-center gap-3 px-3.5 py-2 rounded-xl text-[13px] font-semibold transition-all duration-200 hover:translate-x-1 group {{ request()->routeIs('generations.*') ? 'bg-amber-500/15 text-amber-400 font-bold border-r-2 border-amber-400 shadow-sm' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
+                <i data-lucide="activity" class="w-4 h-4 text-emerald-400 flex-shrink-0 group-hover:scale-110 transition-transform"></i>
                 <span class="whitespace-nowrap truncate">Mediciones kWh & CO₂</span>
             </a>
 
-            <div class="px-3 pt-2 pb-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 select-none">
+            <div class="px-3 pt-2.5 pb-1 text-[11px] font-bold uppercase tracking-wider text-slate-400 select-none">
                 Analítica y Monitoreo
             </div>
 
             <!-- Alertas Automáticas (RF-14) -->
             <a href="{{ route('alerts.index') }}" 
-               class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors {{ request()->routeIs('alerts.*') ? 'bg-rose-500/15 text-rose-400 font-bold border-r-2 border-rose-500' : 'text-slate-300 hover:bg-slate-800/60 hover:text-white' }}">
-                <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-400 flex-shrink-0"></i>
+               class="flex items-center gap-3 px-3.5 py-2 rounded-xl text-[13px] font-semibold transition-all duration-200 hover:translate-x-1 group {{ request()->routeIs('alerts.*') ? 'bg-rose-500/15 text-rose-400 font-bold border-r-2 border-rose-500 shadow-sm' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
+                <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-400 flex-shrink-0 group-hover:scale-110 transition-transform"></i>
                 <span class="flex-1 whitespace-nowrap truncate">Alertas (Déficit ≥20%)</span>
             </a>
 
             <!-- Reportes Departamentales (RF-12) -->
             <a href="{{ route('reports.index') }}" 
-               class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors {{ request()->routeIs('reports.*') ? 'bg-amber-500/15 text-amber-400 font-bold border-r-2 border-amber-400' : 'text-slate-300 hover:bg-slate-800/60 hover:text-white' }}">
-                <i data-lucide="bar-chart-3" class="w-4 h-4 text-indigo-400 flex-shrink-0"></i>
+               class="flex items-center gap-3 px-3.5 py-2 rounded-xl text-[13px] font-semibold transition-all duration-200 hover:translate-x-1 group {{ request()->routeIs('reports.*') ? 'bg-amber-500/15 text-amber-400 font-bold border-r-2 border-amber-400 shadow-sm' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
+                <i data-lucide="bar-chart-3" class="w-4 h-4 text-indigo-400 flex-shrink-0 group-hover:scale-110 transition-transform"></i>
                 <span class="whitespace-nowrap truncate">Reportes por Depto</span>
             </a>
 
             <!-- Proyecciones Climáticas (RF-15) -->
             <a href="{{ route('forecasts.index') }}" 
-               class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors {{ request()->routeIs('forecasts.*') ? 'bg-amber-500/15 text-amber-400 font-bold border-r-2 border-amber-400' : 'text-slate-300 hover:bg-slate-800/60 hover:text-white' }}">
-                <i data-lucide="trending-up" class="w-4 h-4 text-teal-400 flex-shrink-0"></i>
+               class="flex items-center gap-3 px-3.5 py-2 rounded-xl text-[13px] font-semibold transition-all duration-200 hover:translate-x-1 group {{ request()->routeIs('forecasts.*') ? 'bg-amber-500/15 text-amber-400 font-bold border-r-2 border-amber-400 shadow-sm' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
+                <i data-lucide="trending-up" class="w-4 h-4 text-teal-400 flex-shrink-0 group-hover:scale-110 transition-transform"></i>
                 <span class="whitespace-nowrap truncate">Proyecciones Futuras</span>
             </a>
 
-            <div class="px-3 pt-2 pb-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 select-none">
+            <div class="px-3 pt-2.5 pb-1 text-[11px] font-bold uppercase tracking-wider text-slate-400 select-none">
                 Integración
             </div>
 
             <!-- API REST Documentada (RF-16) -->
             <a href="{{ route('api.docs') }}" 
-               class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors {{ request()->routeIs('api.docs') ? 'bg-amber-500/15 text-amber-400 font-bold border-r-2 border-amber-400' : 'text-slate-300 hover:bg-slate-800/60 hover:text-white' }}">
-                <i data-lucide="code-2" class="w-4 h-4 text-violet-400 flex-shrink-0"></i>
+               class="flex items-center gap-3 px-3.5 py-2 rounded-xl text-[13px] font-semibold transition-all duration-200 hover:translate-x-1 group {{ request()->routeIs('api.docs') ? 'bg-amber-500/15 text-amber-400 font-bold border-r-2 border-amber-400 shadow-sm' : 'text-slate-300 hover:bg-slate-800/70 hover:text-white' }}">
+                <i data-lucide="code-2" class="w-4 h-4 text-violet-400 flex-shrink-0 group-hover:scale-110 transition-transform"></i>
                 <span class="flex-1 whitespace-nowrap">API REST v1</span>
                 <span class="text-[9px] bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded border border-slate-700 flex-shrink-0">JSON</span>
             </a>
         </nav>
 
         <!-- Footer del Sidebar -->
-        <div class="p-2.5 border-t border-slate-800/80 bg-slate-950/60">
-            <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-2.5 flex items-center justify-between">
-                <div class="flex items-center gap-2">
+        <div class="p-3 border-t border-slate-800/80 bg-slate-950/60">
+            <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3 flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
                     <div class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></div>
                     <div>
-                        <div class="text-[11px] font-bold text-white leading-none">AWS EC2 Online</div>
-                        <div class="text-[9px] text-slate-400 leading-tight mt-0.5">PHP 8.3 • Nginx • MySQL</div>
+                        <div class="text-xs font-bold text-white leading-none">AWS EC2 Online</div>
+                        <div class="text-[10px] text-slate-400 leading-tight mt-0.5">PHP 8.3 • Nginx • MySQL</div>
                     </div>
                 </div>
-                <button type="button" onclick="toggleDarkMode()" title="Cambiar tema" class="p-1.5 text-slate-300 hover:text-amber-400 hover:bg-slate-800 rounded-lg transition">
-                    <i data-lucide="moon" class="w-3.5 h-3.5 hidden dark:block"></i>
-                    <i data-lucide="sun" class="w-3.5 h-3.5 block dark:hidden"></i>
+                <button type="button" onclick="toggleDarkMode()" title="Cambiar tema" class="p-1.5 text-slate-300 hover:text-amber-400 hover:bg-slate-800 rounded-lg transition-transform duration-200 hover:scale-110 active:scale-95">
+                    <i data-lucide="moon" class="w-4 h-4 hidden dark:block"></i>
+                    <i data-lucide="sun" class="w-4 h-4 block dark:hidden"></i>
                 </button>
             </div>
         </div>
@@ -252,12 +260,23 @@
                             {{ auth()->user()->role ?? 'Equipo Competencia' }}
                         </div>
                     </div>
+
+                    <!-- Botón Cerrar Sesión Topbar -->
+                    <form method="POST" action="{{ route('logout') }}" class="inline ml-1">
+                        @csrf
+                        <button type="submit" 
+                                class="p-2 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-all duration-200 hover:scale-105 active:scale-95 flex items-center gap-1" 
+                                title="Cerrar sesión">
+                            <i data-lucide="log-out" class="w-4 h-4 text-rose-500"></i>
+                            <span class="hidden xl:inline text-xs font-bold text-rose-600 dark:text-rose-400">Salir</span>
+                        </button>
+                    </form>
                 </div>
             </div>
         </header>
 
         <!-- ÁREA DE CONTENIDO CON SCROLL Y RESPETO AL BOTTOM NAV -->
-        <main class="flex-1 overflow-y-auto overflow-x-hidden p-3.5 sm:p-6 lg:p-8 pb-28 md:pb-8 w-full">
+        <main class="flex-1 overflow-y-auto overflow-x-hidden {{ request()->routeIs('map.*') ? 'p-2 sm:p-6 pb-20 md:pb-8 overflow-hidden' : 'p-3.5 sm:p-6 lg:p-8 pb-28 md:pb-8' }} w-full animate-fade-in">
             
             <!-- MENSAJES FLASH (Alertas de sesión) -->
             @if(session('success'))
@@ -371,20 +390,33 @@
         <!-- Links de Navegación del Drawer -->
         <div class="flex-1 overflow-y-auto px-4 py-4 space-y-4">
             
-            <!-- Perfil / Usuario -->
-            <div class="p-3 rounded-2xl bg-slate-950/50 border border-slate-800/90 flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-amber-500 to-amber-600 flex items-center justify-center text-white font-bold text-sm shadow-md flex-shrink-0">
-                    {{ substr(auth()->user()->name ?? 'Andy & Carlos', 0, 2) }}
-                </div>
-                <div class="min-w-0">
-                    <div class="text-xs font-bold text-white truncate">
-                        {{ auth()->user()->name ?? 'Andy & Carlos' }}
+            <!-- Perfil / Usuario con botón de cerrar sesión -->
+            <div class="p-3 rounded-2xl bg-slate-950/50 border border-slate-800/90 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3 min-w-0">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-amber-500 to-amber-600 flex items-center justify-center text-white font-bold text-sm shadow-md flex-shrink-0">
+                        {{ substr(auth()->user()->name ?? 'Andy & Carlos', 0, 2) }}
                     </div>
-                    <div class="text-[10px] text-emerald-400 font-semibold truncate flex items-center gap-1">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse"></span>
-                        {{ auth()->user()->role ?? 'Equipo Competencia' }}
+                    <div class="min-w-0">
+                        <div class="text-xs font-bold text-white truncate">
+                            {{ auth()->user()->name ?? 'Andy & Carlos' }}
+                        </div>
+                        <div class="text-[10px] text-emerald-400 font-semibold truncate flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse"></span>
+                            {{ auth()->user()->role ?? 'Equipo Competencia' }}
+                        </div>
                     </div>
                 </div>
+
+                <!-- Botón Salir Móvil -->
+                <form method="POST" action="{{ route('logout') }}" class="inline flex-shrink-0">
+                    @csrf
+                    <button type="submit" 
+                            class="px-2.5 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-400 border border-rose-500/30 text-xs font-bold flex items-center gap-1.5 transition active:scale-95" 
+                            title="Cerrar sesión">
+                        <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+                        <span>Salir</span>
+                    </button>
+                </form>
             </div>
 
             <!-- Navegación Principal -->
