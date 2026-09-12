@@ -280,9 +280,14 @@ erDiagram
 
 | Nombre | Correo | Contraseña | Rol |
 |---|---|---|---|
-| Administrador Nacional | `admin@solarguatemala.gob.gt` | `Solar2026!Admin` | `admin` |
-| Operador Regional | `operador@solarguatemala.gob.gt` | `Operador2026!` | `operador` |
-| Evaluador Jurado | `evaluador@umg.edu.gt` | `Evaluador2026!` | `visualizador` |
+| Administrador Nacional | `admin@solarguatemala.gob.gt` | ver `SEED_ADMIN_PASSWORD` (`config/seed.php`) | `admin` |
+| Operador Regional | `operador@solarguatemala.gob.gt` | ver `SEED_OPERADOR_PASSWORD` (`config/seed.php`) | `operador` |
+| Evaluador Jurado | `evaluador@umg.edu.gt` | ver `SEED_EVALUADOR_PASSWORD` (`config/seed.php`) | `visualizador` |
+
+> OWASP A02/A07: las contraseñas ya no se documentan en texto plano en ningún archivo
+> versionado (este incluido). Cada quien define las suyas en su `.env` local; las de
+> producción/demo se entregan por un canal separado al equipo y al jurado — nunca por
+> este repositorio. El seeder falla explícitamente si alguna falta.
 
 ---
 

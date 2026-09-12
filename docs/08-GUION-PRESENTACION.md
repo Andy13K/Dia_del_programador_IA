@@ -89,7 +89,8 @@
 
 **[2:30–2:55] — Login y Dashboard**
 1. Navegar a `https://kin-solar-guatemala.duckdns.org` (ya abierto en una pestaña)
-2. Ingresar como admin: `admin@solarguatemala.gob.gt` / `Solar2026!Admin`
+2. Ingresar como admin: `admin@solarguatemala.gob.gt` / (contraseña entregada por canal
+   separado — **nunca en este documento**, ver nota de seguridad al final del guion)
 3. Mostrar el Dashboard con los 6 KPIs
 4. Decir: *"Este es el tablero ejecutivo. En un vistazo, el administrador ve toda la red solar nacional: [leer los 6 KPIs en voz alta]."*
 
@@ -250,3 +251,14 @@
 
 > Si el ensayo supera 10:30, cortar alguno de los pasos del bloque de demo.
 > El bloque que NUNCA se corta: el diferenciador del mapa + la demo del 403.
+
+---
+
+## Nota de seguridad — credenciales de la demo
+
+Las contraseñas de `admin@solarguatemala.gob.gt` y del resto de usuarios semilla **no se
+documentan en ningún archivo de este repositorio** (OWASP A02/A07 — ver auditoría en
+`docs/04-BITACORA-PROMPTS.md`). Quien presenta debe tenerlas guardadas de antemano en su
+gestor de contraseñas o anotadas fuera de git, obtenidas del canal separado del equipo
+(no de este documento). Si el repositorio llega a hacerse público, ninguna contraseña
+real queda expuesta en el historial de este archivo.
