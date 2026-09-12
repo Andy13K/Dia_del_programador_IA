@@ -1154,6 +1154,27 @@ API y el diagnóstico de la rúbrica.
 - Compilación limpia con Vite (`npm run build`).
 
 **Intervención humana:** Andy determinó que un simple control en el dashboard no alcanzaba el nivel de dinamismo e interactividad visual necesario para convencer al jurado, y encomendó la creación de una suite/módulo completo e independiente donde se pudiera emular toda la telemetría de forma continua e inmersiva.
+---
+
+### Claude Code (Agente A) — Verificación contra el PDF del reto y 3 ajustes post-revisión
+
+**Objetivo:** el humano pidió (1) verificar que producción cumple al 100 % el documento oficial de la competencia (17 RF, dashboard mínimo, mapa, alertas, proyección, requisitos técnicos y entregables) con una guía de dónde probar cada cosa, y (2) tras recorrer producción él mismo, tres cambios concretos: rediseñar el cliente de prueba de la API, corregir la leyenda/contador del mapa que no cambiaban a modo claro, y arreglar que las proyecciones "se quedaban en octubre" al pedir diciembre.
+
+**Prompts del humano (extractos literales):**
+> quiero que en base al documento revises que el proyecto actual en produccion este cumpliendo con todo lo solictado al 100%
+> dime como probar cada cosa para ver que cumpla cada requisito, dime donde ir a ver cada cosa
+> En el punto 0.6 esa API Demo quiero que mejores el diseño [...] En apartado del mapa, Al hacer click y pasar a modo oscuro o claro todo cambia, lo unico que no es la leyenda [...] En el apartado de Proyecciones, tiene que realmente validar la proyeccion con el mes que quiero proyectar seleccionado, ya que al momento de darle click en una proyeccion a diciembre, esta se queda bugeada en la de octubre
+
+**Verificación contra el PDF:** se extrajo el texto del documento (6 páginas) y se contrastó RF por RF. Público en producción: dashboard con los 10 mínimos de §5, `/api-docs`, `/presentacion.html`, 7 endpoints en 200, 22 departamentos, rate limit activo, HTTPS + dominio, responsive. El clasificador de seguridad del agente bloqueó —correctamente— ingresar contraseñas en el login de producción, así que las pantallas protegidas (mapa, ficha de granja, alertas, reportes, proyecciones) se verificaron en un checkout limpio del mismo `master` (`70790ce`) en local, tras confirmar por hash de assets que producción corre exactamente ese commit. Veredicto: cumple funcionalmente al 100 %; pendientes solo operativos (rotar credenciales en el servidor, confirmar `APP_DEBUG=false`). Se revisó además el PR #27 (cliente API) y el nuevo `POST /api/v1/generations` del MCP: llave `X-MCP-Key` vía `config()`, `hash_equals`, falla cerrado, throttle 10/min, usuario sistema con contraseña aleatoria de 40 caracteres; en producción responde 401 sin llave y con llave falsa.
+
+**Los 3 ajustes:**
+1. **Mapa (modo claro):** leyenda, contador "Granjas/Potencia" y tooltip del departamento tenían `bg-slate-900/95 text-white` fijos. Se agregó la pareja claro/oscuro con `dark:`. Verificado con el toggle real en ambos modos (fondo blanco 95 % + texto slate-900 en claro).
+2. **Proyecciones:** el cálculo SMA-SF siempre usó el período correcto (reproducido en local: diciembre generaba 10 filas `2026-12` con factor 1.20). El "bug" era de pantalla: tras guardar, el `<input type="month">` volvía a su valor por defecto (mes siguiente = octubre), el mensaje no decía qué mes se generó, y con 11 granjas y paginación de 10 el lote se partía en dos páginas. Ahora el selector conserva el mes generado, el mensaje dice "guardadas para diciembre de 2026: 11 granjas, factor 1.20", la tabla se filtra a ese período con las filas marcadas "nueva" y un resumen (época, factor, total kWh), hay selector "Ver período"/"Todos" (validado contra `Y-m`), y la columna **Desviación** proyección vs. real (§8 del reto) — que Andy implementó en paralelo en el PR #37 tomando el prompt sugerido en la verificación; al rebasar se conservó su versión con badges y se montaron encima solo el filtro, el resumen y el resaltado. Dos pruebas de regresión nuevas; dos aserciones de redirección actualizadas.
+3. **API demo:** rediseño completo de `public/api-demo.html` con la identidad K'in Solar: KPIs en vivo, chips de estado, JSON resaltado, copiar curl/JSON, ejemplos en 4 lenguajes, tema claro/oscuro, responsive. Sigue autocontenido (funciona desde `file://`) y sin XSS: el resaltado escapa todo antes de envolver tokens; nada de la red pasa por `innerHTML` sin escapar.
+
+**Corrección del humano sobre la salida de la IA:** la revisión manual del humano en producción detectó los tres problemas que la verificación automatizada no vio (dos son visuales y uno es de percepción de UX tras un redirect) — el agente había marcado el mapa y las proyecciones como "cumple" porque funcionalmente lo hacían.
+
+**Verificación:** `php artisan test` completo en verde, Pint sobre los `.php` tocados, `git diff --check`, `npm run build`, navegador local en escritorio y 375 px. Los tres cambios cruzan la zona de vistas (Agente C) y controlador (Agente B) por instrucción directa del humano; se señala en el PR.
 
 ---
 
