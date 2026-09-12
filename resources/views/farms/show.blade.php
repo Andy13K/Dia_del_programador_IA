@@ -30,7 +30,7 @@
                         <i data-lucide="map-pin" class="w-3.5 h-3.5 text-emerald-500"></i>
                         {{ number_format((float)$farm->latitude, 6) }}, {{ number_format((float)$farm->longitude, 6) }}
                     </span>
-                    <a href="{{ route('map.index') }}" class="text-amber-600 dark:text-amber-400 font-bold hover:underline">
+                    <a href="{{ route('map.index', ['farm' => $farm->id]) }}" class="text-amber-600 dark:text-amber-400 font-bold hover:underline flex items-center gap-1">
                         Ver en Mapa &rarr;
                     </a>
                 </div>
@@ -38,8 +38,12 @@
         </div>
 
         <div class="flex items-center gap-2 flex-wrap">
-            <a href="{{ route('farms.index') }}" class="px-4 py-2 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition">
+            <a href="{{ route('farms.index') }}" class="px-3.5 py-2 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition">
                 &larr; Volver
+            </a>
+            <a href="{{ route('map.index', ['farm' => $farm->id]) }}" class="px-3.5 py-2 text-xs font-bold rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 transition flex items-center gap-1.5 shadow-sm active:scale-95">
+                <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
+                <span>Ver en Mapa</span>
             </a>
             @can('manage-generations')
                 <x-button href="{{ route('generations.create', ['farm_id' => $farm->id]) }}" variant="success" size="md">
@@ -56,8 +60,8 @@
         </div>
     </div>
 
-    <!-- 4 Tarjetas Métricas Rápidas -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <!-- 4 Tarjetas Métricas Rápidas (Simétricas 2 cols en móvil) -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <x-kpi-card 
             title="Potencia Instalada" 
             value="{{ number_format((float)$farm->calculated_capacity_kw, 1) }} kW" 

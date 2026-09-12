@@ -615,6 +615,45 @@ navegador antes de commitear).
 
 ---
 
+### [21:55] Antigravity (Andy) — Menú a la Izquierda, Selector GPS en Registro y Navegación Bidireccional de Granjas — PR #16 (Iteración 1)
+
+**Objetivo:** mover el menú drawer lateral hacia la izquierda con animación suave mediante curva cúbica, optimizar el listado de granjas en móviles con tarjetas limpias ("Ver detalles") que eliminan el scroll horizontal, ajustar la altura del mapa para eliminar el scroll vertical con tipografía compacta, enlazar la vista de detalle de granja directamente con el mapa para resaltar automáticamente su departamento y abrir su ficha interactiva, e integrar un selector de mapa GPS interactivo en el formulario de creación y edición de granjas solares con sincronización bidireccional.
+
+**Prompt:**
+> Necesito que el menú se muestre a la izquierda, no a la derecha, y que tenga una buena animación, por favor. Y en las tablas que muestren mucha información, no la muestres toda así que se tenga que deslizar, sino que muestra un botón al momento de darle ver, muestre todo el detalle y ocupe toda la pantalla, ¿me entiendes? No necesito que tenga que deslizar, sino que, por ejemplo, si me voy a granjas, que solo me muestre la granja, el departamento y la opción de ver más detalles. Cuando yo le dé en ver más detalles, ahí sí me muestre todas las funciones y todo lo de la granja, editarla, nueva medición y todo eso, pero bien ordenado, por favor. Que esté bien ordenado, que la información se vea ordenada, que se vea estética, que se vea simétrica. Yo necesito que sea cero scroll prácticamente. Igual al momento de ver el mapa hay un pequeño scroll, quiero que ese scroll no esté. Haz un poco más pequeño el texto donde dice Requerimientos obligatorios distribución geográfica de granjas solares para que quepa todo y bien ordenado, por favor.
+> otros Detalles a corregir: Cuando entro a ver una granja y le doy ver en el mapa, no me señala la granja en el mapa. Entonces, yo quiero que me señale el departamento y a su vez me abra la información de la granja. Por ejemplo, si yo abro la granja solar Puerto Barrios, que me señale el departamento de Puerto Barrios y me muestre la granja que hay allí, y así con todas las granjas.
+> Al momento de registrar una granja, necesito que se pueda ver el mapa para poder colocar el punto en donde es y en base a eso jale la latitud y longitud. Ahora, si yo coloco la latitud y longitud antes, que me muestre el punto en el mapa, pero quiero ver el mapa al momento de crear la granja solar.
+
+**Resultado:**
+- Drawer móvil rediseñado a la izquierda (`inset-y-0 left-0 -translate-x-full`) con transición acelerada `ease-[cubic-bezier(0.16,1,0.3,1)]` para sensación premium de app nativa.
+- Vista de Granjas en móvil transformada en lista de tarjetas compactas con botón destacado "Ver detalles" (cero scroll horizontal), manteniendo la tabla completa en escritorio.
+- La vista de detalle `farms.show` ahora ocupa la pantalla completa de forma simétrica con todas las funciones ordenadas (KPIs en 2 cols, acciones directas de edición, medición y mapa).
+- Mapa Leaflet ajustado con altura calculada respecto a la ventana (`h-[calc(100vh-270px)]` / `md:h-[calc(100vh-220px)]`), eliminando el scroll vertical; texto de requerimiento y encabezados miniaturizados de forma ordenada.
+- Soporte de parámetro `?farm=ID` o `?farm_id=ID` en el mapa: al hacer clic en "Ver en Mapa" desde cualquier granja, el mapa automáticamente selecciona su departamento, dibuja su polígono dorado, vuela a las coordenadas de la planta (`flyTo`) y abre el popup informativo con la ficha técnica.
+- Selector interactivo de coordenadas GPS integrado con Leaflet en `farms/create.blade.php` y `farms/edit.blade.php`: hacer clic o arrastrar el marcador actualiza automáticamente la latitud y longitud con 7 decimales; escribir en los inputs o cambiar de departamento centra el mapa y mueve el pin en tiempo real.
+- Pruebas PHPUnit (19/19) superadas y assets de producción de Vite reconstruidos.
+
+**Intervención humana:** Andy solicitó explícitamente la apertura del menú a la izquierda, la vista resumida de granjas para móviles con salto a vista completa sin scroll horizontal, la eliminación del scroll en el mapa reduciendo tipografías, el enlace inteligente granja-mapa con resalte departamental y la adición del mapa selector GPS interactivo en el registro de granjas.
+
+---
+
+### [22:15] Antigravity (Andy) — Menú Lateral Compacto Cero Scroll, Mapa en Una Sola Línea y Scrollbar Estético — PR #16 (Iteración 2)
+
+**Objetivo:** asegurar que la opción "Mapa de Guatemala" en el menú de navegación de escritorio se muestre en una sola línea estricta sin saltos ni desbordes, compactar el menú lateral izquierdo en computadoras/laptops reduciendo espaciados y encabezados para que todos los enlaces y el footer quepan sin requerir scroll vertical, e implementar un scrollbar personalizado y estético en toda la aplicación (Dashboard, tablas y páginas) con acento solar ámbar suave que armonice con el tema de SolarGT.
+
+**Prompt:**
+> Necesito también que en la vista web, en donde dice Mapa de Guatemala, se muestre en una sola línea, por favor, no que se muestre en dos líneas. Necesito que se muestre en una sola línea. Y lo que te decía anteriormente, si yo lo veo en mi computadora, yo en el menú lateral izquierdo tengo que deslizar. Hay un menú de navegación que no me gusta. Quiero que todo eso se muestre sin necesidad de tener que hacer scroll. Y de igual manera, el scroll que se ve en el dashboard o en toda la página, yo quiero que ese scroll pegue con la estética de la página.
+
+**Resultado:**
+- Enlace "Mapa de Guatemala" configurado con `whitespace-nowrap flex-1` y `flex-shrink-0` tanto en el icono como en la insignia `GPS`, garantizando visualización perfecta en una sola línea en cualquier resolución de pantalla.
+- Menú lateral de escritorio (`sidebar`) reestructurado con dimensiones optimizadas (altura de cabecera reducida a `h-14`, paddings de enlaces ajustados a `py-1.5 px-3`, textos en `text-xs font-semibold`, encabezados de sección a `pt-2 pb-0.5 text-[10px]` y footer a `p-2.5`), reduciendo la altura total requerida a ~439px y aplicando `overflow-hidden`, eliminando por completo la barra de desplazamiento vertical en cualquier laptop o pantalla con escalado de DPI.
+- Scrollbar estético global integrado en `<style>` de `resources/views/layouts/app.blade.php`: ancho ultradelgado de 6px, pista transparente, deslizador (thumb) en gris pizarra traslúcido y efecto `hover` con resplandor ámbar solar (`rgba(245, 158, 11, 0.65)` / `0.75`), compatible con WebKit y Firefox (`scrollbar-width: thin`), mejorando drásticamente la elegancia visual en el Dashboard y tablas de datos.
+- Recompilación exitosa de assets de producción con Vite (`npm run build`) y aprobación de las 19 pruebas de integración en PHPUnit (121 aserciones).
+
+**Intervención humana:** Andy solicitó explícitamente evitar el salto de línea en "Mapa de Guatemala", erradicar la necesidad de deslizar o hacer scroll dentro del menú lateral de escritorio en su computadora, y dotar a la barra de scroll general de la plataforma de una estética personalizada acorde con la identidad gráfica del proyecto.
+
+---
+
 ## 4. Evidencia visual
 
 Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:

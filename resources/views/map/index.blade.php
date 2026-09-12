@@ -18,27 +18,27 @@
 @endpush
 
 @section('content')
-<div class="space-y-6">
+<div class="space-y-3 sm:space-y-4">
 
     <!-- Encabezado y Filtros Rápidos -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white dark:bg-slate-900 p-3 sm:p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
         <div>
-            <div class="flex items-center gap-2">
-                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span class="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">Requerimiento Obligatorio RF-13</span>
+            <div class="flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">Requerimiento Obligatorio RF-13</span>
             </div>
-            <h2 class="text-xl font-extrabold text-slate-900 dark:text-white mt-1">
+            <h2 class="text-sm sm:text-base md:text-lg font-bold text-slate-900 dark:text-white mt-0.5 leading-tight">
                 Distribución Geográfica de Granjas Solares
             </h2>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                Visualización satelital y cartográfica en los 22 departamentos de la República de Guatemala.
+            <p class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                Visualización satelital y cartográfica en los 22 departamentos de Guatemala.
             </p>
         </div>
 
         <!-- Controles / Filtros -->
-        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-2.5 w-full sm:w-auto">
             <div class="relative w-full sm:w-auto">
-                <select id="departmentFilter" onchange="filterFarms()" class="w-full sm:w-auto pl-3 pr-8 py-2.5 sm:py-2 text-xs font-semibold rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500">
+                <select id="departmentFilter" onchange="filterFarms()" class="w-full sm:w-auto pl-3 pr-8 py-2 text-xs font-semibold rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500">
                     <option value="all">Todos los Departamentos (22)</option>
                     @if(isset($departments) && $departments->count() > 0)
                         @foreach($departments as $dept)
@@ -71,15 +71,15 @@
                 </select>
             </div>
 
-            <button type="button" onclick="resetMap()" class="w-full sm:w-auto justify-center px-3 py-2.5 sm:py-2 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition flex items-center gap-1.5 active:scale-95">
+            <button type="button" onclick="resetMap()" class="w-full sm:w-auto justify-center px-3 py-2 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition flex items-center gap-1.5 active:scale-95">
                 <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
                 <span>Centrar Guatemala</span>
             </button>
         </div>
     </div>
 
-    <!-- Contenedor del Mapa con Paneles Flotantes -->
-    <div class="relative w-full h-[460px] sm:h-[540px] md:h-[620px] rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200/80 dark:border-slate-800 shadow-xl bg-slate-900">
+    <!-- Contenedor del Mapa con Paneles Flotantes (Cero scroll) -->
+    <div class="relative w-full h-[calc(100vh-270px)] min-h-[380px] md:h-[calc(100vh-220px)] md:min-h-[520px] rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200/80 dark:border-slate-800 shadow-xl bg-slate-900">
         
         <!-- Mapa Leaflet -->
         <div id="guatemalaMap" class="w-full h-full z-10"></div>
@@ -248,6 +248,8 @@
         });
     }
 
+    const farmMarkersMap = {};
+
     function renderMarkers(farmList) {
         markersLayer.clearLayers();
         let totalPower = 0;
@@ -297,11 +299,12 @@
                 icon: createCustomPin(pinColor, farm.has_alert)
             }).bindPopup(popupContent);
 
+            farmMarkersMap[farm.id] = marker;
             markersLayer.addLayer(marker);
         });
 
         // Actualizar contadores
-        document.getElementById('visibleFarmsCount').textContent = `${farmList.length} granjas`;
+        document.getElementById('visibleFarmsCount').textContent = `${farmList.length}`;
         document.getElementById('visiblePowerCount').textContent = `${Math.round(totalPower).toLocaleString()} kW`;
     }
 
@@ -390,7 +393,37 @@
         map.setView(GT_CENTER, GT_ZOOM);
     }
 
+    // Enfocar granja específica por ID, resaltar su departamento y abrir su popup
+    function focusFarmById(farmId) {
+        const targetFarm = farms.find(f => String(f.id) === String(farmId));
+        if (targetFarm) {
+            const select = document.getElementById('departmentFilter');
+            if (select) {
+                select.value = String(targetFarm.dept_id);
+                filterFarms();
+            }
+
+            setTimeout(() => {
+                map.flyTo([targetFarm.lat, targetFarm.lng], 13.5, { duration: 1.4 });
+                setTimeout(() => {
+                    if (farmMarkersMap[targetFarm.id]) {
+                        farmMarkersMap[targetFarm.id].openPopup();
+                    }
+                }, 1500);
+            }, 350);
+        }
+    }
+
     // Render inicial
     renderMarkers(farms);
+
+    // Revisar si viene ?farm=ID o ?farm_id=ID en la URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const targetFarmParam = urlParams.get('farm') || urlParams.get('farm_id');
+    if (targetFarmParam) {
+        setTimeout(() => {
+            focusFarmById(targetFarmParam);
+        }, 500);
+    }
 </script>
 @endpush

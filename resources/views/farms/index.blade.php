@@ -72,8 +72,52 @@
         </form>
     </div>
 
-    <!-- Tabla de Granjas -->
-    <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm overflow-hidden">
+    <!-- VISTA MÓVIL: Tarjetas limpias sin scroll lateral (md:hidden) -->
+    <div class="md:hidden space-y-3">
+        @forelse($farms as $farm)
+            <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3 min-w-0">
+                    <div class="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-500 flex-shrink-0">
+                        <i data-lucide="sun" class="w-5 h-5"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <h4 class="font-bold text-sm text-slate-900 dark:text-white truncate">
+                            {{ $farm->name }}
+                        </h4>
+                        <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                            <span class="truncate font-medium">{{ $farm->department->name ?? 'N/A' }}</span>
+                            <span>•</span>
+                            @if($farm->status === 'active')
+                                <span class="text-emerald-500 font-semibold">Activa</span>
+                            @elseif($farm->status === 'maintenance')
+                                <span class="text-amber-500 font-semibold">Mantenimiento</span>
+                            @else
+                                <span class="text-slate-400 font-semibold">Inactiva</span>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
+                <a href="{{ route('farms.show', $farm) }}" class="flex-shrink-0 px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs flex items-center gap-1 shadow-sm transition active:scale-95">
+                    <span>Ver detalles</span>
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                </a>
+            </div>
+        @empty
+            <div class="p-8 text-center bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 text-slate-400 text-xs">
+                No se encontraron granjas solares con los filtros seleccionados.
+            </div>
+        @endforelse
+
+        @if($farms->hasPages())
+            <div class="p-3 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800">
+                {{ $farms->links() }}
+            </div>
+        @endif
+    </div>
+
+    <!-- VISTA ESCRITORIO: Tabla Completa (hidden md:block) -->
+    <div class="hidden md:block bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm overflow-hidden">
         <x-table>
             <thead class="bg-slate-50 dark:bg-slate-800/80 text-[11px] uppercase font-extrabold text-slate-400 tracking-wider">
                 <tr>
@@ -126,9 +170,10 @@
                             @endif
                         </td>
                         <td class="px-6 py-4 text-right">
-                            <div class="inline-flex items-center gap-1.5">
-                                <a href="{{ route('farms.show', $farm) }}" class="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white transition" title="Ver ficha">
-                                    <i data-lucide="eye" class="w-4 h-4"></i>
+                            <div class="inline-flex items-center gap-2">
+                                <a href="{{ route('farms.show', $farm) }}" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs transition flex items-center gap-1">
+                                    <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                                    <span>Ver detalles</span>
                                 </a>
                                 @can('manage-farms')
                                     <a href="{{ route('farms.edit', $farm) }}" class="p-1.5 rounded-lg hover:bg-amber-50 dark:hover:bg-amber-950/40 text-amber-600 hover:text-amber-700 transition" title="Editar">

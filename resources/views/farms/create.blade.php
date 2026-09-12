@@ -102,6 +102,29 @@
                            class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500 font-mono">
                 </div>
 
+                <!-- Selector Interactivo de Ubicación en el Mapa -->
+                <div class="sm:col-span-2">
+                    <div class="flex items-center justify-between mb-1.5">
+                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                            <i data-lucide="crosshair" class="w-3.5 h-3.5 text-amber-500"></i>
+                            <span>Fijar Ubicación en el Mapa (Clic o arrastre el marcador)</span>
+                        </label>
+                        <span class="text-[10px] font-semibold text-amber-600 dark:text-amber-400">
+                            Coordenadas automáticas
+                        </span>
+                    </div>
+                    <div class="relative w-full h-64 sm:h-72 rounded-2xl overflow-hidden border border-slate-300 dark:border-slate-700 shadow-inner bg-slate-900">
+                        <div id="farmPickerMap" class="w-full h-full z-10"></div>
+                        <div class="absolute bottom-2 left-2 z-20 bg-slate-900/90 backdrop-blur-md px-2.5 py-1 rounded-lg border border-slate-800 text-[10px] text-slate-300 flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                            <span id="mapCoordsDisplay">14.6349000, -90.5069000</span>
+                        </div>
+                    </div>
+                    <p class="text-[11px] text-slate-400 mt-1">
+                        Haga clic en el mapa para colocar el punto exacto y autocompletar la latitud y longitud. También puede escribirlas manualmente o elegir un departamento arriba para centrar el mapa.
+                    </p>
+                </div>
+
                 <div class="sm:col-span-2">
                     <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
                         Familias Beneficiadas *
@@ -171,6 +194,84 @@
 @push('scripts')
 <script>
     let panelIndex = 1;
+    let pickerMap, pickerMarker;
+
+    function initPickerMap() {
+        const latInput = document.getElementById('latInput');
+        const lngInput = document.getElementById('lngInput');
+        const coordsDisplay = document.getElementById('mapCoordsDisplay');
+
+        let initialLat = parseFloat(latInput.value) || 14.6349;
+        let initialLng = parseFloat(lngInput.value) || -90.5069;
+
+        pickerMap = L.map('farmPickerMap', {
+            zoomSnap: 0.5
+        }).setView([initialLat, initialLng], 9);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>'
+        }).addTo(pickerMap);
+
+        const customPin = L.divIcon({
+            className: 'picker-pin',
+            html: `
+                <div class="relative w-8 h-8 flex items-center justify-center">
+                    <div class="w-8 h-8 rounded-full bg-amber-500 text-white shadow-xl border-2 border-white flex items-center justify-center">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+                    </div>
+                </div>
+            `,
+            iconSize: [32, 32],
+            iconAnchor: [16, 16]
+        });
+
+        pickerMarker = L.marker([initialLat, initialLng], {
+            icon: customPin,
+            draggable: true
+        }).addTo(pickerMap);
+
+        function updateCoords(lat, lng) {
+            latInput.value = lat.toFixed(7);
+            lngInput.value = lng.toFixed(7);
+            if (coordsDisplay) {
+                coordsDisplay.textContent = `${lat.toFixed(7)}, ${lng.toFixed(7)}`;
+            }
+        }
+
+        pickerMarker.on('dragend', function(e) {
+            const pos = e.target.getLatLng();
+            updateCoords(pos.lat, pos.lng);
+        });
+
+        pickerMap.on('click', function(e) {
+            pickerMarker.setLatLng(e.latlng);
+            updateCoords(e.latlng.lat, e.latlng.lng);
+        });
+
+        function onManualInput() {
+            const lat = parseFloat(latInput.value);
+            const lng = parseFloat(lngInput.value);
+            if (!isNaN(lat) && !isNaN(lng) && lat >= 13 && lat <= 19 && lng >= -94 && lng <= -87) {
+                pickerMarker.setLatLng([lat, lng]);
+                pickerMap.panTo([lat, lng]);
+                if (coordsDisplay) {
+                    coordsDisplay.textContent = `${lat.toFixed(7)}, ${lng.toFixed(7)}`;
+                }
+            }
+        }
+
+        latInput.addEventListener('input', onManualInput);
+        lngInput.addEventListener('input', onManualInput);
+
+        updateCoords(initialLat, initialLng);
+    }
+
+    if (typeof L !== 'undefined') {
+        initPickerMap();
+    } else {
+        window.addEventListener('load', initPickerMap);
+    }
 
     function updateDeptCoords() {
         const select = document.getElementById('deptSelect');
@@ -178,8 +279,19 @@
         const lat = selectedOption.getAttribute('data-lat');
         const lng = selectedOption.getAttribute('data-lng');
         if (lat && lng) {
-            document.getElementById('latInput').value = parseFloat(lat).toFixed(6);
-            document.getElementById('lngInput').value = parseFloat(lng).toFixed(6);
+            const fLat = parseFloat(lat);
+            const fLng = parseFloat(lng);
+            document.getElementById('latInput').value = fLat.toFixed(7);
+            document.getElementById('lngInput').value = fLng.toFixed(7);
+
+            if (pickerMarker && pickerMap) {
+                pickerMarker.setLatLng([fLat, fLng]);
+                pickerMap.setView([fLat, fLng], 11);
+                const coordsDisplay = document.getElementById('mapCoordsDisplay');
+                if (coordsDisplay) {
+                    coordsDisplay.textContent = `${fLat.toFixed(7)}, ${fLng.toFixed(7)}`;
+                }
+            }
         }
     }
 
