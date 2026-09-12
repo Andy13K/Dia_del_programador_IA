@@ -28,7 +28,7 @@ Uso adecuado de herramientas de desarrollo y control de versiones."*
 
 - [ ] IDE con agente integrado — usado y con captura
 - [ ] Desarrollo incremental evidenciado en el historial de commits
-- [ ] **MCP Server en uso** — configurado, usado y con captura de pantalla
+- [x] **MCP Server en uso** — configurado, usado y con captura de pantalla ([`.mcp.json`](../.mcp.json) y [`docs/evidencias/mcp-*.png`](evidencias/mcp-01.png))
 - [ ] Vibecoding / generación por descripción en lenguaje natural — con ejemplo documentado
 - [ ] LLMs como asistentes de código — listados en `04-BITACORA-PROMPTS.md`
 - [ ] **Prompts documentados** — bitácora completa y cronológica

@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json.schemastore.org/mcp.json",
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "c:\\Users\\ACER NITRO\\Desktop\\DIA DEL PROGRAMADOR IA"
+      ]
+    },
+    "mysql": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-mysql"
+      ],
+      "env": {
+        "MYSQL_HOST": "127.0.0.1",
+        "MYSQL_PORT": "3306",
+        "MYSQL_USER": "root",
+        "MYSQL_PASSWORD": "",
+        "MYSQL_DATABASE": "solar_guatemala"
+      }
+    },
+    "github": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-github"
+      ],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
+      }
+    }
+  }
+}
