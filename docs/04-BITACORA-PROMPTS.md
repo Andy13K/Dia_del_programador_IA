@@ -654,6 +654,24 @@ navegador antes de commitear).
 
 ---
 
+### [22:18] Antigravity (Andy) — Menú Ampliado y Espaciado, Micro-Animaciones, Tabla con Solo Ojito y Zoom Moderado — PR #16 (Iteración 3)
+
+**Objetivo:** ampliar y espaciar adecuadamente el menú lateral izquierdo de escritorio para una mayor legibilidad y armonía visual, incorporar micro-animaciones en botones, tarjetas y transiciones de página, optimizar la tabla de granjas para que los nombres largos quepan en una sola línea con coordenadas GPS y potencia alineadas en una línea, sustituir el texto del botón "Ver detalles" por el icono del ojo en la vista web, y calibrar el zoom al ir del detalle de la granja al mapa para que sea moderado y muestre tanto el departamento delimitado como la granja sin acercamientos desmedidos.
+
+**Prompt:**
+> El menú izquierdo lo hiciste un poco pequeño, hazlo un poco más grande, por favor, solo un poco, o que esté mejor espaciado entre cada funciones. Mejor espaciado entre funciones. Necesito más animaciones en todo el sistema. Hay algunos botones, si me voy por ejemplo a granjas solares, el botón de ver detalles no se ve bien. Ahí en la vista web quiero que solo se muestre el ojito, por favor. Y que la granja quepa su nombre en línea, por ejemplo, Granja Solar Sur Chiquimula Sur, que todo su nombre pueda caber en una sola línea, o sea, para el detalle de la granja solar que admita más caracteres. Ordena un poco mejor esa tabla, por favor. Y también lo GPS, coordenada GPS y potencia kilovatio en una sola línea, o sea, quiero que todo quede en una sola línea y las tablas bien centradas y justificadas. Por otra parte, por otra parte Necesito que cuando le dé a ver mapa y me lleve a la granja, no haga un zoom tan exagerado, sino que solamente muestre el departamento señalizado y la granja, y haga un poco de zoom, no mucho.
+
+**Resultado:**
+- Menú lateral de escritorio ampliado a proporciones cómodas (`h-16` en cabecera, `px-3.5 py-2.5`, espaciado `space-y-1`, tipografía en `text-[13px] font-semibold`, `pt-2.5 pb-1 text-[11px]` en categorías) con animaciones al pasar el cursor (`hover:translate-x-1`, `group-hover:scale-110`).
+- Sistema de animaciones globales integrado: animación de entrada `animate-fade-in` en `<main>`, elevación y sombra dinámica en `<x-button>` (`hover:scale-[1.02] active:scale-[0.98] hover:shadow-md`) y `<x-kpi-card>` (`hover:shadow-lg hover:-translate-y-1`).
+- Tabla de granjas solares reestructurada con perfecta simetría: nombres largos en una sola línea sin desbordes (`whitespace-nowrap text-[13px] font-bold`), coordenadas GPS en una sola línea (`number_format° N, number_format° W`), potencia kW en badge mono-línea, columnas centradas y justificadas uniformemente, y sustitución del botón textual de ver detalles en escritorio por un botón limpio y redondeado con únicamente el icono del ojo (`<i data-lucide="eye"></i>`) con efecto `hover:scale-110`.
+- Enfoque interactivo en mapa (`focusFarmById`) reconfigurado con zoom moderado a nivel `9.8` (en vez de `13.5`), permitiendo visualizar el departamento completo delimitado en contorno dorado junto con la granja solar y su ficha técnica abierta.
+- Pruebas PHPUnit (19/19) aprobadas y compilación de Vite completada.
+
+**Intervención humana:** Andy corrigió el tamaño excesivamente compacto del menú lateral solicitando mejor espaciado entre funciones, exigió la adición de animaciones y micro-interacciones en botones y tarjetas en todo el sistema, demandó que la tabla de granjas mostrara exclusivamente el icono del ojo para ver detalles, garantizó que nombres largos y coordenadas cupieran en una sola línea justificada, y corrigió el zoom del mapa al enlace de granjas para que no fuera exagerado sino que mostrara armónicamente el departamento completo y la planta.
+
+---
+
 ## 4. Evidencia visual
 
 Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:

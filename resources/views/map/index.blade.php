@@ -403,13 +403,15 @@
                 filterFarms();
             }
 
+            // Zoom suave y moderado (alrededor de 9.8) para ver todo el departamento delimitado y la granja sin zoom exagerado
             setTimeout(() => {
-                map.flyTo([targetFarm.lat, targetFarm.lng], 13.5, { duration: 1.4 });
+                const moderateZoom = 9.8;
+                map.flyTo([targetFarm.lat, targetFarm.lng], moderateZoom, { duration: 1.0 });
                 setTimeout(() => {
                     if (farmMarkersMap[targetFarm.id]) {
                         farmMarkersMap[targetFarm.id].openPopup();
                     }
-                }, 1500);
+                }, 1000);
             }, 350);
         }
     }
