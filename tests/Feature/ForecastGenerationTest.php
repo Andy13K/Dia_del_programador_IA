@@ -27,9 +27,11 @@ class ForecastGenerationTest extends TestCase
         $user = $this->operator();
         $farm = $this->farm($user);
         $this->history($farm);
+
+        // SMA = 300*0.50 + 200*0.30 + 100*0.20 = 230.0 → 230 * 1.20 = 276.0 (abril=seco)
         $this->actingAs($user)->post('/forecasts/generate', ['solar_farm_id' => $farm->id, 'target_period' => '2026-04'])
             ->assertRedirect(route('forecasts.index'))->assertSessionHas('success');
-        $this->assertDatabaseHas('generation_forecasts', ['solar_farm_id' => $farm->id, 'forecasted_kwh' => 280]);
+        $this->assertDatabaseHas('generation_forecasts', ['solar_farm_id' => $farm->id, 'forecasted_kwh' => 276]);
         $this->assertDatabaseHas('audit_logs', ['user_id' => $user->id, 'action' => 'forecast_generated']);
     }
 
@@ -61,13 +63,17 @@ class ForecastGenerationTest extends TestCase
         $this->assertDatabaseCount('generation_forecasts', 0);
     }
 
-    public function test_bulk_failure_rolls_back_forecasts_and_audit(): void
+    public function test_nominal_fallback_persists_forecast_when_no_history(): void
     {
         $user = $this->operator();
-        $this->history($this->farm($user));
-        $this->farm($user);
-        $this->actingAs($user)->postJson('/forecasts/generate', ['target_period' => '2026-04'])->assertUnprocessable();
-        $this->assertDatabaseCount('generation_forecasts', 0);
-        $this->assertDatabaseCount('audit_logs', 0);
+        $farm = $this->farm($user);
+
+        // Sin historial suficiente → fallback nominal (capacity=0 → forecast=0)
+        $this->actingAs($user)->post('/forecasts/generate', ['solar_farm_id' => $farm->id, 'target_period' => '2026-04'])
+            ->assertRedirect(route('forecasts.index'))->assertSessionHas('success');
+        $this->assertDatabaseHas('generation_forecasts', [
+            'solar_farm_id' => $farm->id,
+            'method' => 'SMA-SF (nominal)',
+        ]);
     }
 }

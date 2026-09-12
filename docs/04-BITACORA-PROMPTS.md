@@ -373,6 +373,48 @@ pruebas solicitadas verifican contrato y un caso poblado, no corrigen esa lógic
 
 ---
 
+### [19:47] Antigravity (Agente C - Andy Opus) — Corrección ForecastService SMA-SF y batería de tests — PR #7
+
+**Objetivo:** Corregir el algoritmo predictivo SMA-SF (RF-15) para usar los pesos exactos
+solicitados (0.50, 0.30, 0.20) en lugar de los pesos 3/6, 2/6, 1/6 implementados por el
+Agente B. Agregar el fallback de capacidad nominal × 140 horas sol pico mensuales cuando
+no hay historial suficiente (en lugar de lanzar excepción). Verificar y ampliar la batería
+de pruebas PHPUnit para cubrir todos los escenarios.
+
+**Prompt:**
+> Implementar el Algoritmo Predictivo Estacional Bimodal SMA-SF (RF-15) en
+> `app/Services/ForecastService.php`:
+> - Pesos: 0.50 el mes más reciente, 0.30 el anterior, 0.20 el tras anterior.
+> - Si no hay suficiente historial, usa capacidad nominal × 140 horas sol pico mensuales.
+> - Factor seco (nov-abr): 1.20. Factor lluvioso (may-oct): 0.88.
+> Crear batería de tests: CarbonOffsetServiceTest, AlertEvaluationServiceTest,
+> ForecastServiceTest, SolarApiTest. Ejecutar php artisan test al 100%.
+
+**Resultado:**
+- `app/Services/ForecastService.php` reescrito con pesos explícitos `[0.50, 0.30, 0.20]`
+  como constantes de clase y fallback nominal `capacity_kw × 140 × factor_estacional`.
+- `tests/Unit/ForecastServiceTest.php` actualizado: valores esperados corregidos
+  (276.0 seco, 202.4 lluvioso), test de fallback nominal con panel (840.0 kWh),
+  test de fallback sin paneles (0.0 kWh), test de factores estacionales directos.
+- `tests/Feature/ForecastGenerationTest.php` actualizado: valor esperado corregido
+  (276 en vez de 280), nuevo test de fallback nominal vía POST.
+- 19 pruebas, 121 aserciones, 100% verde.
+
+**Intervención humana / correcciones sobre el código existente:**
+- El Agente B (Codex) usó pesos `(3-index)/6` que producen (0.50, 0.333, 0.167) en vez
+  de los (0.50, 0.30, 0.20) solicitados. La diferencia afecta la predicción: con historial
+  [100, 200, 300] el valor correcto seco es 276.0, no 280.0.
+- El Agente B lanzaba `ValidationException` con historial insuficiente. El requerimiento
+  original pide un fallback basado en la capacidad nominal instalada, no un rechazo.
+- PHP 8.2 estaba en el PATH del sistema; se usó `C:\laragon\bin\php\php-8.3.30\php.exe`
+  para ejecutar las pruebas con la versión requerida por `composer.json`.
+- Se generó `.env` local (no versionado) con `key:generate` para que los feature tests
+  que requieren sesión/encriptación funcionen en SQLite en memoria.
+
+**Iteraciones:** 1 — investigación del codebase, corrección y verificación en una pasada.
+
+---
+
 ## 4. Evidencia visual
 
 Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:
