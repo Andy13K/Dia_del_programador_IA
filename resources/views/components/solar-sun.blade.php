@@ -47,10 +47,4 @@
         <span class="kin-solar-spark kin-solar-spark-two"></span>
         <span class="kin-solar-spark kin-solar-spark-three"></span>
     </div>
-    <label class="kin-solar-control">
-        <input class="kin-solar-pause" type="checkbox" aria-label="Pausar animación del sol">
-        <svg class="kin-solar-pause-icon" width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M3 2h2v8H3zm4 0h2v8H7z" /></svg>
-        <svg class="kin-solar-play-icon" width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="m3 1 8 5-8 5z" /></svg>
-        <span class="kin-solar-pause-text">Pausar</span><span class="kin-solar-play-text">Reanudar</span>
-    </label>
 </div>

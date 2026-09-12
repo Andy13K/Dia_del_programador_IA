@@ -1039,6 +1039,19 @@ API y el diagnóstico de la rúbrica.
 
 ---
 
+### Codex (Carlos), Agente B — Sol continuo sin control de pausa
+
+**Fecha:** 12/09/2026. **PR:** #35, misma rama `style/carlos-codex/login-sol-vivo`.
+
+**Corrección literal del humano:**
+> Ok me gusta, ahora el boton de pausar y de reanudar quitalo, que siempre este en movimiento el sol mejor amigo
+
+**Cambio:** se elimina el control de pausa/reanudación, sus estilos y la corrección de foco que requería. Las nueve capas decorativas siguen animándose continuamente. Se conserva la preferencia de movimiento reducido del sistema y no se modifica el formulario ni el backend.
+
+**Verificación:** build, caché de vistas y revisión del diff correctos. En el navegador local no quedan controles dentro del sol y las nueve capas muestran animación activa con repetición infinita. Página sin desbordamiento a 1440×900 y capturas de ambos temas actualizadas. La versión pública sigue pendiente del despliegue del PR.
+
+---
+
 ## 4. Evidencia visual
 
 Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:

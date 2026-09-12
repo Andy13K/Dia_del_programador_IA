@@ -1,6 +1,3 @@
-/* El foco del control no debe desplazar la foto dentro del panel decorativo. */
-.kin-login-story:has(.kin-solar) { overflow: clip; }
-
 .kin-solar {
     position: relative;
     width: min(100%, 440px, 46dvh);
@@ -74,32 +71,6 @@
 .kin-solar-spark-two { top: 64%; right: 16%; animation-delay: -5s; }
 .kin-solar-spark-three { bottom: 18%; left: 40%; animation-delay: -3s; }
 
-.kin-solar-control {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 7px;
-    min-height: 36px;
-    padding: 0 12px;
-    border: 1px solid #ffe3a026;
-    border-radius: 20px;
-    background: #0b0f1799;
-    color: #e1c99f;
-    font-size: 10px;
-    cursor: pointer;
-    transition: background-color .2s, border-color .2s;
-}
-.kin-solar-control:hover { background: #211a10; border-color: #ffe3a066; }
-.kin-solar-control:focus-within { outline: 2px solid #ffd58b; outline-offset: 4px; }
-.kin-solar-pause { position: absolute; width: 1px; height: 1px; clip-path: inset(50%); overflow: hidden; }
-.kin-solar-play-icon, .kin-solar-play-text { display: none; }
-.kin-solar-control:has(:checked) :is(.kin-solar-pause-icon, .kin-solar-pause-text) { display: none; }
-.kin-solar-control:has(:checked) :is(.kin-solar-play-icon, .kin-solar-play-text) { display: block; }
-.kin-solar:has(.kin-solar-pause:checked) .kin-solar-art * { animation-play-state: paused; }
-
 @keyframes kin-solar-turn { to { transform: rotate(360deg); } }
 @keyframes kin-solar-breathe { to { opacity: .65; transform: scale(1.06); } }
 @keyframes kin-solar-drift { from { opacity: .25; } to { opacity: .8; transform: translate(6px, -9px); } }
@@ -108,5 +79,4 @@
 @media (max-width: 1023px) { .kin-solar { display: none; } }
 @media (prefers-reduced-motion: reduce) {
     .kin-solar-art * { animation: none !important; }
-    .kin-solar-control { display: none; }
 }
