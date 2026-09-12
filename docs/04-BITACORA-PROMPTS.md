@@ -563,6 +563,24 @@ navegador antes de commitear).
 
 ---
 
+### [20:35] Antigravity (Andy) — Eliminación de Marco Rectangular y Contornos Departamentales Dinámicos — PR #13
+
+**Objetivo:** eliminar el marco rectangular que envolvía el mapa general y permitir que al seleccionar cualquier departamento de Guatemala en el selector, se dibuje con precisión geográfica el contorno poligonal de dicho departamento en color ámbar solar (`#f59e0b`) con relleno translúcido y encuadre fluido.
+
+**Prompt:**
+> No me gusta cómo le sale ese cuadro a todo el mapa, quita eso. Y cuando yo seleccione departamento por departamento, que se dibuje todo el contorno del departamento, por favor. HAZ ESAS MEJORAS
+
+**Resultado:**
+- Eliminación total del cuadro rectangular envolvente y del GeoJSON nacional estático.
+- Incorporación de `public/data/guatemala-departments.geojson` optimizado (863 KB) con los límites oficiales de los 22 departamentos de Guatemala.
+- Dibujo dinámico y reactivo del contorno del departamento seleccionado (`selectedDepartmentLayer`) con estilo ámbar solar, tooltip personalizado con conteo de granjas y zoom inteligente (`fitBounds`).
+- Al seleccionar "Todos los Departamentos (22)" o hacer clic en "Centrar Guatemala", el mapa queda completamente limpio y despejado con vista panorámica nacional.
+- Reset de estilos SVG para Leaflet previniendo bordes o contornos no deseados por herencia CSS.
+
+**Intervención humana:** Andy solicitó remover el cuadro negro rectangular que afeaba el mapa y exigió la delimitación interactiva departamento por departamento para una experiencia de usuario superior.
+
+---
+
 ## 4. Evidencia visual
 
 Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:
