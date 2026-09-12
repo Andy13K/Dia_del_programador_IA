@@ -70,7 +70,9 @@ innovadora, uso adecuado de colores, tipografía consistente, diseño responsivo
 tareas realizadas por cada miembro del equipo y rol. Commits claros."*
 
 - [x] Objetivos del proyecto documentados en ERS §1.2
-- [x] Manual de usuario resumido en `docs/09-MANUAL-USUARIO.md`
+- [x] Manual de usuario en `docs/09-MANUAL-USUARIO.md` (14 secciones completas para el jurado)
+- [x] Manual de despliegue y operaciones en producción en `docs/07-PLAN-DESPLIEGUE.md` (AWS EC2, Nginx, PHP-FPM 8.3, SSL Let's Encrypt, DuckDNS, MCP)
+- [x] Manual técnico y de arquitectura en `docs/12-MANUAL-TECNICO.md` (Arquitectura en capas, modelos matemáticos CNEE/SMA-SF, DER, API REST, MCP y OWASP 2025)
 - [x] Tareas y roles documentados en la diapositiva de cierre (`presentacion.html`, diapositiva 10 — Andy: Arquitectura, Integración, UI/UX, MCP, Despliegue; Carlos: OWASP, Servicios de dominio, Bitácora, Pruebas)
 - [x] Historial de 158+ commits en español con formato Conventional Commits
 - [x] Diagrama entidad-relación (`docs/diagramas/diagrama-entidad-relacion.svg`) y diagrama de casos de uso (`docs/diagramas/diagrama-casos-de-uso.svg`), embebidos en `docs/03-PLANTILLA-ERS.md` §6

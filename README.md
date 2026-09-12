@@ -291,20 +291,30 @@ curl -s -o /dev/null -w "%{http_code}" http://kin-solar-guatemala.duckdns.org/  
 
 ---
 
-## 📂 Documentación del proyecto
+## 📂 Documentación del Proyecto y Manuales Oficiales
+
+### 📚 Manuales Principales del Sistema
+
+| Manual | Documento | Destinatario | Descripción |
+|---|---|---|---|
+| 📘 **Manual de Usuario** | [`docs/09-MANUAL-USUARIO.md`](docs/09-MANUAL-USUARIO.md) | Jurado Evaluador y Operadores | 14 secciones ilustradas: dashboard, mapa Leaflet, SCADA IoT en vivo, alertas, reportes, API y FAQ. |
+| 🚀 **Manual de Despliegue y Operaciones** | [`docs/07-PLAN-DESPLIEGUE.md`](docs/07-PLAN-DESPLIEGUE.md) | Administradores de Sistemas / DevOps | Guía paso a paso para AWS EC2, Nginx, PHP-FPM 8.3, MySQL, SSL Let's Encrypt, DuckDNS y MCP. |
+| ⚙️ **Manual Técnico y de Arquitectura** | [`docs/12-MANUAL-TECNICO.md`](docs/12-MANUAL-TECNICO.md) | Ingenieros de Software y Auditores | Arquitectura en capas, servicios de dominio (CNEE 0.40, SMA-SF), DER, API REST v1, MCP, OWASP y testing. |
+
+### 📑 Documentos de Soporte y Estándares
 
 | Documento | Descripción |
 |---|---|
 | [`docs/00-PLAN-MAESTRO.md`](docs/00-PLAN-MAESTRO.md) | Cronograma, roles y propiedad de carpetas |
 | [`docs/01-REGLAS-DE-TRABAJO.md`](docs/01-REGLAS-DE-TRABAJO.md) | Git, ramas, commits y Pull Requests |
-| [`docs/02-SEGURIDAD-OWASP-2025.md`](docs/02-SEGURIDAD-OWASP-2025.md) | Estándar de seguridad aplicado |
-| [`docs/03-PLANTILLA-ERS.md`](docs/03-PLANTILLA-ERS.md) | Especificación de requerimientos (IEEE 830) |
+| [`docs/02-SEGURIDAD-OWASP-2025.md`](docs/02-SEGURIDAD-OWASP-2025.md) | Estándar de seguridad obligatorio OWASP Top 10:2025 |
+| [`docs/03-PLANTILLA-ERS.md`](docs/03-PLANTILLA-ERS.md) | Especificación de requerimientos (IEEE 830 / ISO/IEC/IEEE 29148) |
 | [`docs/04-BITACORA-PROMPTS.md`](docs/04-BITACORA-PROMPTS.md) | Evidencia de uso de IA — vale el 20% |
 | [`docs/05-CHECKLIST-RUBRICA.md`](docs/05-CHECKLIST-RUBRICA.md) | Auditoría final contra la rúbrica |
 | [`docs/06-CONTRATOS-HORA-1.md`](docs/06-CONTRATOS-HORA-1.md) | Esquema, rutas y vistas congelados |
-| [`docs/07-PLAN-DESPLIEGUE.md`](docs/07-PLAN-DESPLIEGUE.md) | Plan de despliegue en AWS EC2 |
 | [`docs/08-GUION-PRESENTACION.md`](docs/08-GUION-PRESENTACION.md) | Guion cronometrado de 10 minutos |
-| [`docs/09-MANUAL-USUARIO.md`](docs/09-MANUAL-USUARIO.md) | Manual de usuario para el jurado |
+| [`docs/10-TAREA-MCP-SERVER-PROPIO.md`](docs/10-TAREA-MCP-SERVER-PROPIO.md) | Especificación e integración del servidor MCP propio |
+| [`docs/11-DIAPOSITIVAS-PRESENTACION.md`](docs/11-DIAPOSITIVAS-PRESENTACION.md) | Diapositivas de la defensa final |
 
 ---
 
