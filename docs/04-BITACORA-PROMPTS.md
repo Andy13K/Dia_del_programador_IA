@@ -137,7 +137,7 @@ la misma pasada, antes de commitear).
 
 ---
 
-### [18:50] Antigravity (Agente C) — Maquetación de Layout, Componentes Blade, Dashboard y Mapa Interactivo — PR #2
+### [18:50] Antigravity (Agente C) — Maquetación de Layout, Componentes Blade, Dashboard y Mapa Interactivo — PR #3
 
 **Objetivo:** Desarrollar el sistema visual integral de la aplicación: layout maestro responsivo con sidebar, suite de 8 componentes Blade reutilizables, vista de Dashboard nacional con 6 KPIs obligatorios (RF-11), vista del Mapa Interactivo de Guatemala con Leaflet.js (RF-13), matriz de reportes comparativos departamentales (RF-12), bandeja de alertas de generación (RF-14), visualización de proyecciones algorítmicas (RF-15) y documentación de la API REST (RF-16).
 
@@ -204,6 +204,57 @@ un servidor MCP externo para la implementación.
 
 **Iteraciones:** una solicitud de implementación con ciclos internos de comprobación
 y corrección; un seguimiento humano para autorizar el registro documental.
+
+---
+
+### [19:10] Claude Code (Agente A) — Autenticación, RBAC y datos demo — PR #4
+
+**Objetivo:** implementar autenticación por sesión, control de acceso por rol (RBAC) conforme
+a OWASP Top 10:2025, un servicio de auditoría automático, y sembrar los 3 usuarios y los datos
+demo realistas (paneles, granjas, mediciones, alertas) que el jurado verá en la demo.
+
+**Prompt:**
+> Actúa como el Agente A (Arquitecto de Seguridad y Datos) en Claude Code para el proyecto
+> Solar Guatemala [...] implementar la autenticación segura, el control de acceso (RBAC)
+> conforme a OWASP Top 10:2025 y los datos de prueba realistas para la evaluación del jurado.
+> (prompt completo con 4 tareas: AuthController + login/logout + throttling, columna role +
+> 4 Policies, AuditService, DatabaseSeeder + SolarDemoSeeder)
+
+**Resultado:** `AuthController` (showLoginForm/login/logout) + `LoginRequest` + vista de login
+con `@csrf`; columna `role` (enum, fuera de `$fillable`) y 4 Policies (`SolarFarmPolicy`,
+`SolarPanelPolicy`, `EnergyGenerationPolicy`, `GenerationAlertPolicy`) registradas en
+`AppServiceProvider` junto con los Gates `manage-*` que ya usaban las rutas del PR #1;
+`AuditService::log()`; los 3 usuarios semilla del contrato con su rol; `SolarDemoSeeder` con 6
+paneles, 10 granjas, 60 mediciones y 3 alertas activas (déficit del 25%). Verificado con
+`migrate:fresh --seed` y probando el login/logout real contra `php artisan serve`.
+
+**Intervención humana / autocorrección durante la ejecución:**
+- **Riesgo de choque de working directory:** al preparar la rama, `git status` mostró que la
+  sesión de Codex (rama `feat/carlos-codex/backend-paneles-granjas-mediciones`) tenía cambios
+  sin commitear *en ese mismo momento* en el mismo directorio compartido. Se detuvo el
+  `git switch master` (que habría descartado su trabajo) y, con el visto bueno del usuario, se
+  aisló todo este PR en un **git worktree** aparte (`.claude/worktrees/...`) con su propia base
+  de datos de prueba (`solar_guatemala_claude_wt`) para no tocar ni el checkout ni la base de
+  datos que Codex estaba usando para probar.
+- Se detectó que `app/Services/BackendAuditService.php` (de Codex, sin commitear en su rama) es
+  funcionalmente parecido a `AuditService` que pidió este prompt — mismo directorio, nombres
+  distintos. Se dejó una nota en el commit y aquí para que el equipo reconcilie ambos servicios
+  antes del merge final; no se intentó fusionarlos unilateralmente.
+- `role` se agregó **fuera** de `$fillable` en `User` (regla explícita de
+  `docs/02-SEGURIDAD-OWASP-2025.md`, A01: "Jamás incluir role... en $fillable"). Los seeders
+  asignan el rol por atributo directo (`$user->role = ...; $user->save();`), nunca por mass
+  assignment.
+- Al probar el logout con un token CSRF deliberadamente inválido vía `fetch()`, la petición
+  igual pasó. Antes de asumir una falla de seguridad se revisó el middleware de Laravel 13
+  (`PreventRequestForgery`): valida también la cabecera `Sec-Fetch-Site` del navegador, y mi
+  prueba se hacía desde el mismo origen (`same-origin`), lo cual la aprueba legítimamente sin
+  mirar el token — así protege Laravel 13 por defecto. No había ninguna vulnerabilidad; quedó
+  documentado para que nadie repita la misma prueba mal planteada.
+
+Detalle completo en el diff del PR.
+
+**Iteraciones:** 1 (los hallazgos anteriores se resolvieron dentro de la misma pasada, antes de
+commitear).
 
 ---
 
