@@ -73,8 +73,8 @@
             </div>
         </div>
 
-        <!-- Contador flotante superior -->
-        <div class="absolute top-6 right-6 z-20 flex gap-2">
+        <!-- Contador flotante inferior derecho -->
+        <div class="absolute bottom-6 right-6 z-20 flex gap-2">
             <div class="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-4 py-2.5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-lg text-xs flex items-center gap-3">
                 <div>
                     <div class="text-[10px] uppercase font-bold text-slate-400">Granjas Visibles</div>
@@ -101,17 +101,71 @@
         zoomSnap: 0.25,
         zoomDelta: 0.5,
         maxBounds: [
-            [13.0, -93.0], // Suroeste
-            [18.5, -87.5]  // Noreste
+            [12.5, -93.5], // Suroeste
+            [19.0, -87.0]  // Noreste
         ]
     }).setView(GT_CENTER, GT_ZOOM);
 
-    // Capa de Mapa CartoDB Positron / OpenStreetMap
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
-        subdomains: 'abcd',
-        maxZoom: 19
-    }).addTo(map);
+    // Capas Base 100% Libres y Gratuitas (Sin API Key, Sin marcas de agua)
+    const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors'
+    });
+
+    const esriSatLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        maxZoom: 18,
+        attribution: '&copy; Esri, Maxar, Earthstar Geographics &mdash; Satélite HD'
+    });
+
+    const esriTopoLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+        maxZoom: 18,
+        attribution: '&copy; Esri &mdash; Relieve y Topografía IGN Guatemala'
+    });
+
+    // Activar capa OSM por defecto
+    osmLayer.addTo(map);
+
+    // Selector de Capas para el usuario y el jurado de la UMG
+    const baseMaps = {
+        "🗺️ Calles y Departamentos (OSM)": osmLayer,
+        "🛰️ Satélite HD Fotográfico (Esri)": esriSatLayer,
+        "⛰️ Topografía y Relieve (Esri)": esriTopoLayer
+    };
+    L.control.layers(baseMaps, null, { position: 'topright' }).addTo(map);
+
+    // Capa de Fronteras y Sombreado de la República de Guatemala (GeoJSON)
+    let gtBoundaryLayer = null;
+
+    fetch('/data/guatemala.geojson')
+        .then(response => {
+            if (!response.ok) throw new Error('Error al leer GeoJSON');
+            return response.json();
+        })
+        .then(geoData => {
+            gtBoundaryLayer = L.geoJSON(geoData, {
+                style: {
+                    color: '#f59e0b',        // Borde dorado ámbar solar
+                    weight: 3,               // Grosor definido
+                    opacity: 0.95,           // Opacidad de contorno
+                    fillColor: '#38bdf8',    // Sombreado celeste solar suave
+                    fillOpacity: 0.08,       // Translúcido para destacar el territorio nacional
+                    dashArray: '6, 4'        // Punteado elegante tipo monitoreo
+                },
+                onEachFeature: function(feature, layer) {
+                    layer.bindTooltip('<strong>República de Guatemala</strong><br><span class="text-xs">Red Nacional de Generación Solar</span>', {
+                        sticky: true,
+                        className: 'shadow-lg rounded-lg border border-amber-400/50 bg-slate-900/90 text-amber-300 font-sans text-xs px-2.5 py-1'
+                    });
+                }
+            }).addTo(map);
+
+            // Ajustar vista automáticamente a los límites exactos de Guatemala
+            map.fitBounds(gtBoundaryLayer.getBounds(), { padding: [20, 20] });
+        })
+        .catch(err => {
+            console.warn('GeoJSON de Guatemala no disponible localmente, usando centro por defecto:', err);
+            map.setView(GT_CENTER, GT_ZOOM);
+        });
 
     // Datos iniciales de Granjas (se inyectan de la BD o datos representativos de los 22 departamentos)
     const rawFarmsData = @json($farmsJson ?? null);
@@ -214,15 +268,25 @@
     }
 
     function filterFarms() {
-        const selectedDept = document.getElementById('departmentFilter').value;
+        const select = document.getElementById('departmentFilter');
+        const selectedDept = select.value;
         if (selectedDept === 'all') {
             renderMarkers(farms);
-            map.setView(GT_CENTER, GT_ZOOM);
+            if (gtBoundaryLayer) {
+                map.fitBounds(gtBoundaryLayer.getBounds(), { padding: [20, 20] });
+            } else {
+                map.setView(GT_CENTER, GT_ZOOM);
+            }
         } else {
             const filtered = farms.filter(f => String(f.dept_id) === String(selectedDept));
             renderMarkers(filtered);
-            if (filtered.length > 0) {
-                map.setView([filtered[0].lat, filtered[0].lng], 9);
+            const opt = select.options[select.selectedIndex];
+            const lat = parseFloat(opt.getAttribute('data-lat'));
+            const lng = parseFloat(opt.getAttribute('data-lng'));
+            if (!isNaN(lat) && !isNaN(lng)) {
+                map.flyTo([lat, lng], 9.5, { duration: 1.2 });
+            } else if (filtered.length > 0) {
+                map.flyTo([filtered[0].lat, filtered[0].lng], 9.5, { duration: 1.2 });
             }
         }
     }
@@ -230,7 +294,11 @@
     function resetMap() {
         document.getElementById('departmentFilter').value = 'all';
         renderMarkers(farms);
-        map.setView(GT_CENTER, GT_ZOOM);
+        if (gtBoundaryLayer) {
+            map.fitBounds(gtBoundaryLayer.getBounds(), { padding: [20, 20] });
+        } else {
+            map.setView(GT_CENTER, GT_ZOOM);
+        }
     }
 
     // Render inicial
