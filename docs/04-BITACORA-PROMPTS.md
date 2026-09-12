@@ -344,6 +344,35 @@ pruebas solicitadas verifican contrato y un caso poblado, no corrigen esa lógic
 
 ---
 
+### [19:38] Antigravity (Agente D) — Documentación de alto puntaje: README, Manual, Guion y Bitácora — PR #6
+
+**Objetivo:** Producir los cuatro documentos de documentación que maximizan el puntaje en los criterios de Originalidad (20%), Uso de IA (20%) y Documentación (10%) de la rúbrica, partiendo del estado real del proyecto con la URL pública `http://3.238.198.77` ya desplegada.
+
+**Prompt:**
+> Trabajemos en la rama `feat/carlos-antigravity/readme-manual-presentacion`.
+> Actualizar README.md con título oficial, URL pública, credenciales por rol, matriz de RFs
+> (RF-01 a RF-17), instrucciones de despliegue en AWS EC2 y arquitectura técnica.
+> Crear `docs/09-MANUAL-USUARIO.md` ilustrado para el jurado.
+> Actualizar `docs/08-GUION-PRESENTACION.md` cronometrado a 10 min entre Andy y Carlos,
+> destacando los 5 diferenciadores: 5 agentes de IA coordinados, factor 0.40 kg CO₂/kWh,
+> Leaflet.js con GPS, proyección estacional guatemalteca y mitigaciones OWASP 2025.
+> Registrar en `docs/04-BITACORA-PROMPTS.md` y abrir PR.
+
+**Resultado:**
+- `README.md` completamente reescrito con badges, URL en vivo, tabla de 17 RFs con estado, instrucciones de despliegue AWS paso a paso (10 pasos con comandos exactos), diagrama de arquitectura ASCII, stack técnico completo, credenciales por rol y tabla de roles del equipo.
+- `docs/09-MANUAL-USUARIO.md` creado (12 secciones): acceso al sistema, dashboard nacional, mapa interactivo, gestión de granjas, paneles, mediciones, alertas, reportes, proyecciones, API REST, tabla de permisos por rol y FAQ para el jurado.
+- `docs/08-GUION-PRESENTACION.md` completamente reescrito: 8 bloques cronometrados con textos literales para Andy y Carlos, secuencia de 36 clics específicos para la demo en vivo, 8 preguntas del jurado con respuestas preparadas, checklist pre-presentación y tabla de ensayos.
+- Entrada en `docs/04-BITACORA-PROMPTS.md` con este registro.
+
+**Intervención humana:**
+- Carlos especificó la URL pública (`http://3.238.198.77`), las tres credenciales exactas por rol y el rango de RFs (RF-01 a RF-17). El agente leyó el estado real del repo (20 commits de otros agentes en `master`) antes de escribir para no contradecir lo implementado.
+- La secuencia de la demo (paso a paso con números de clic) fue construida por el agente a partir de las vistas Blade y rutas existentes en el código; Carlos validará contra la URL real antes del ensayo.
+- El guion anterior tenía la sección de demo con marcadores `<Función principal 1>` sin rellenar; se sustituyó por pasos concretos basados en los módulos reales del sistema.
+
+**Iteraciones:** 1 — rama creada, los 4 archivos escritos, commit y PR en una sola pasada.
+
+---
+
 ## 4. Evidencia visual
 
 Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:
