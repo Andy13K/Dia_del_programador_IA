@@ -15,6 +15,9 @@
             <div class="kin-login-orbit" aria-hidden="true">
                 <span class="kin-ray kin-ray-a"></span>
                 <span class="kin-ray kin-ray-b"></span>
+                <span class="kin-ray kin-ray-c"></span>
+                <span class="kin-ray kin-ray-d"></span>
+                <span class="kin-ray kin-ray-e"></span>
             </div>
         </div>
         <div>

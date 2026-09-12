@@ -158,7 +158,7 @@ button { cursor:pointer; }
     container-type:inline-size; padding:44px 56px; display:flex; flex-direction:column; justify-content:space-between;
     background:radial-gradient(ellipse at 45% 45%,#b0781822,transparent 60%),#0b0f17; color:var(--kin-ink); position:relative; overflow:hidden;
 }
-.kin-login-story:before { content:''; position:absolute; inset:-20px; background:url('/images/paneles-imagen.jpg') center 55%/cover; filter:blur(2.5px) brightness(.92) saturate(1.15); transform:scale(1.04); z-index:0; }
+.kin-login-story:before { content:''; position:absolute; inset:-20px; background:url('/images/paneles-imagen.jpg') 60% 55%/cover; filter:blur(2.5px) brightness(.92) saturate(1.15); transform:scale(1.04); z-index:0; }
 .kin-login-story:after { content:''; position:absolute; inset:0; background:linear-gradient(165deg,#0b0f17a6,#0b0f17b8 45%,#0b0f17e8); z-index:0; }
 .kin-login-story>* { position:relative; z-index:1; }
 .kin-login-story .kin-brand { color:var(--kin-ink); }
@@ -168,16 +168,22 @@ button { cursor:pointer; }
 .kin-login-story .kin-brand-caption { font-size:12px; margin-top:-1px; color:var(--kin-muted); }
 
 .kin-login-top { display:flex; flex-direction:column; }
-.kin-login-orbit { width:330px; height:330px; margin:32px 0 0; border:1px solid #f59e0b25; border-radius:50%; display:grid; place-items:center; position:relative; box-shadow:0 0 0 40px #f59e0b04,0 0 0 80px #f59e0b03; }
+.kin-login-orbit { width:330px; height:330px; margin:32px 0 0; border:1px solid #f59e0b25; border-radius:50%; display:grid; place-items:center; position:relative; box-shadow:0 0 0 40px #f59e0b04,0 0 0 80px #f59e0b03; animation:kin-orbit-aura 6.5s ease-in-out infinite; }
 .kin-login-orbit:before { content:''; width:130px; height:130px; border-radius:50%; background:radial-gradient(circle at 35% 30%,#ffe8a0,#e6a132 60%,#875316); box-shadow:0 0 65px #f59e0b44,inset -12px -12px 25px #6b3c1333; animation:kin-sun-breathe 5s ease-in-out infinite; }
 @keyframes kin-sun-breathe { 0%,100% { transform:scale(1); filter:brightness(1); } 50% { transform:scale(1.045); filter:brightness(1.12); } }
+@keyframes kin-orbit-aura { 0%,100% { box-shadow:0 0 0 40px #f59e0b04,0 0 0 80px #f59e0b03; } 50% { box-shadow:0 0 0 46px #f59e0b07,0 0 0 92px #f59e0b05; } }
 
 /* Rayos sutiles: nacen lejos del sol (no pegados a su borde) y viajan en
    diagonal invertida hacia donde estan los paneles de la foto. */
-.kin-ray { position:absolute; top:64%; left:50%; width:2px; height:210px; border-radius:2px; background:linear-gradient(180deg,#ffe8a0cc,#ffd68550 40%,#ffd68500); opacity:0; transform-origin:top center; animation:kin-ray-travel 4.5s ease-in-out infinite; }
-.kin-ray-a { transform:translateX(-50%) rotate(-16deg); animation-delay:0s; }
-.kin-ray-b { transform:translateX(-50%) rotate(-32deg); height:175px; animation-delay:1.6s; }
-@keyframes kin-ray-travel { 0%,100% { opacity:0; } 35% { opacity:.4; } 65% { opacity:.4; } 100% { opacity:0; } }
+/* Abanico de rayos rectos y sutiles, todos anclados al mismo punto en el
+   borde del sol, cayendo en distintos angulos sobre los paneles de la foto. */
+.kin-ray { position:absolute; top:63%; left:63%; width:1.5px; border-radius:2px; background:linear-gradient(180deg,#ffe8a0b0,#ffd68540 55%,#ffd68500); opacity:0; transform-origin:top center; animation:kin-ray-travel 5s ease-in-out infinite; }
+.kin-ray-a { height:150px; transform:rotate(8deg); animation-delay:0s; }
+.kin-ray-b { height:190px; transform:rotate(24deg); animation-delay:.5s; }
+.kin-ray-c { height:170px; transform:rotate(40deg); animation-delay:1s; }
+.kin-ray-d { height:140px; transform:rotate(55deg); animation-delay:1.5s; }
+.kin-ray-e { height:105px; transform:rotate(69deg); animation-delay:2s; }
+@keyframes kin-ray-travel { 0%,100% { opacity:0; } 35% { opacity:.35; } 65% { opacity:.35; } 100% { opacity:0; } }
 .kin-login-story h1 { max-width:none; line-height:1.14; }
 .kin-hero-sub { display:block; font-size:clamp(15px,4.4cqw,24px); font-weight:500; letter-spacing:-.3px; color:var(--kin-muted); white-space:nowrap; }
 .kin-hero-main { display:block; font-size:clamp(21px,6.4cqw,42px); font-weight:700; letter-spacing:-1.1px; color:var(--kin-ink); white-space:nowrap; margin-top:2px; }
