@@ -49,7 +49,7 @@
         </x-card>
 
         <x-card>
-            <span class="text-xs text-slate-400 font-semibold uppercase">CO₂ Evitado</span>
+            <span class="text-xs text-slate-400 font-semibold uppercase">CO₂ Evitado<x-co2-info :kwh="(float) $generation->real_kwh" /></span>
             <div class="text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-1 font-mono">
                 {{ number_format($co2Ton, 2) }} Ton
             </div>

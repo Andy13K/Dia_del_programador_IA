@@ -12,7 +12,7 @@
             <div class="kin-metric-note"><span class="text-amber-600 dark:text-amber-400">{{ number_format($stats['total_kwh'] ?? 0) }} kWh</span> de energía limpia registrada</div>
         </article>
         <article class="kin-panel kin-metric kin-metric-hero is-eco">
-            <div class="kin-metric-label"><i data-lucide="leaf" class="text-emerald-600 dark:text-emerald-400"></i>Emisiones de CO₂ evitadas</div>
+            <div class="kin-metric-label"><i data-lucide="leaf" class="text-emerald-600 dark:text-emerald-400"></i>Emisiones de CO₂ evitadas<x-co2-info :kwh="$stats['total_kwh'] ?? null" /></div>
             <div class="kin-metric-value">{{ number_format(($stats['total_co2_kg'] ?? 0) / 1000, 1) }} <small>toneladas</small></div>
             <div class="kin-metric-note"><span class="text-emerald-700 dark:text-emerald-400">{{ number_format($stats['total_co2_kg'] ?? 0) }} kg de CO₂</span> · Factor de 0.40 kg/kWh</div>
         </article>
@@ -38,7 +38,7 @@
             @endif
         </section>
         <section class="kin-panel">
-            <div class="kin-panel-heading"><div><h3>Departamentos que lideran</h3><p>Participación en la generación nacional</p></div><i data-lucide="award" class="w-5 h-5 text-amber-500"></i></div>
+            <div class="kin-panel-heading"><div><h3>Departamentos que lideran</h3><p>Participación en la generación nacional · CO₂ evitado por departamento<x-co2-info /></p></div><i data-lucide="award" class="w-5 h-5 text-amber-500"></i></div>
             <div class="kin-ranking">
                 @forelse($topRanking ?? [] as $index => $dept)
                     <div class="kin-rank-item">

@@ -26,6 +26,62 @@ document.addEventListener('keydown', event => {
         menu.querySelector('.kin-user-trigger')?.setAttribute('aria-expanded', 'false');
     });
 });
+// Popover "¿Cómo se calcula el CO₂ evitado?" (<x-co2-info>): delegado para que funcione
+// también en contenido generado por JS (popups de Leaflet, filas nuevas).
+// El panel se mueve al <body> mientras está abierto y se posiciona fijo respecto al botón, para
+// que no lo recorten tarjetas con overflow-hidden/transform, tablas con scroll ni popups de Leaflet.
+let openCo2 = null; // { panel, toggle, home }
+const placeCo2Panel = () => {
+    if (!openCo2) return;
+    const {panel, toggle} = openCo2;
+    const r = toggle.getBoundingClientRect();
+    const margin = 12, gap = 8;
+    const w = panel.offsetWidth, h = panel.offsetHeight;
+    let left = Math.min(Math.max(margin, r.left), window.innerWidth - w - margin);
+    let top = r.bottom + gap;
+    if (top + h > window.innerHeight - margin && r.top - gap - h >= margin) top = r.top - gap - h;
+    panel.style.left = `${Math.round(left)}px`;
+    panel.style.top = `${Math.round(Math.max(margin, top))}px`;
+};
+const closeCo2Panel = () => {
+    if (!openCo2) return;
+    const {panel, toggle, home} = openCo2;
+    panel.hidden = true;
+    panel.style.left = panel.style.top = '';
+    home.appendChild(panel);
+    toggle.setAttribute('aria-expanded', 'false');
+    openCo2 = null;
+    window.removeEventListener('scroll', placeCo2Panel, true);
+    window.removeEventListener('resize', placeCo2Panel);
+};
+document.addEventListener('click', event => {
+    const toggle = event.target.closest('[data-co2-toggle]');
+    if (toggle) {
+        event.preventDefault();
+        event.stopPropagation();
+        const panel = document.getElementById(toggle.getAttribute('aria-controls'));
+        if (!panel) return;
+        const reopenSame = openCo2?.panel === panel;
+        closeCo2Panel();
+        if (reopenSame) return;
+        openCo2 = {panel, toggle, home: panel.parentElement};
+        document.body.appendChild(panel);
+        panel.hidden = false;
+        toggle.setAttribute('aria-expanded', 'true');
+        placeCo2Panel();
+        window.addEventListener('scroll', placeCo2Panel, true);
+        window.addEventListener('resize', placeCo2Panel);
+        return;
+    }
+    if (!event.target.closest('.kin-co2-panel')) closeCo2Panel();
+});
+document.addEventListener('keydown', event => {
+    if (event.key !== 'Escape' || !openCo2) return;
+    const {toggle} = openCo2;
+    closeCo2Panel();
+    toggle.focus();
+});
+
 window.togglePasswordVisibility = (id, button) => {
     const field = document.getElementById(id);
     const nowVisible = field.type === 'password';

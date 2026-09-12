@@ -104,6 +104,8 @@
         </div>
     </div>
 </div>
+{{-- Cuerpo del popover "¿Cómo se calcula el CO₂?" para los popups de Leaflet (se clona desde JS). --}}
+<template id="co2InfoBody"><x-co2-info-body /></template>
 @endsection
 
 @push('scripts')
@@ -192,6 +194,8 @@
     const farms = Array.isArray(rawFarmsData) ? rawFarmsData : [];
     let markersLayer = L.layerGroup().addTo(map);
     const farmUrl = @json(route('farms.show', ['farm' => '__FARM__']));
+    const CO2_FACTOR = {{ (float) config('solar.co2_kg_per_kwh') }};
+    const CO2_INFO_BODY = document.getElementById('co2InfoBody').innerHTML;
     const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, character => ({
         '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
     })[character]);
@@ -233,8 +237,18 @@
             if (farm.has_alert) pinColor = 'bg-rose-600';
             else if (farm.status !== 'active') pinColor = 'bg-slate-500';
 
-            const co2_kg = (farm.monthly_kwh || 0) * 0.40;
+            const co2_kg = (farm.monthly_kwh || 0) * CO2_FACTOR;
             const co2_tons = (co2_kg / 1000).toFixed(2);
+            // Mismo cuerpo que el componente co2-info (template renderizado por Blade) + el ejemplo con la cifra
+            // de esta granja, insertado entre la fórmula y la explicación, igual que en el componente.
+            const co2Example = `<div class="kin-co2-example"><span>Con este valor:</span>${Number(farm.monthly_kwh || 0).toLocaleString('es-GT')} kWh × ${CO2_FACTOR.toFixed(2)} = <strong>${Math.round(co2_kg).toLocaleString('es-GT')} kg</strong> = <strong>${(co2_kg / 1000).toFixed(1)} t</strong></div>`;
+            const co2InfoHtml = `
+                <span class="kin-co2" data-co2>
+                    <button type="button" class="kin-co2-btn" data-co2-toggle aria-expanded="false" aria-controls="co2-map-${escapeHtml(farm.id)}" aria-label="Cómo se calcula el CO₂ evitado" title="¿Cómo se calcula?">!</button>
+                    <div id="co2-map-${escapeHtml(farm.id)}" class="kin-co2-panel" role="dialog" aria-label="Cómo se calcula el CO₂ evitado" hidden>
+                        ${CO2_INFO_BODY.replace('<p class="kin-co2-text">', co2Example + '<p class="kin-co2-text">')}
+                    </div>
+                </span>`;
 
             const popupContent = `
                 <div class="p-1 font-sans min-w-[240px]">
@@ -256,7 +270,7 @@
                             <strong class="text-slate-800 dark:text-slate-100">${parseInt(farm.families).toLocaleString()}</strong>
                         </div>
                         <div class="flex justify-between">
-                            <span class="text-slate-400 dark:text-slate-500">CO₂ Evitado (Mes):</span>
+                            <span class="text-slate-400 dark:text-slate-500">CO₂ Evitado (Mes):${co2InfoHtml}</span>
                             <strong class="text-emerald-600 dark:text-emerald-400 font-bold">${co2_tons} Ton (${co2_kg.toLocaleString()} kg)</strong>
                         </div>
                     </div>

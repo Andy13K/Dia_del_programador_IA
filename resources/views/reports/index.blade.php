@@ -10,7 +10,7 @@
                 <span class="px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold text-xs">
                     REPORTES & AUDITORÍA ENERGÉTICA
                 </span>
-                <span class="text-xs text-slate-400 font-mono">Factor CNEE 0.40 kg CO₂/kWh</span>
+                <span class="text-xs text-slate-400 font-mono">Factor CNEE {{ number_format((float) config('solar.co2_kg_per_kwh'), 2) }} kg CO₂/kWh<x-co2-info /></span>
             </div>
             <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white mt-1">
                 {{ $reportData['title'] }}
@@ -157,7 +157,7 @@
             @foreach($reportData['summary_kpis'] as $kpi)
                 <div class="bg-white dark:bg-slate-900 p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
                     <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block font-mono">
-                        {{ $kpi['label'] }}
+                        {{ $kpi['label'] }}@if(stripos($kpi['label'], 'CO2') !== false || stripos($kpi['label'], 'CO₂') !== false)<x-co2-info />@endif
                     </span>
                     <div class="text-2xl font-black text-slate-900 dark:text-white mt-1">
                         {{ $kpi['value'] }}
@@ -194,7 +194,7 @@
                         <th class="px-5 py-3.5 text-center w-12">#</th>
                         @foreach($reportData['columns'] as $col)
                             <th class="px-5 py-3.5 {{ $col['align'] === 'right' ? 'text-right' : ($col['align'] === 'center' ? 'text-center' : 'text-left') }}">
-                                {{ $col['label'] }}
+                                {{ $col['label'] }}@if(str_starts_with($col['key'], 'co2'))<x-co2-info />@endif
                             </th>
                         @endforeach
                     </tr>

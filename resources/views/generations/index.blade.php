@@ -10,7 +10,7 @@
                 <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 font-bold text-xs">
                     Requerimientos RF-08 a RF-10
                 </span>
-                <span class="text-xs text-slate-400">Factor Certificado: 0.40 kg CO₂ / kWh</span>
+                <span class="text-xs text-slate-400">Factor Certificado: {{ number_format((float) config('solar.co2_kg_per_kwh'), 2) }} kg CO₂ / kWh<x-co2-info /></span>
             </div>
             <h2 class="text-xl font-extrabold text-slate-900 dark:text-white mt-1">
                 Registro de Generación Eléctrica Mensual
@@ -72,7 +72,7 @@
                     <th class="px-6 py-4">Fecha Registro</th>
                     <th class="px-6 py-4 text-right">Esperada (kWh)</th>
                     <th class="px-6 py-4 text-right">Real (kWh)</th>
-                    <th class="px-6 py-4 text-right">CO₂ Evitado</th>
+                    <th class="px-6 py-4 text-right">CO₂ Evitado<x-co2-info /></th>
                     <th class="px-6 py-4 text-center">Desviación</th>
                     <th class="px-6 py-4 text-center">Estado Alerta</th>
                     <th class="px-6 py-4 text-right">Acciones</th>

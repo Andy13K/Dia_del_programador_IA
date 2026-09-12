@@ -89,7 +89,9 @@
             subtitle="{{ number_format($farm->energyGenerations->sum('co2_kg') / 1000, 2) }} Ton CO₂ evitadas"
             icon="leaf"
             variant="eco"
-        />
+        >
+            <x-slot:info><x-co2-info :kwh="$farm->energyGenerations->sum('real_kwh')" /></x-slot:info>
+        </x-kpi-card>
     </div>
 
     <section class="kin-panel overflow-hidden">
@@ -148,7 +150,7 @@
                         <i data-lucide="activity" class="w-4 h-4 text-emerald-500"></i>
                         <span>Historial de Mediciones Mensuales</span>
                     </h3>
-                    <p class="text-[11px] text-slate-400">Emisiones calculadas automáticamente a 0.40 kg CO₂ por kWh generado.</p>
+                    <p class="text-[11px] text-slate-400">Emisiones calculadas automáticamente a {{ number_format((float) config('solar.co2_kg_per_kwh'), 2) }} kg CO₂ por kWh generado.<x-co2-info /></p>
                 </div>
                 @can('manage-generations')
                     <a href="{{ route('generations.create', ['farm_id' => $farm->id]) }}" class="text-xs font-bold text-amber-600 hover:text-amber-700 dark:text-amber-400 flex items-center gap-1">
@@ -164,7 +166,7 @@
                         <th class="px-4 py-3">Período</th>
                         <th class="px-4 py-3 text-right">Esperada (kWh)</th>
                         <th class="px-4 py-3 text-right">Real (kWh)</th>
-                        <th class="px-4 py-3 text-right">CO₂ Evitado (Ton)</th>
+                        <th class="px-4 py-3 text-right">CO₂ Evitado (Ton)<x-co2-info /></th>
                         <th class="px-4 py-3 text-center">Desviación</th>
                         <th class="px-4 py-3 text-center">Alerta</th>
                     </tr>
