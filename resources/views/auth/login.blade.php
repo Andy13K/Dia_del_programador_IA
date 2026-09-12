@@ -3,7 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Iniciar Sesión — Sistema Solar Guatemala</title>
+    <title>Iniciar Sesión — K'in Solar Guatemala</title>
+    <link rel="icon" type="image/png" href="{{ asset('images/kin-icon-dorado.png') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,16 +26,11 @@
     <div class="w-full max-w-md relative z-10 space-y-6">
         
         <!-- Logo y Título -->
-        <div class="text-center space-y-2">
-            <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-tr from-amber-500 via-amber-400 to-emerald-400 p-0.5 shadow-xl shadow-amber-500/20">
-                <div class="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center">
-                    <i data-lucide="sun" class="w-7 h-7 text-amber-400 animate-pulse"></i>
-                </div>
-            </div>
-            <h1 class="text-2xl font-black tracking-tight text-white">
-                Solar<span class="text-amber-400">GT</span>
+        <div class="text-center space-y-3">
+            <img src="{{ asset('images/kin-logo-dorado.png') }}" alt="K'in Solar Guatemala" class="h-16 sm:h-20 w-auto mx-auto drop-shadow-[0_0_25px_rgba(245,158,11,0.25)]">
+            <div class="flex items-center justify-center">
                 <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Nube</span>
-            </h1>
+            </div>
             <p class="text-xs text-slate-400 max-w-xs mx-auto">
                 Sistema Nacional de Registro y Monitoreo de Generación Solar en los 22 Departamentos
             </p>

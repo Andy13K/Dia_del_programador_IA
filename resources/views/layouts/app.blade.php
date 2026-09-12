@@ -6,8 +6,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title ?? 'Monitoreo Solar' }} — Sistema Nacional de Generación Solar Guatemala</title>
     
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23F59E0B'><path d='M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41M12 7a5 5 0 100 10 5 5 0 000-10z'/></svg>">
+    <!-- Favicon: glifo maya K'in (sol) de la marca K'in Solar Guatemala -->
+    <link rel="icon" type="image/png" href="{{ asset('images/kin-icon-dorado.png') }}">
 
     <!-- Tipografía Inter y Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -78,19 +78,9 @@
         
         <!-- Logo / Marca -->
         <div class="h-16 px-5 flex items-center justify-between border-b border-slate-800/80 bg-slate-950/40">
-            <a href="{{ route('home') }}" class="flex items-center gap-3 group">
-                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 via-amber-400 to-emerald-400 p-0.5 shadow-md shadow-amber-500/20 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
-                    <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
-                        <i data-lucide="sun" class="w-4.5 h-4.5 text-amber-400 animate-pulse"></i>
-                    </div>
-                </div>
-                <div>
-                    <span class="text-base font-bold tracking-tight text-white flex items-center gap-1.5">
-                        Solar<span class="text-amber-400">GT</span>
-                        <span class="text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-semibold border border-emerald-500/30">Nube</span>
-                    </span>
-                    <span class="text-[11px] text-slate-400 block -mt-0.5 font-medium">Monitoreo 22 Dptos</span>
-                </div>
+            <a href="{{ route('home') }}" class="flex items-center gap-2.5 group min-w-0">
+                <img src="{{ asset('images/kin-logo-blanco.png') }}" alt="K'in Solar Guatemala" class="h-9 w-auto group-hover:scale-105 transition-transform duration-300 flex-shrink-0">
+                <span class="text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-semibold border border-emerald-500/30 flex-shrink-0">Nube</span>
             </a>
         </div>
 
@@ -211,12 +201,9 @@
 
                 <!-- Logo Móvil -->
                 <a href="{{ route('home') }}" class="md:hidden flex items-center gap-2 flex-shrink-0">
-                    <div class="w-7 h-7 rounded-lg bg-gradient-to-tr from-amber-500 to-amber-400 p-0.5 flex items-center justify-center shadow-sm">
-                        <div class="w-full h-full bg-slate-950 rounded-[5px] flex items-center justify-center">
-                            <i data-lucide="sun" class="w-3.5 h-3.5 text-amber-400"></i>
-                        </div>
-                    </div>
-                    <span class="text-sm font-bold text-slate-900 dark:text-white">Solar<span class="text-amber-500">GT</span></span>
+                    <img src="{{ asset('images/kin-icon-negro.png') }}" alt="K'in Solar" class="w-7 h-7 object-contain block dark:hidden">
+                    <img src="{{ asset('images/kin-icon-blanco.png') }}" alt="K'in Solar" class="w-7 h-7 object-contain hidden dark:block">
+                    <span class="text-sm font-bold text-slate-900 dark:text-white">K'in <span class="text-amber-500">Solar</span></span>
                 </a>
 
                 <div class="hidden sm:block min-w-0">
@@ -372,15 +359,8 @@
         <!-- Header Drawer -->
         <div class="h-16 px-5 flex items-center justify-between border-b border-slate-800 bg-slate-950/60">
             <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-amber-500 to-amber-400 p-0.5 flex items-center justify-center shadow-md">
-                    <div class="w-full h-full bg-slate-950 rounded-[6px] flex items-center justify-center">
-                        <i data-lucide="sun" class="w-4 h-4 text-amber-400"></i>
-                    </div>
-                </div>
-                <div>
-                    <span class="text-sm font-bold text-white tracking-tight">Solar<span class="text-amber-400">GT</span></span>
-                    <span class="text-[10px] uppercase font-semibold text-emerald-400 block -mt-0.5">Menú Completo</span>
-                </div>
+                <img src="{{ asset('images/kin-logo-blanco.png') }}" alt="K'in Solar Guatemala" class="h-8 w-auto">
+                <span class="text-[10px] uppercase font-semibold text-emerald-400">Menú Completo</span>
             </div>
             <button type="button" onclick="closeMobileDrawer()" class="p-2 text-slate-400 hover:text-white rounded-lg active:scale-95 transition" aria-label="Cerrar Menú">
                 <i data-lucide="x" class="w-5 h-5"></i>
