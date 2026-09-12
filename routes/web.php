@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,10 +20,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', fn () => 'OK: home')->name('home');
 Route::get('/dashboard', fn () => 'OK: dashboard')->middleware('auth')->name('dashboard');
 
-// Placeholder temporal: el middleware "auth" redirige aquí si no hay sesión.
-// El andamiaje real de autenticación (Breeze/Fortify, ver OWASP A07) queda pendiente
-// para un incremento posterior — no forma parte del alcance de este PR.
-Route::get('/login', fn () => 'OK: login (placeholder, pendiente andamiaje de autenticación)')->name('login');
+// Autenticación (OWASP A01/A06/A07): throttle:5,1 limita fuerza bruta en el intento de login.
+Route::get('/login', [AuthController::class, 'showLoginForm'])->middleware('guest')->name('login');
+Route::post('/login', [AuthController::class, 'login'])->middleware(['guest', 'throttle:5,1'])->name('login.attempt');
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
 // Granjas
 Route::get('/farms', fn () => 'OK: farms.index')->middleware('auth')->name('farms.index');
