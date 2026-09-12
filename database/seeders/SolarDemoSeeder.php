@@ -12,6 +12,8 @@ use App\Models\SolarPanel;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class SolarDemoSeeder extends Seeder
 {
@@ -107,6 +109,17 @@ class SolarDemoSeeder extends Seeder
     {
         $panels = $this->seedPanels();
         [$adminId, $operadorId] = $this->seedOperators();
+
+        // Usuario sistema para el servidor MCP — nunca se usa para login humano.
+        $mcpUser = User::query()->firstOrCreate(
+            ['email' => 'mcp-agent@kinsolar.internal'],
+            [
+                'name' => "Agente MCP (K'in Solar)",
+                'password' => Hash::make(Str::random(40)),
+            ],
+        );
+        $mcpUser->role = 'operador';
+        $mcpUser->save();
 
         foreach (self::FARMS as $index => $farmData) {
             $department = Department::query()->where('code', $farmData['department_code'])->firstOrFail();

@@ -137,3 +137,22 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
     })->name('alerts.index');
 
 });
+
+/*
+|--------------------------------------------------------------------------
+| Rutas MCP (escritura protegida con API Key)
+|--------------------------------------------------------------------------
+|
+| Endpoint de escritura consumido por el servidor MCP propio (mcp-server/).
+| Autenticación por cabecera X-MCP-Key, no por sesión de usuario.
+| Las rutas de solo lectura (arriba) siguen siendo públicas sin llave.
+|
+*/
+
+use App\Http\Controllers\Api\McpGenerationController;
+
+Route::prefix('v1')->name('api.v1.')->middleware('mcp.key')->group(function () {
+    Route::post('/generations', [McpGenerationController::class, 'store'])
+        ->middleware('throttle:10,1')
+        ->name('mcp.generations.store');
+});

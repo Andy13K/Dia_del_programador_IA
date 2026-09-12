@@ -906,6 +906,35 @@ API y el diagnóstico de la rúbrica.
 
 ---
 
+### [01:50] Claude Opus & Antigravity (Andy) — Implementación del Servidor MCP Propio del Producto (K'in Solar)
+
+**Objetivo:** Construir un servidor MCP propio del sistema K'in Solar Guatemala (`mcp-server/`) como funcionalidad de innovación para el criterio de **Originalidad (20%)**, permitiendo a cualquier asistente de IA externo (Claude Desktop, Claude Code, Cursor) consultar datos en tiempo real y registrar mediciones reales de energía en lenguaje natural.
+
+**Prompt del humano:**
+> mira tu auxilar como iba con lo del MCP se quedo sin tokens
+
+**Resultado:**
+- **Parte A (API Laravel):**
+  - Endpoint `POST /api/v1/generations` protegido con API key estática (`X-MCP-Key`).
+  - Middleware `AuthenticateMcpKey` implementando comparación en tiempo constante con `hash_equals()` (OWASP A04) y política de fallo cerrado (OWASP A10).
+  - Rate limiting estricto de escritura (`throttle:10,1`).
+  - Validación completa con `McpStoreGenerationRequest`.
+  - Atribución de auditoría en `audit_logs` mediante usuario sistema `mcp-agent@kinsolar.internal`.
+  - 7 pruebas automatizadas en `tests/Feature/McpGenerationApiTest.php` (401, 422, 500, 201, generación de alerta, unicidad, integridad de rutas públicas).
+- **Parte B (Servidor MCP Node.js):**
+  - Proyecto Node.js autocontenido en `mcp-server/` utilizando el SDK oficial `@modelcontextprotocol/sdk`.
+  - Herramientas registradas:
+    1. `kin_solar_statistics`: Consulta consolidado nacional (solo lectura).
+    2. `kin_solar_list_farms`: Listado de granjas solares con ID, GPS y capacidad (solo lectura).
+    3. `kin_solar_register_generation`: Registro de medición real de generación con cálculo automático de CO₂ y alerta (escritura).
+  - Configuración y documentación completa en `mcp-server/README.md` con ejemplos para Claude Desktop y Claude Code.
+- **Suite completa:** 39 tests de PHPUnit pasando al 100% (241 assertions).
+
+**Intervención humana:** Andy supervisó el relevo del trabajo tras el agotamiento de tokens del agente auxiliar, coordinó la finalización del servidor MCP en Node.js y la validación integral de seguridad y pruebas.
+
+---
+
+
 ## 4. Evidencia visual
 
 Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:

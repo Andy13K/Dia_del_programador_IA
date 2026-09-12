@@ -10,10 +10,10 @@ use Illuminate\Http\Request;
 
 class BackendAuditService
 {
-    public function record(Request $request, string $action, Model $model): void
+    public function record(Request $request, string $action, Model $model, ?int $userId = null): void
     {
         AuditLog::query()->create([
-            'user_id' => $request->user()->getAuthIdentifier(),
+            'user_id' => $userId ?? $request->user()?->getAuthIdentifier(),
             'action' => $action,
             'model_type' => $model::class,
             'model_id' => $model->getKey(),
