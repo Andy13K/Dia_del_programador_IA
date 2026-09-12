@@ -23,9 +23,16 @@ class DatabaseSeederCredentialsTest extends TestCase
             'seed.evaluador_password' => null,
         ]);
 
-        $this->expectException(RuntimeException::class);
+        $threw = false;
 
-        (new DatabaseSeeder)->run();
+        try {
+            (new DatabaseSeeder)->run();
+        } catch (RuntimeException) {
+            $threw = true;
+        }
+
+        $this->assertTrue($threw, 'DatabaseSeeder debía lanzar RuntimeException con las 3 contraseñas faltantes.');
+        $this->assertDatabaseCount('users', 0);
     }
 
     public function test_seeder_fails_when_only_one_seed_password_is_missing(): void
@@ -36,10 +43,17 @@ class DatabaseSeederCredentialsTest extends TestCase
             'seed.evaluador_password' => 'Str0ng#EvaluadorPass',
         ]);
 
-        $this->expectException(RuntimeException::class);
+        $threw = false;
 
-        (new DatabaseSeeder)->run();
+        try {
+            (new DatabaseSeeder)->run();
+        } catch (RuntimeException) {
+            $threw = true;
+        }
 
+        $this->assertTrue($threw, 'DatabaseSeeder debía lanzar RuntimeException con una sola contraseña faltante.');
+        // Sin la validación de "todo o nada", esto habría creado admin/evaluador y
+        // dejado afuera solo a operador — una siembra parcial silenciosa.
         $this->assertDatabaseCount('users', 0);
     }
 
