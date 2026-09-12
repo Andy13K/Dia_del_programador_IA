@@ -27,4 +27,15 @@ class GenerationAlertPolicy
     {
         return $user->hasAnyRole(['admin', 'operador']);
     }
+
+    /**
+     * GenerationAlertController::resolve() (Agente B) autoriza con
+     * Gate::authorize('update', $alert), no con 'resolve': sin este método
+     * la Policy denegaba a TODOS los roles, incluido admin, dejando la
+     * resolución de alertas (RF-14) inoperante. Mismo criterio que resolve().
+     */
+    public function update(User $user, GenerationAlert $generationAlert): bool
+    {
+        return $this->resolve($user, $generationAlert);
+    }
 }
