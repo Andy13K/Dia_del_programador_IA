@@ -12,7 +12,7 @@
     <section class="kin-login-story">
         <div class="kin-login-top">
             <x-brand />
-            <div class="kin-login-orbit" aria-hidden="true"></div>
+            <x-solar-sun />
         </div>
         <div>
             <h1><span class="kin-hero-sub">Una fuente de energía.</span><span class="kin-hero-main">Millones de posibilidades.</span></h1>

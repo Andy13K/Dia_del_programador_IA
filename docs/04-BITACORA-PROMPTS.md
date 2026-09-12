@@ -1003,6 +1003,29 @@ API y el diagnóstico de la rúbrica.
 
 ---
 
+### Codex (Carlos), Agente B — Sol del login con corona y plasma animados
+
+**Fecha:** 12/09/2026. **Rama:** `style/carlos-codex/login-sol-vivo`, worktree aislado desde `origin/master` (`cbdd180`).
+
+**Objetivo:** dar más presencia y movimiento al sol del login, conservando el backend y la composición de la página. Cubre RNF-04 (UI) y RNF-05 (responsividad).
+
+**Prompt clave del humano (extractos literales):**
+> sabes que eres el Agente B, hoy tu tarea sera revolucionar visualmente este sol del Login
+> Quiero algo que llame la atencion del jurado al ver ese sol cuando esten en el login por favor
+> Aclaro que los cambios no deben de porque afectar el backend ni crear conflictos en nada
+
+**Intervención humana:** el humano señaló que el sol anterior era demasiado simple, pidió más impacto visual y autorizó expresamente al Agente B este ajuste del frontend, con la restricción de no afectar el backend. No hubo correcciones adicionales del humano durante esta iteración.
+
+**Resultado:** componente Blade `solar-sun` con textura de plasma SVG, borde incandescente, corona, arcos luminosos, órbitas y partículas. Movimiento lento mediante CSS, control de pausa accesible por teclado y desactivación con `prefers-reduced-motion`. En móvil se conserva la cabecera compacta existente. Estilos propios en `resources/css/solar-sun.css`, sin paquetes ni JavaScript nuevos. Solo se reemplaza el elemento decorativo de la vista de login; no se alteran el formulario, sus nombres, CSRF, rutas, controladores, modelos, servicios ni base de datos. Se versionan los assets compilados siguiendo la práctica actual del repositorio.
+
+**Iteraciones de revisión del agente:** se ajustó la textura para evitar tonos grises, se limitó el tamaño según la altura disponible y se corrigió un desplazamiento interno del fondo al enfocar el control de pausa, mediante `overflow: clip` limitado al panel que contiene el sol.
+
+**Verificación:** `php artisan test`: 58 pruebas, 334 aserciones, todas correctas. `php artisan view:cache`, `npm run build` y `git diff --check` correctos. Navegador local en 360×800, 768×1024, 1024×768, 1366×768 y 1440×900: sin desbordamientos de página y botón de login visible. Se verificaron ambos temas, pausa de las 10 capas animadas, reanudación por teclado y permanencia del fondo al enfocar el control. Consola local sin errores ni advertencias. El modo de movimiento reducido está implementado en CSS; no se emuló la preferencia del sistema en esta sesión. Capturas en `docs/evidencias/login-sol-*.png`.
+
+**Estado público:** se abrió y volvió a comprobar `https://kin-solar-guatemala.duckdns.org/login`; responde con el sol anterior. La validación pública del nuevo componente queda pendiente de revisión, integración y despliegue por los responsables. No se declara desplegado ni se modifica producción.
+
+---
+
 ## 4. Evidencia visual
 
 Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:

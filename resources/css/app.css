@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import './solar-sun.css';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @custom-variant dark (&:where(.dark, .dark *));
@@ -168,13 +169,6 @@ button { cursor:pointer; }
 .kin-login-story .kin-brand-caption { font-size:12px; margin-top:-1px; color:var(--kin-muted); }
 
 .kin-login-top { display:flex; flex-direction:column; }
-.kin-login-orbit { width:330px; height:330px; margin:32px 0 0; border:1px solid #f59e0b25; border-radius:50%; display:grid; place-items:center; position:relative; box-shadow:0 0 0 40px #f59e0b04,0 0 0 80px #f59e0b03; animation:kin-orbit-aura 6.5s ease-in-out infinite; }
-.kin-login-orbit:before { content:''; width:130px; height:130px; border-radius:50%; background:radial-gradient(circle at 35% 30%,#ffe8a0,#e6a132 60%,#875316); box-shadow:0 0 65px #f59e0b44,inset -12px -12px 25px #6b3c1333; animation:kin-sun-breathe 5s ease-in-out infinite; }
-@keyframes kin-sun-breathe { 0%,100% { transform:scale(1); filter:brightness(1); } 50% { transform:scale(1.045); filter:brightness(1.12); } }
-@keyframes kin-orbit-aura { 0%,100% { box-shadow:0 0 0 40px #f59e0b04,0 0 0 80px #f59e0b03; } 50% { box-shadow:0 0 0 46px #f59e0b07,0 0 0 92px #f59e0b05; } }
-
-/* Rayos sutiles: nacen lejos del sol (no pegados a su borde) y viajan en
-   diagonal invertida hacia donde estan los paneles de la foto. */
 .kin-login-story h1 { max-width:none; line-height:1.14; }
 .kin-hero-sub { display:block; font-size:clamp(15px,4.4cqw,24px); font-weight:500; letter-spacing:-.3px; color:var(--kin-muted); white-space:nowrap; }
 .kin-hero-main { display:block; font-size:clamp(21px,6.4cqw,42px); font-weight:700; letter-spacing:-1.1px; color:var(--kin-ink); white-space:nowrap; margin-top:2px; }
@@ -247,7 +241,7 @@ button { cursor:pointer; }
     .kin-map-main>div>div:last-child { min-height:240px; }
     .kin-login { display:block; }
     .kin-login-story { padding:28px 25px; }
-    .kin-login-story h1,.kin-login-story p,.kin-login-orbit,.kin-login-story>footer { display:none; }
+    .kin-login-story h1,.kin-login-story p,.kin-login-story>footer { display:none; }
     .kin-login-form { padding:28px 25px 45px; }
     .kin-login-form input { font-size:16px; }
     .kin-icon-button { min-height:40px; min-width:40px; }
