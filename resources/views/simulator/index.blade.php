@@ -735,6 +735,7 @@
 
             if (res.alert) {
                 logTerminal(`[ALERTA REGISTRADA] Incidente RF-14 persistido en bandeja oficial (ID #${res.alert.id}, -${res.alert.deviation_percentage}%).`, 'text-rose-400 font-bold');
+                window.refreshNotifications?.();
             }
 
         } catch (err) {
@@ -770,6 +771,7 @@
                 body: JSON.stringify({ solar_farm_id: farmId })
             });
             logTerminal(`[BASE DE DATOS] Alertas resueltas y normalizadas para ${farmName}.`, 'text-emerald-300');
+            window.refreshNotifications?.();
         } catch (e) {
             // Silencioso
         }

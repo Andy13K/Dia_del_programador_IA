@@ -155,6 +155,7 @@ Route::get('/map', function () {
 
 // Alertas de Generación (RF-14)
 Route::get('/alerts', [GenerationAlertController::class, 'index'])->middleware('auth')->name('alerts.index');
+Route::get('/alerts/notifications', [GenerationAlertController::class, 'notifications'])->middleware('auth')->name('alerts.notifications');
 Route::get('/alerts/{alert}', [GenerationAlertController::class, 'show'])->middleware('auth')->name('alerts.show');
 Route::post('/alerts/{alert}/resolve', [GenerationAlertController::class, 'resolve'])->middleware(['auth', 'can:manage-alerts'])->name('alerts.resolve');
 

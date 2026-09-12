@@ -31,7 +31,7 @@
             <div class="kin-topbar-actions">
                 <span class="kin-live"><span aria-hidden="true"></span><span class="hidden sm:inline">Conectado</span></span>
                 <button type="button" class="kin-icon-button kin-theme-toggle" onclick="toggleDarkMode()" aria-label="Cambiar tema" title="Cambiar tema"><i data-lucide="sun" class="hidden dark:block"></i><i data-lucide="moon" class="dark:hidden"></i></button>
-                @auth<a href="{{ route('alerts.index') }}" class="kin-icon-button" aria-label="Ver alertas"><i data-lucide="bell"></i></a>@endauth
+                @auth<x-notification-bell />@endauth
                 <x-user-menu :caret="true" class="kin-top-avatar" />
             </div>
         </header>
