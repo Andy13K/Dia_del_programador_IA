@@ -148,6 +148,14 @@ Route::get('/alerts', [GenerationAlertController::class, 'index'])->middleware('
 Route::get('/alerts/{alert}', [GenerationAlertController::class, 'show'])->middleware('auth')->name('alerts.show');
 Route::post('/alerts/{alert}/resolve', [GenerationAlertController::class, 'resolve'])->middleware(['auth', 'can:manage-alerts'])->name('alerts.resolve');
 
+// Gestión de Usuarios y Roles (RBAC / OWASP A01)
+Route::get('/users', [\App\Http\Controllers\UserController::class, 'index'])->middleware(['auth', 'can:manage-users'])->name('users.index');
+Route::get('/users/create', [\App\Http\Controllers\UserController::class, 'create'])->middleware(['auth', 'can:manage-users'])->name('users.create');
+Route::post('/users', [\App\Http\Controllers\UserController::class, 'store'])->middleware(['auth', 'can:manage-users'])->name('users.store');
+Route::get('/users/{user}/edit', [\App\Http\Controllers\UserController::class, 'edit'])->middleware(['auth', 'can:manage-users'])->name('users.edit');
+Route::put('/users/{user}', [\App\Http\Controllers\UserController::class, 'update'])->middleware(['auth', 'can:manage-users'])->name('users.update');
+Route::delete('/users/{user}', [\App\Http\Controllers\UserController::class, 'destroy'])->middleware(['auth', 'can:manage-users'])->name('users.destroy');
+
 // Reportes Departamentales y Exportación CSV (RF-12)
 Route::get('/reports', function () {
     // OWASP A10: fallar cerrado (ver nota en el handler del dashboard más arriba).

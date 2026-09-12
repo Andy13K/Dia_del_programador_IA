@@ -692,6 +692,27 @@ navegador antes de commitear).
 
 ---
 
+### [22:30] Antigravity (Andy) — Módulo Completo de Gestión de Usuarios y Roles (RBAC / OWASP A01) — PR #17 (Iteración 5)
+
+**Objetivo:** desarrollar e integrar el módulo administrativo de gestión de usuarios y roles del sistema bajo el estándar RBAC (`admin`, `operador`, `visualizador`), permitiendo listar, buscar, filtrar, crear, editar y dar de baja usuarios con protección estricta contra mass-assignment y auto-eliminación o revocación no autorizada de privilegios (OWASP A01).
+
+**Prompt:**
+> Mira, voy a poner a Codex Astra, un modelo superpotente, a mejorar toda la interfaz [...] De igual manera, algo que veo que no hay es un apartado para controlar el tema de los usuarios. Entonces, necesito que lo crees y, como te digo, un prompt superdetallado, no escatimes en detalles de lo que debe de hacer Astra para mejorar la experiencia de usuario y la calidad. Pero antes de darme el prompt, sugiéreme nombres, porque el nombre que tiene actualmente me parece un poco genérico. Por favor, en base al documento PDF que nos compartieron, mira si puedes abreviar el proyecto o algo para colocarle un nombre, o no sé si el nombre es ese, SolarGT, y ya nos tenemos que quedar con ese. Necesito confirmar eso, por favor.
+
+**Resultado:**
+- Creación de `UserController` con autorización estricta por Gate `manage-users` (reservado exclusivamente a administradores).
+- Creación de `StoreUserRequest` y `UpdateUserRequest` con reglas de validación seguras, control de unicidad de email e imputación explícita del rol de seguridad (evitando mass-assignment malicioso).
+- Implementación de vistas completas en `resources/views/users/`:
+  - `index.blade.php`: KPIs de cuentas por rol, barra de búsqueda y filtros, tabla completa para escritorio y tarjetas responsivas sin scroll horizontal para celulares.
+  - `create.blade.php`: Formulario de alta con matriz explicativa de roles y confirmación de contraseña cifrada con `Hash::make()`.
+  - `edit.blade.php`: Formulario de edición de datos, actualización de rol y cambio opcional de contraseña, con salvaguarda que impide al administrador revocar sus propios privilegios o auto-eliminarse.
+- Registro de rutas en `routes/web.php`.
+- Suite de pruebas automatizadas `tests/Feature/UserControllerTest.php` (5 pruebas).
+
+**Intervención humana:** Andy identificó la ausencia del módulo de administración de usuarios en el sistema y solicitó su creación inmediata con altos estándares de calidad, seguridad y control de acceso.
+
+---
+
 ### [04:53] Claude Code (Andy) — Dominio gratuito, Elastic IP y HTTPS con Let's Encrypt — PR #18
 
 **Objetivo:** eliminar el incumplimiento literal de la base del reto ("la aplicación deberá estar
@@ -765,6 +786,19 @@ documentación).
 **Verificación:** `php artisan test`: 19/19, 121 aserciones; `php artisan view:cache` y `npm run build` correctos. Navegador local con datos de SolarDemoSeeder: login, dashboard claro/oscuro, menú móvil, búsqueda Escuintla, mapa/filtro/popup, ficha de granja, alertas/detalle, reportes y generación de 10 proyecciones. Comprobaciones a 360, 390, 768 y 1440 px; mapa móvil sin scroll vertical del contenido y páginas revisadas sin desbordamiento horizontal del contenedor principal. Capturas en `docs/evidencias/kin-solar-*.png`.
 
 **Verificación pública pendiente del rediseño:** se abrió `https://kin-solar-guatemala.duckdns.org/` y respondió con la interfaz anterior. Esta rama no está desplegada; la validación final de su interfaz en producción queda pendiente tras integración. No se declara auditoría WCAG completa ni verificación productiva de este cambio.
+
+---
+
+### [05:45] Claude Code (Andy) — Rescate del módulo RBAC de usuarios tras el rediseño de Carlos
+
+**Objetivo:** la rama `feat/andy-opus/mobile-native-ux-responsive` traía dos commits pendientes: el módulo RBAC de usuarios (arriba, [22:30]) y un commit de "branding" que reescribía `layouts/app.blade.php`/`login.blade.php` con la identidad K'in Solar. Para cuando se revisó, el PR #18 de Carlos ya había reemplazado por completo esos mismos archivos con su propio sistema de componentes. Fusionar ambos commits tal cual habría destruido su rediseño.
+
+**Resultado:**
+- Se hizo `cherry-pick` únicamente del commit RBAC (`b3a9581`), descartando el commit de "branding" por completo (superado por el PR #18 y por el PR #22 de logo real).
+- El hunk que agregaba el enlace "Usuarios & Roles" al `app.blade.php` viejo se descartó (ya no existe esa estructura); en su lugar se agregó la entrada equivalente al array de `components/navigation.blade.php` que Carlos construyó, con la misma condición `@can('manage-users')`, mismo ícono y mismo destino de ruta.
+- Se resolvió el conflicto correspondiente en esta misma bitácora conservando las tres entradas (RBAC, dominio/HTTPS, rediseño de Carlos) en orden cronológico real.
+
+**Intervención humana:** Andy pidió una auditoría completa del estado del repositorio y de todas las ramas pendientes; el agente identificó que este rescate era necesario en vez de simplemente abrir el PR con el contenido de la rama tal cual.
 
 ---
 
