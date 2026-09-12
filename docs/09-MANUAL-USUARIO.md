@@ -3,7 +3,7 @@
 > **Documento dirigido al jurado evaluador y a usuarios finales del sistema.**
 > No se requiere conocimiento técnico previo para navegar la plataforma.
 >
-> **URL de la aplicación:** http://3.238.198.77
+> **URL de la aplicación:** https://kin-solar-guatemala.duckdns.org
 >
 > **Tiempo estimado de exploración completa:** 15–20 minutos
 
@@ -30,7 +30,7 @@
 
 ### Paso 1 — Abrir el navegador
 
-Ingresar a **http://3.238.198.77** en cualquier navegador moderno (Chrome, Firefox, Edge, Safari).
+Ingresar a **https://kin-solar-guatemala.duckdns.org** en cualquier navegador moderno (Chrome, Firefox, Edge, Safari).
 
 La página de inicio redirige automáticamente al formulario de inicio de sesión.
 
@@ -364,13 +364,13 @@ La API es **pública** (no requiere autenticación). Devuelve datos en formato J
 
 ```bash
 # Ver estadísticas nacionales
-curl http://3.238.198.77/api/v1/statistics
+curl https://kin-solar-guatemala.duckdns.org/api/v1/statistics
 
 # Ver todas las granjas
-curl http://3.238.198.77/api/v1/farms
+curl https://kin-solar-guatemala.duckdns.org/api/v1/farms
 
 # Ver detalle del departamento 1 (Guatemala)
-curl http://3.238.198.77/api/v1/departments/1
+curl https://kin-solar-guatemala.duckdns.org/api/v1/departments/1
 ```
 
 La página `/api-docs` muestra la documentación interactiva con ejemplos de respuesta JSON para cada endpoint.

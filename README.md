@@ -4,7 +4,8 @@
 [![PHP](https://img.shields.io/badge/PHP-8.3-777BB4?logo=php)](https://php.net)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?logo=tailwindcss)](https://tailwindcss.com)
 [![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?logo=mysql)](https://mysql.com)
-[![AWS EC2](https://img.shields.io/badge/Desplegado_en-AWS_EC2-FF9900?logo=amazonaws)](http://3.238.198.77)
+[![AWS EC2](https://img.shields.io/badge/Desplegado_en-AWS_EC2-FF9900?logo=amazonaws)](https://kin-solar-guatemala.duckdns.org)
+[![HTTPS](https://img.shields.io/badge/HTTPS-Let's_Encrypt-brightgreen?logo=letsencrypt)](https://kin-solar-guatemala.duckdns.org)
 [![OWASP Top 10:2025](https://img.shields.io/badge/OWASP-Top_10:2025-000000)](docs/02-SEGURIDAD-OWASP-2025.md)
 
 **Equipo:** Andy Aquino · Carlos — Universidad Mariano Gálvez, sede Puerto Barrios
@@ -15,9 +16,11 @@
 
 ## 🌐 URL Pública en Vivo
 
-> **http://3.238.198.77**
+> **https://kin-solar-guatemala.duckdns.org**
 
-La aplicación está desplegada en producción sobre **AWS EC2 (Ubuntu 24.04 LTS)** con Nginx + PHP-FPM 8.3 y MySQL 8.0. Sin necesidad de instalación local para evaluar.
+La aplicación está desplegada en producción sobre **AWS EC2 (Ubuntu 24.04 LTS)** con Nginx + PHP-FPM 8.3 y MySQL 8.0, con **HTTPS mediante certificado gratuito de Let's Encrypt** y redirección automática de HTTP a HTTPS. Sin necesidad de instalación local para evaluar.
+
+> El dominio (`kin-solar-guatemala.duckdns.org`, vía DuckDNS) apunta a una **Elastic IP** de AWS (`75.101.181.76`), fija mientras la instancia exista — no cambia si la instancia se reinicia.
 
 ---
 
@@ -124,7 +127,7 @@ La aplicación está desplegada en producción sobre **AWS EC2 (Ubuntu 24.04 LTS
 ### 1. Conectarse a la instancia
 
 ```bash
-ssh -i tu-llave.pem ubuntu@3.238.198.77
+ssh -i tu-llave.pem ubuntu@75.101.181.76
 ```
 
 ### 2. Instalar dependencias del sistema
@@ -164,7 +167,7 @@ APP_NAME="Solar Guatemala"
 APP_ENV=production
 APP_KEY=              # generada en el paso anterior
 APP_DEBUG=false
-APP_URL=http://3.238.198.77
+APP_URL=https://kin-solar-guatemala.duckdns.org
 
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
@@ -174,7 +177,7 @@ DB_USERNAME=solar_user
 DB_PASSWORD=TU_PASSWORD_SEGURO
 
 SESSION_DRIVER=database
-SESSION_SECURE_COOKIE=false   # true si se configura HTTPS
+SESSION_SECURE_COOKIE=true    # requiere HTTPS activo (ver paso 9.1)
 SESSION_HTTP_ONLY=true
 SESSION_SAME_SITE=lax
 LOG_LEVEL=error
@@ -211,7 +214,7 @@ sudo -u www-data php artisan optimize
 # /etc/nginx/sites-available/solar
 server {
     listen 80;
-    server_name 3.238.198.77;
+    server_name kin-solar-guatemala.duckdns.org;
     root /var/www/solar/public;
     index index.php;
 
@@ -240,14 +243,41 @@ sudo ln -s /etc/nginx/sites-available/solar /etc/nginx/sites-enabled/
 sudo nginx -t && sudo systemctl reload nginx
 ```
 
+### 9.1 Dominio gratuito y certificado HTTPS (DuckDNS + Let's Encrypt)
+
+La IP de una instancia EC2 sin Elastic IP cambia si la instancia se reinicia, y las bases exigen
+una **URL con nombre de dominio**, no una IP pelada. Solución de costo cero:
+
+1. **Elastic IP** en AWS (EC2 → Direcciones IP elásticas → Asignar → Asociar a la instancia).
+   Deja la IP pública fija de por vida de la instancia.
+2. **Dominio gratis** en [duckdns.org](https://www.duckdns.org) — login con GitHub/Google,
+   crear un subdominio (ej. `kin-solar-guatemala`) y apuntarlo a la Elastic IP.
+3. **Abrir el puerto 443** en el Security Group de la instancia (Type: HTTPS, Source: `0.0.0.0/0`).
+4. **Certbot** para el certificado gratuito de Let's Encrypt:
+
+```bash
+sudo sed -i 's/server_name _;/server_name kin-solar-guatemala.duckdns.org;/' \
+    /etc/nginx/sites-available/solar
+sudo nginx -t && sudo systemctl reload nginx
+
+sudo apt install -y certbot python3-certbot-nginx
+sudo certbot --nginx -d kin-solar-guatemala.duckdns.org
+```
+
+Certbot edita el bloque de Nginx solo (agrega `listen 443 ssl` y el redirect 301 de HTTP a
+HTTPS) y programa la renovación automática — el certificado dura 90 días, sin intervención manual.
+
 ### 10. Verificación post-despliegue
 
 ```bash
 # Confirmar que el .env no es accesible
-curl -s -o /dev/null -w "%{http_code}" http://3.238.198.77/.env   # debe ser 404
+curl -s -o /dev/null -w "%{http_code}" https://kin-solar-guatemala.duckdns.org/.env   # debe ser 403
 
-# Confirmar que la app responde
-curl -s -o /dev/null -w "%{http_code}" http://3.238.198.77/       # debe ser 200 o 302
+# Confirmar que la app responde por HTTPS
+curl -s -o /dev/null -w "%{http_code}" https://kin-solar-guatemala.duckdns.org/       # debe ser 200 o 302
+
+# Confirmar que HTTP redirige a HTTPS
+curl -s -o /dev/null -w "%{http_code}" http://kin-solar-guatemala.duckdns.org/        # debe ser 301
 ```
 
 **Tiempo medido de un despliegue completo desde cero:** ~15 minutos
