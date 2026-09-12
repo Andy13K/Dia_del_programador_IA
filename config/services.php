@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'mcp' => [
+        'key' => env('MCP_API_KEY'),
+    ],
+
 ];
