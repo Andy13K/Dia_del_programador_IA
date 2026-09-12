@@ -7,6 +7,7 @@ use App\Http\Controllers\EnergyGenerationController;
 use App\Http\Controllers\GenerationAlertController;
 use App\Http\Controllers\SolarFarmController;
 use App\Http\Controllers\SolarPanelController;
+use App\Http\Controllers\TelemetrySimulationController;
 use App\Models\Department;
 use App\Models\EnergyGeneration;
 use App\Models\GenerationAlert;
@@ -82,12 +83,15 @@ $dashboardHandler = function () {
     $chartExpected = $monthlyGens->pluck('exp_kwh')->map(fn ($v) => (float) $v)->all();
     $chartReal = $monthlyGens->pluck('act_kwh')->map(fn ($v) => (float) $v)->all();
 
-    return view('dashboard', compact('stats', 'activeAlerts', 'topRanking', 'chartLabels', 'chartExpected', 'chartReal'));
+    return view('dashboard', compact('farms', 'stats', 'activeAlerts', 'topRanking', 'chartLabels', 'chartExpected', 'chartReal'));
 };
 
 // Rutas Principales: Inicio y Dashboard
 Route::get('/', $dashboardHandler)->name('home');
 Route::get('/dashboard', $dashboardHandler)->middleware('auth')->name('dashboard');
+Route::post('/telemetry/simulate', [TelemetrySimulationController::class, 'simulate'])
+    ->middleware(['auth', 'can:manage-generations'])
+    ->name('telemetry.simulate');
 
 // Autenticación (OWASP A01/A06/A07): throttle:5,1 limita fuerza bruta en el intento de login.
 Route::get('/login', [AuthController::class, 'showLoginForm'])->middleware('guest')->name('login');

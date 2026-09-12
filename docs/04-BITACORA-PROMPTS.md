@@ -1104,6 +1104,33 @@ API y el diagnóstico de la rúbrica.
 
 ---
 
+### [11:15] Antigravity (Andy) — Simulador IoT SCADA de Telemetría en Tiempo Real sin Recarga de Página — PR #39
+
+**Objetivo:** dotar a la plataforma de dinamismo interactivo operativo en vivo, respondiendo a cómo se validan, miden y simulan los datos de cada sucursal/granja solar en tiempo real (RF-14, telemetría SCADA y contingencias operativas):
+1. Incorporar en el Dashboard un panel de control SCADA interactivo que permite seleccionar cualquier granja solar del país y un escenario operativo (Óptimo, Nubosidad leve, Falla crítica de inversores con déficit 26%, o Tormenta severa con déficit 48%).
+2. Transmitir e inyectar la telemetría vía `POST /telemetry/simulate` protegido con autorización basada en roles (`can:manage-generations`), trazabilidad en bitácora de auditoría (`audit_logs`) y cálculo de física solar con estacionalidad climática bimodal de Guatemala.
+3. Actualizar la interfaz en vivo de forma asíncrona sin recargar la página (`fetch` + Chart.js + DOM reactivo):
+   - Pulso visual de confirmación en las tarjetas KPI de Generación Solar Acumulada (MWh) y Emisiones de CO₂ Evitadas (Toneladas).
+   - Redibujado automático de la curva en el gráfico interactivo de Chart.js.
+   - Recálculo dinámico de las barras y porcentajes de participación del Top Ranking departamental.
+   - Disparo automático e inserción en vivo de nueva fila en la tabla de Atención y Seguimiento de Alertas si el déficit es $\ge 20\%$ (RF-14).
+   - Caja de feedback ejecutivo con detalles de telemetría (kWh reales, esperados, porcentaje de desviación, CO₂ y marca de tiempo).
+
+**Prompt clave:**
+> "Mira, tengo una duda. ¿Cómo es que valida los datos de cada sucursal? ¿De dónde se están obteniendo los datos de cuántos paneles están funcionando o cuántos están dejando de funcionar? ¿Cómo es que esos datos realmente están llegando aquí a la base de datos? ¿Cómo se ingresan, cómo se obtienen o se simulan? Necesito que haya cierto dinamismo en eso y me gustaría hacer la mejor solución.
+> Agrega ese botón y quiero que la simulación la pueda reflejar en cierta granja. Yo pueda seleccionar la granja a la que va a salir afectada y tú me dices en dónde se van a ver esos datos en tiempo real para que se vayan mostrando las gráficas o números como van cambiando sin necesidad de yo tener que refrescar la página."
+
+**Resultado:**
+- Controlador `app/Http/Controllers/TelemetrySimulationController.php` con validación estricta, autorización con Gates, persistencia de `EnergyGeneration`, disparo automático de `GenerationAlert` (RF-14) cuando corresponda, auditoría OWASP A09 con `AuditService`, y respuesta JSON con métricas agregadas.
+- Ruta `POST /telemetry/simulate` registrada en `routes/web.php` con middleware `['auth', 'can:manage-generations']`.
+- Vista `resources/views/dashboard.blade.php` equipada con el panel de telemetría SCADA, selectores de granja y escenario, animaciones de pulso reactivo, actualización en caliente del gráfico `Chart.js`, ranking departamental y prepend de alertas en la tabla.
+- Suite de pruebas automatizadas `tests/Feature/TelemetrySimulationTest.php` (4 pruebas, 29 aserciones) verificando RBAC para invitados/visualizadores/operadores, persistencia, generación de alerta RF-14 y trazabilidad de auditoría. Suite global al 100% (62 tests pasando, 365 aserciones).
+- Compilación limpia de assets con Vite (`npm run build`).
+
+**Intervención humana:** Andy identificó la necesidad de demostrar cómo se alimenta dinámicamente el sistema con datos de campo tipo IoT/SCADA y especificó que la experiencia de usuario durante la defensa ante el jurado debía ser fluida y sin recargas de página, permitiendo elegir la granja afectada y ver el impacto inmediato en gráficas y alertas.
+
+---
+
 ## 4. Evidencia visual
 
 Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:
