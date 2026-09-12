@@ -276,6 +276,57 @@ commitear).
 
 ---
 
+### [19:44] Codex (Agente B) — SMA-SF y pruebas automatizadas
+
+**Objetivo:** implementar RF-15 en `ForecastService`, conectar el POST existente y
+agregar las pruebas de carbono, alertas, proyecciones y API pública solicitadas.
+
+**Prompt (extractos literales):**
+> Trabajemos en la rama feat/carlos-codex/forecast-service-y-pruebas.
+> Lee AGENTS.md antes de empezar. Recuerda las reglas: nunca push a main, FormRequest, PSR-12 y Co-Authored-By.
+
+> El método generateForecast(SolarFarm $farm, string $targetPeriod): GenerationForecast debe calcular el promedio móvil ponderado de las últimas 3 mediciones reales y multiplicarlo por el factor estacional del mes proyectado.
+
+> Asegúrate de que php artisan test pase al 100% antes de abrir el PR.
+> Documenta el prompt en docs/04-BITACORA-PROMPTS.md.
+
+**Resultado:** promedio con pesos 3, 2 y 1 desde el registro más reciente anterior
+al período objetivo, dividido entre 6; factor 1.20 en noviembre–abril y 0.88 en
+mayo–octubre. Requiere tres mediciones, redondea a dos decimales y persiste SMA-SF
+con actualización idempotente por granja/período y bloqueo transaccional.
+FormRequest y controlador con permiso de módulo, Policy de granja, alcance por
+propietario y auditoría. El POST sin parámetros conserva el botón existente:
+genera el próximo mes para las granjas autorizadas, con rollback del lote completo
+si alguna no tiene historial suficiente. También acepta solar_farm_id y target_period.
+La única edición en rutas conecta el POST solicitado; no cambia middleware.
+
+**Verificación:** `php artisan test`: 17/17 pruebas y 105 aserciones correctas.
+Casos: las doce estaciones mensuales, ponderación, exclusión de registros futuros
+y ajenos, historial insuficiente, idempotencia, umbral inclusivo de alerta, estimación
+cero, autorización HTTP, validación, auditoría y rollback; tres endpoints API con
+respuesta 200 y envoltura success/data. Los servicios que persisten usan SQLite
+en memoria con RefreshDatabase, aun estando sus pruebas en tests/Unit como se pidió.
+Vite compiló después de instalar el lockfile existente con npm ci --ignore-scripts;
+no se agregaron dependencias. El worktree usa su propia APP_KEY local no versionada.
+La URL pública sigue sin especificar: no se declara verificación pública.
+
+**Intervención humana:** el humano fijó factores, tres mediciones, nombres de
+archivos, conexión POST y exigencia de suite completa. Codex eligió pesos 3/2/1
+y exigencia de tres registros; no se atribuyen estas decisiones al humano.
+Durante el trabajo paralelo cambió la rama del directorio compartido: Codex
+trasladó su commit a un worktree exclusivo y retiró ese commit de la rama ajena,
+preservando los cambios del otro agente. No hubo correcciones humanas posteriores.
+
+**Pendientes de otros módulos:** la vista de proyecciones conserva los ejemplos
+estáticos del agente C; persistir una proyección no actualiza esas filas estáticas.
+La API de estadísticas tiene valores de ejemplo cuando no existen datos; las
+pruebas solicitadas verifican contrato y un caso poblado, no corrigen esa lógica.
+
+**Iteraciones:** una solicitud, con implementación y comprobaciones internas.
+**Herramientas:** Codex, terminal, Git, PHPUnit, Pint y GitHub CLI.
+
+---
+
 ## 4. Evidencia visual
 
 Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:
