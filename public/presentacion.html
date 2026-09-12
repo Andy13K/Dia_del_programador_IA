@@ -107,6 +107,41 @@
             }
             .slide:last-of-type { page-break-after: auto !important; break-after: auto !important; }
         }
+
+        /* ============================================================
+           TEMA CLARO — usa los tokens reales de resources/css/app.css
+           (--kin-bg, --kin-surface, --kin-ink, --kin-muted, --kin-accent)
+           en vez de una paleta inventada, para que esta misma
+           presentación demuestre el sistema de diseño dual del producto.
+           ============================================================ */
+        html[data-theme="light"] {
+            --p-bg: #f5f7fa; --p-surface: #ffffff; --p-raised: #f8fafc;
+            --p-line: #e2e8f0; --p-ink: #172033; --p-muted: #526175; --p-accent: #a65a00;
+        }
+        html[data-theme="light"] body { background: var(--p-bg) !important; }
+        html[data-theme="light"] header,
+        html[data-theme="light"] footer,
+        html[data-theme="light"] .bg-slate-950,
+        html[data-theme="light"] .bg-slate-950\/80,
+        html[data-theme="light"] .bg-slate-900,
+        html[data-theme="light"] .bg-slate-900\/80 { background: var(--p-surface) !important; border-color: var(--p-line) !important; }
+        html[data-theme="light"] .bg-slate-800,
+        html[data-theme="light"] .bg-slate-800\/80 { background: var(--p-raised) !important; border-color: var(--p-line) !important; }
+        html[data-theme="light"] .glass-panel { background: var(--p-raised) !important; border-color: var(--p-line) !important; backdrop-filter: none !important; }
+        html[data-theme="light"] .border-slate-800,
+        html[data-theme="light"] .border-slate-800\/60,
+        html[data-theme="light"] .border-slate-700 { border-color: var(--p-line) !important; }
+        html[data-theme="light"] .text-white { color: var(--p-ink) !important; }
+        html[data-theme="light"] .text-slate-300,
+        html[data-theme="light"] .text-slate-400,
+        html[data-theme="light"] .text-slate-500 { color: var(--p-muted) !important; }
+        html[data-theme="light"] .text-solar-400,
+        html[data-theme="light"] .text-solar-500 { color: var(--p-accent) !important; }
+        html[data-theme="light"] .bg-solar-500\/10 { background: color-mix(in srgb, var(--p-accent) 12%, transparent) !important; }
+        html[data-theme="light"] .border-solar-500\/30 { border-color: color-mix(in srgb, var(--p-accent) 40%, transparent) !important; }
+        html[data-theme="light"] kbd { background: var(--p-raised) !important; color: var(--p-ink) !important; }
+        html[data-theme="light"] .glow-amber { box-shadow: 0 0 25px -8px color-mix(in srgb, var(--p-accent) 35%, transparent) !important; }
+        html[data-theme="light"] ::-webkit-scrollbar-track { background: var(--p-bg); }
     </style>
 </head>
 <body class="h-full flex flex-col font-sans">
@@ -140,14 +175,20 @@
                     <svg id="timerPlayIcon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     <svg id="timerPauseIcon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </button>
-                <span id="timerDisplay" class="font-mono font-bold text-sm text-emerald-400 tracking-wider">10:00</span>
+                <span id="timerDisplay" class="font-mono font-bold text-sm text-emerald-400 tracking-wider">12:00</span>
                 <button id="timerResetBtn" class="text-slate-500 hover:text-slate-300 text-xs transition-colors" title="Reiniciar Cronómetro">↺</button>
             </div>
 
             <!-- Slide Counter -->
             <div class="text-xs font-mono text-slate-400">
-                <span id="currentSlideNum" class="text-solar-400 font-bold">1</span> / <span id="totalSlidesNum">10</span>
+                <span id="currentSlideNum" class="text-solar-400 font-bold">1</span> / <span id="totalSlidesNum">13</span>
             </div>
+
+            <!-- Theme toggle: usa la misma paleta de variables (claro/oscuro) del sistema real -->
+            <button id="themeToggleBtn" class="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors" title="Cambiar tema claro / oscuro del sistema">
+                <svg id="themeIconMoon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 1020.354 15.354z"></path></svg>
+                <svg id="themeIconSun" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+            </button>
 
             <!-- Fullscreen button -->
             <button id="fullscreenBtn" class="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors" title="Pantalla Completa (F)">
@@ -165,10 +206,10 @@
     <main class="flex-1 relative overflow-hidden flex items-center justify-center p-6 md:p-10">
 
         <!-- SLIDE 1: Portada & Problema -->
-        <section class="slide active w-full max-w-6xl h-full flex-col justify-between" data-speaker="Carlos" data-speaker-class="speaker-badge-carlos" data-time="0:00 - 0:45">
+        <section class="slide active w-full max-w-6xl h-full flex-col justify-between" data-speaker="Carlos" data-speaker-class="speaker-badge-carlos" data-time="0:00 - 0:40">
             <div class="flex items-center justify-between border-b border-slate-800/60 pb-4">
                 <span class="text-xs uppercase tracking-widest text-solar-400 font-bold">01 · Portada & Problema</span>
-                <span class="text-xs text-slate-500 font-mono">0:00 - 0:45</span>
+                <span class="text-xs text-slate-500 font-mono">0:00 - 0:40</span>
             </div>
             
             <div class="my-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
@@ -183,7 +224,7 @@
                         Plataforma centralizada de trazabilidad, monitoreo en tiempo real y proyección energética fotovoltaica en los 22 departamentos de Guatemala.
                     </p>
                     <div class="flex flex-wrap gap-3 pt-2">
-                        <span class="px-3 py-1 rounded-lg bg-slate-800/80 border border-slate-700 text-xs font-mono text-slate-300">PHP 8.3 / Laravel 12</span>
+                        <span class="px-3 py-1 rounded-lg bg-slate-800/80 border border-slate-700 text-xs font-mono text-slate-300">PHP 8.3 / Laravel 13</span>
                         <span class="px-3 py-1 rounded-lg bg-slate-800/80 border border-slate-700 text-xs font-mono text-slate-300">AWS EC2 Ubuntu 24.04</span>
                         <span class="px-3 py-1 rounded-lg bg-slate-800/80 border border-slate-700 text-xs font-mono text-slate-300">Servidor MCP Nativo</span>
                         <span class="px-3 py-1 rounded-lg bg-slate-800/80 border border-slate-700 text-xs font-mono text-slate-300">OWASP Top 10:2025</span>
@@ -220,11 +261,47 @@
             </div>
         </section>
 
-        <!-- SLIDE 2: Cinco Elementos Innovadores -->
-        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Carlos" data-speaker-class="speaker-badge-carlos" data-time="0:45 - 1:45">
+        <!-- SLIDE 2: El nombre K'in Solar (origen maya, originalidad) -->
+        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Carlos" data-speaker-class="speaker-badge-carlos" data-time="0:40 - 1:25">
             <div class="flex items-center justify-between border-b border-slate-800/60 pb-4">
-                <span class="text-xs uppercase tracking-widest text-solar-400 font-bold">02 · Solución & Diferenciadores</span>
-                <span class="text-xs text-slate-500 font-mono">0:45 - 1:45</span>
+                <span class="text-xs uppercase tracking-widest text-solar-400 font-bold">02 · ¿Por Qué "K'in"?</span>
+                <span class="text-xs text-slate-500 font-mono">0:40 - 1:25</span>
+            </div>
+
+            <div class="my-auto grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+                <div class="lg:col-span-5 flex flex-col items-center justify-center space-y-4">
+                    <div class="glass-panel glow-amber rounded-3xl p-8 flex items-center justify-center bg-white">
+                        <img src="/images/kin-logo-negro.png" alt="Glifo maya K'in" class="w-56 sm:w-64">
+                    </div>
+                    <span class="text-xs text-slate-500 font-mono text-center">El glifo real del día K'in del calendario maya</span>
+                </div>
+
+                <div class="lg:col-span-7 space-y-5">
+                    <h2 class="text-3xl sm:text-4xl font-black text-white leading-tight">
+                        Cuando la Identidad Maya se Encuentra con la <span class="text-gradient">Energía Solar</span>
+                    </h2>
+                    <div class="space-y-4 text-sm sm:text-base text-slate-300 leading-relaxed">
+                        <p><strong class="text-solar-400">K'in</strong> es el signo del día del Sol en el calendario Tzolk'in/Haab' maya, usado por los pueblos K'iche', Kaqchikel y otras naciones mayas de Guatemala. Significa literalmente <strong>"Sol" / "Día"</strong>.</p>
+                        <p>No es un nombre decorativo: Guatemala es un país de raíz maya y de sol — más de 300 días de irradiancia solar aprovechable al año. El sistema nace para gestionar exactamente ese recurso.</p>
+                        <p>El glifo del logo <strong>es el jeroglífico maya real</strong> del día K'in, no un ícono genérico de sol de un banco de iconos — una identidad visual y conceptual construida desde cero, no traducida de una plantilla extranjera.</p>
+                    </div>
+                    <div class="pt-2">
+                        <span class="px-3 py-1.5 rounded-lg bg-solar-500/10 border border-solar-500/30 text-solar-400 text-xs font-bold uppercase tracking-wide">Criterio de Originalidad · 20% de la rúbrica</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-xs text-slate-500 flex justify-between items-center pt-4 border-t border-slate-800/60">
+                <span>Orador: Carlos</span>
+                <span>Identidad de Producto</span>
+            </div>
+        </section>
+
+        <!-- SLIDE 3: Cinco Elementos Innovadores -->
+        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Carlos" data-speaker-class="speaker-badge-carlos" data-time="1:25 - 2:15">
+            <div class="flex items-center justify-between border-b border-slate-800/60 pb-4">
+                <span class="text-xs uppercase tracking-widest text-solar-400 font-bold">03 · Solución & Diferenciadores</span>
+                <span class="text-xs text-slate-500 font-mono">1:25 - 2:15</span>
             </div>
 
             <div class="my-auto space-y-6">
@@ -283,15 +360,15 @@
 
             <div class="text-xs text-slate-500 flex justify-between items-center pt-4 border-t border-slate-800/60">
                 <span>Orador: Carlos</span>
-                <span>Arquitectura Funcional</span>
+                <span>Diferenciadores del Producto</span>
             </div>
         </section>
 
-        <!-- SLIDE 3: Arquitectura & Stack -->
-        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Andy" data-speaker-class="speaker-badge-andy" data-time="1:45 - 2:30">
+        <!-- SLIDE 4: Arquitectura & Documentación -->
+        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Andy" data-speaker-class="speaker-badge-andy" data-time="2:15 - 3:00">
             <div class="flex items-center justify-between border-b border-slate-800/60 pb-4">
-                <span class="text-xs uppercase tracking-widest text-solar-400 font-bold">03 · Arquitectura & Infraestructura Nube</span>
-                <span class="text-xs text-slate-500 font-mono">1:45 - 2:30</span>
+                <span class="text-xs uppercase tracking-widest text-solar-400 font-bold">04 · Arquitectura & Documentación del Proyecto</span>
+                <span class="text-xs text-slate-500 font-mono">2:15 - 3:00</span>
             </div>
 
             <div class="my-auto grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
@@ -304,44 +381,44 @@
                     <div class="space-y-3 font-mono text-xs">
                         <div class="flex items-center justify-between p-3 rounded-lg bg-slate-900 border border-slate-800">
                             <span class="text-slate-400">Servidor Nube</span>
-                            <span class="text-white font-bold">AWS EC2 Ubuntu 24.04 LTS (t3.medium)</span>
+                            <span class="text-white font-bold">AWS EC2 Ubuntu 24.04 LTS</span>
                         </div>
                         <div class="flex items-center justify-between p-3 rounded-lg bg-slate-900 border border-slate-800">
                             <span class="text-slate-400">Servidor Web / SSL</span>
-                            <span class="text-white font-bold">Nginx 1.24 + Let's Encrypt Wildcard SSL</span>
+                            <span class="text-white font-bold">Nginx + Let's Encrypt SSL</span>
                         </div>
                         <div class="flex items-center justify-between p-3 rounded-lg bg-slate-900 border border-slate-800">
                             <span class="text-slate-400">Backend Core</span>
-                            <span class="text-white font-bold">PHP 8.3.30 + Laravel 12 Enterprise Engine</span>
+                            <span class="text-white font-bold">PHP 8.3 + Laravel 13</span>
                         </div>
                         <div class="flex items-center justify-between p-3 rounded-lg bg-slate-900 border border-slate-800">
                             <span class="text-slate-400">Almacenamiento</span>
-                            <span class="text-white font-bold">MySQL 8.0 InnoDB (Strict Foreign Keys)</span>
+                            <span class="text-white font-bold">MySQL 8.0 · 9 entidades relacionales</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="glass-panel p-6 rounded-2xl space-y-4">
+                <div class="glass-panel p-6 rounded-2xl space-y-3">
                     <h3 class="text-sm font-bold uppercase tracking-wider text-solar-400 flex items-center space-x-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                        <span>Servicios de Dominio (Clean Code)</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        <span>Documentación Versionada en el Repositorio</span>
                     </h3>
-                    <div class="space-y-2.5 text-xs">
+                    <div class="space-y-2 text-xs">
                         <div class="p-2.5 rounded bg-slate-900/80 border border-slate-800 flex items-start space-x-3">
-                            <span class="text-solar-400 font-mono font-bold">CarbonOffsetService</span>
-                            <span class="text-slate-400">Calcula factor 0.40 kg/kWh, acumulados departamentales y equivalencias de reforestación.</span>
+                            <span class="text-solar-400 font-mono font-bold shrink-0">ERS v2.0</span>
+                            <span class="text-slate-400">Objetivos, 19 RF, 12 RNF, ISO/IEC 25010, 12 casos de uso y 6 diagramas UML. Exportado a Word y PDF.</span>
                         </div>
                         <div class="p-2.5 rounded bg-slate-900/80 border border-slate-800 flex items-start space-x-3">
-                            <span class="text-solar-400 font-mono font-bold">AlertEvaluationService</span>
-                            <span class="text-slate-400">Evalúa desviaciones de producción (déficit ≥ 20%), gestiona transacciones y resolución.</span>
+                            <span class="text-solar-400 font-mono font-bold shrink-0">OWASP</span>
+                            <span class="text-slate-400">Los 10 controles de seguridad documentados y verificados por PR.</span>
                         </div>
                         <div class="p-2.5 rounded bg-slate-900/80 border border-slate-800 flex items-start space-x-3">
-                            <span class="text-solar-400 font-mono font-bold">ForecastService</span>
-                            <span class="text-slate-400">Implementa algoritmo SMA-SF con ajuste por estacionalidad de Guatemala y fallback nominal.</span>
+                            <span class="text-solar-400 font-mono font-bold shrink-0">Bitácora</span>
+                            <span class="text-slate-400">Cada prompt de IA con su corrección humana, cronológico, +1000 líneas.</span>
                         </div>
                         <div class="p-2.5 rounded bg-slate-900/80 border border-slate-800 flex items-start space-x-3">
-                            <span class="text-solar-400 font-mono font-bold">BackendAuditService</span>
-                            <span class="text-slate-400">Bitácora inmutable en base de datos con registro de IP, agente, actor y payload.</span>
+                            <span class="text-solar-400 font-mono font-bold shrink-0">Manual</span>
+                            <span class="text-slate-400">Manual de usuario resumido con credenciales de acceso por rol.</span>
                         </div>
                     </div>
                 </div>
@@ -354,10 +431,10 @@
         </section>
 
         <!-- SLIDE 4: Demostración en Vivo: Dashboard & Mapa -->
-        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Andy" data-speaker-class="speaker-badge-andy" data-time="2:30 - 3:45">
+        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Andy" data-speaker-class="speaker-badge-andy" data-time="3:00 - 4:15">
             <div class="flex items-center justify-between border-b border-slate-800/60 pb-4">
-                <span class="text-xs uppercase tracking-widest text-solar-400 font-bold">04 · Demostración en Vivo: Dashboard & Territorio</span>
-                <span class="text-xs text-slate-500 font-mono">2:30 - 3:45</span>
+                <span class="text-xs uppercase tracking-widest text-solar-400 font-bold">05 · Demostración en Vivo: Dashboard & Territorio</span>
+                <span class="text-xs text-slate-500 font-mono">3:00 - 4:15</span>
             </div>
 
             <div class="my-auto space-y-6">
@@ -426,10 +503,10 @@
         </section>
 
         <!-- SLIDE 5: Demostración en Vivo: Operación y Alertas -->
-        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Andy" data-speaker-class="speaker-badge-andy" data-time="3:45 - 5:00">
+        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Andy" data-speaker-class="speaker-badge-andy" data-time="4:15 - 5:30">
             <div class="flex items-center justify-between border-b border-slate-800/60 pb-4">
-                <span class="text-xs uppercase tracking-widest text-solar-400 font-bold">05 · Demostración en Vivo: Operación & Alertas</span>
-                <span class="text-xs text-slate-500 font-mono">3:45 - 5:00</span>
+                <span class="text-xs uppercase tracking-widest text-solar-400 font-bold">06 · Demostración en Vivo: Operación & Alertas</span>
+                <span class="text-xs text-slate-500 font-mono">4:15 - 5:30</span>
             </div>
 
             <div class="my-auto space-y-6">
@@ -484,10 +561,10 @@
         </section>
 
         <!-- SLIDE 6: Inteligencia Predictiva: Modelo SMA-SF -->
-        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Andy" data-speaker-class="speaker-badge-andy" data-time="5:00 - 6:30">
+        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Andy" data-speaker-class="speaker-badge-andy" data-time="5:30 - 6:30">
             <div class="flex items-center justify-between border-b border-slate-800/60 pb-4">
-                <span class="text-xs uppercase tracking-widest text-solar-400 font-bold">06 · Inteligencia Predictiva: Modelo SMA-SF</span>
-                <span class="text-xs text-slate-500 font-mono">5:00 - 6:30</span>
+                <span class="text-xs uppercase tracking-widest text-solar-400 font-bold">07 · Inteligencia Predictiva: Modelo SMA-SF</span>
+                <span class="text-xs text-slate-500 font-mono">5:30 - 6:30</span>
             </div>
 
             <div class="my-auto space-y-6">
@@ -548,10 +625,10 @@
         </section>
 
         <!-- SLIDE 7: Innovación de Alto Impacto: Servidor MCP Propio -->
-        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Carlos" data-speaker-class="speaker-badge-carlos" data-time="6:30 - 7:30">
+        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Carlos" data-speaker-class="speaker-badge-carlos" data-time="6:30 - 7:15">
             <div class="flex items-center justify-between border-b border-slate-800/60 pb-4">
-                <span class="text-xs uppercase tracking-widest text-emerald-400 font-bold">07 · Criterio de Originalidad (20%): Servidor MCP Propio</span>
-                <span class="text-xs text-slate-500 font-mono">6:30 - 7:30</span>
+                <span class="text-xs uppercase tracking-widest text-emerald-400 font-bold">08 · Criterio de Originalidad (20%): Servidor MCP Propio</span>
+                <span class="text-xs text-slate-500 font-mono">6:30 - 7:15</span>
             </div>
 
             <div class="my-auto space-y-6">
@@ -605,11 +682,64 @@
             </div>
         </section>
 
-        <!-- SLIDE 8: Seguridad OWASP 2025 -->
-        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Carlos" data-speaker-class="speaker-badge-carlos" data-time="7:30 - 8:30">
+        <!-- SLIDE 9: Elementos Plus (mas alla de las 17 RF originales) -->
+        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Andy" data-speaker-class="speaker-badge-andy" data-time="7:15 - 8:00">
             <div class="flex items-center justify-between border-b border-slate-800/60 pb-4">
-                <span class="text-xs uppercase tracking-widest text-solar-400 font-bold">08 · Seguridad: OWASP Top 10:2025</span>
-                <span class="text-xs text-slate-500 font-mono">7:30 - 8:30</span>
+                <span class="text-xs uppercase tracking-widest text-solar-400 font-bold">09 · Elementos Plus: Más Allá de lo Pedido</span>
+                <span class="text-xs text-slate-500 font-mono">7:15 - 8:00</span>
+            </div>
+
+            <div class="my-auto space-y-6">
+                <div>
+                    <h2 class="text-3xl sm:text-4xl font-black text-white">Lo que Nadie nos Pidió, <span class="text-gradient">pero Construimos</span></h2>
+                    <p class="text-sm text-slate-400 mt-1">Documentado con honestidad en el ERS como RF-18 / RF-19 — no oculto como si fuera alcance original.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="glass-panel p-4 rounded-xl border border-slate-800 space-y-2">
+                        <span class="text-2xl">🖥️</span>
+                        <h4 class="text-xs font-bold text-white">Laboratorio SCADA IoT en Vivo</h4>
+                        <p class="text-[11px] text-slate-400 leading-relaxed">Simula fallas de inversores en tiempo real con osciloscopio visual, sin depender de hardware físico.</p>
+                    </div>
+                    <div class="glass-panel p-4 rounded-xl border border-slate-800 space-y-2">
+                        <span class="text-2xl">🔔</span>
+                        <h4 class="text-xs font-bold text-white">Campanita con Web Audio API</h4>
+                        <p class="text-[11px] text-slate-400 leading-relaxed">Aviso sonoro nativo del navegador ante nueva alerta, con contador dinámico leída/no leída.</p>
+                    </div>
+                    <div class="glass-panel p-4 rounded-xl border border-slate-800 space-y-2">
+                        <span class="text-2xl">🌓</span>
+                        <h4 class="text-xs font-bold text-white">Tema Claro / Oscuro Real</h4>
+                        <p class="text-[11px] text-slate-400 leading-relaxed">Paleta completa de tokens de diseño — la misma que usa esta presentación (botón arriba a la derecha).</p>
+                    </div>
+                    <div class="glass-panel p-4 rounded-xl border border-slate-800 space-y-2">
+                        <span class="text-2xl">📱</span>
+                        <h4 class="text-xs font-bold text-white">Navegación Móvil Nativa</h4>
+                        <p class="text-[11px] text-slate-400 leading-relaxed">Barra inferior tipo app y drawer lateral, cero scroll horizontal desde 360 px.</p>
+                    </div>
+                    <div class="glass-panel p-4 rounded-xl border border-slate-800 space-y-2">
+                        <span class="text-2xl">🔌</span>
+                        <h4 class="text-xs font-bold text-white">Cliente de Prueba de API Externo</h4>
+                        <p class="text-[11px] text-slate-400 leading-relaxed"><code class="text-slate-200">public/api-demo.html</code> consume la API en vivo sin backend propio ni credenciales.</p>
+                    </div>
+                    <div class="glass-panel p-4 rounded-xl border border-slate-800 space-y-2">
+                        <span class="text-2xl">🗺️</span>
+                        <h4 class="text-xs font-bold text-white">Identidad Maya-Solar Propia</h4>
+                        <p class="text-[11px] text-slate-400 leading-relaxed">Nombre, glifo y paleta ámbar como síntesis conceptual del producto — no solo del código.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-xs text-slate-500 flex justify-between items-center pt-4 border-t border-slate-800/60">
+                <span>Orador: Andy</span>
+                <span>Creatividad & Valor Añadido</span>
+            </div>
+        </section>
+
+        <!-- SLIDE 10: Seguridad OWASP 2025 -->
+        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Carlos" data-speaker-class="speaker-badge-carlos" data-time="8:00 - 8:45">
+            <div class="flex items-center justify-between border-b border-slate-800/60 pb-4">
+                <span class="text-xs uppercase tracking-widest text-solar-400 font-bold">10 · Seguridad: OWASP Top 10:2025</span>
+                <span class="text-xs text-slate-500 font-mono">8:00 - 8:45</span>
             </div>
 
             <div class="my-auto space-y-6">
@@ -676,10 +806,10 @@
         </section>
 
         <!-- SLIDE 9: Metodología: 5 Agentes de IA en Paralelo -->
-        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Carlos" data-speaker-class="speaker-badge-carlos" data-time="8:30 - 9:15">
+        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Carlos" data-speaker-class="speaker-badge-carlos" data-time="8:45 - 9:45">
             <div class="flex items-center justify-between border-b border-slate-800/60 pb-4">
-                <span class="text-xs uppercase tracking-widest text-solar-400 font-bold">09 · Criterio Uso de IA (20%): Desarrollo Incremental</span>
-                <span class="text-xs text-slate-500 font-mono">8:30 - 9:15</span>
+                <span class="text-xs uppercase tracking-widest text-solar-400 font-bold">11 · Criterio Uso de IA (20%): Desarrollo Incremental</span>
+                <span class="text-xs text-slate-500 font-mono">8:45 - 9:45</span>
             </div>
 
             <div class="my-auto space-y-6">
@@ -732,10 +862,10 @@
         </section>
 
         <!-- SLIDE 10: Roles del Equipo, Conclusión y Preguntas -->
-        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Andy & Carlos" data-speaker-class="speaker-badge-both" data-time="9:15 - 10:00">
+        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Andy & Carlos" data-speaker-class="speaker-badge-both" data-time="9:45 - 10:45">
             <div class="flex items-center justify-between border-b border-slate-800/60 pb-4">
-                <span class="text-xs uppercase tracking-widest text-solar-400 font-bold">10 · Conclusión & Preguntas del Jurado</span>
-                <span class="text-xs text-slate-500 font-mono">9:15 - 10:00</span>
+                <span class="text-xs uppercase tracking-widest text-solar-400 font-bold">12 · Roles del Equipo & Conclusión</span>
+                <span class="text-xs text-slate-500 font-mono">9:45 - 10:45</span>
             </div>
 
             <div class="my-auto space-y-6">
@@ -811,6 +941,49 @@
             </div>
         </section>
 
+        <!-- SLIDE 13: Ronda de Preguntas -->
+        <section class="slide w-full max-w-6xl h-full flex-col justify-between" data-speaker="Andy & Carlos" data-speaker-class="speaker-badge-both" data-time="10:45 - 12:00">
+            <div class="flex items-center justify-between border-b border-slate-800/60 pb-4">
+                <span class="text-xs uppercase tracking-widest text-solar-400 font-bold">13 · Ronda de Preguntas del Jurado</span>
+                <span class="text-xs text-slate-500 font-mono">10:45 - 12:00</span>
+            </div>
+
+            <div class="my-auto space-y-3 overflow-y-auto">
+                <h2 class="text-2xl sm:text-3xl font-black text-white mb-3">¿Preguntas? <span class="text-gradient">Aquí Van Algunas Respuestas Listas</span></h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                    <div class="glass-panel p-3 rounded-xl border border-slate-800">
+                        <p class="text-solar-400 font-bold mb-1">¿Por qué se llama K'in Solar?</p>
+                        <p class="text-slate-400">K'in es el signo maya del Sol. Guatemala tiene sol y raíces mayas — el nombre viene de ahí, no de un generador de nombres en inglés.</p>
+                    </div>
+                    <div class="glass-panel p-3 rounded-xl border border-slate-800">
+                        <p class="text-solar-400 font-bold mb-1">¿Cuánto lo hizo la IA?</p>
+                        <p class="text-slate-400">La mayor parte del código. Arquitectura, modelo de datos y controles de seguridad son nuestros — cada corrección está en la bitácora.</p>
+                    </div>
+                    <div class="glass-panel p-3 rounded-xl border border-slate-800">
+                        <p class="text-solar-400 font-bold mb-1">¿Cómo coordinaron 5 agentes sin conflictos?</p>
+                        <p class="text-slate-400">Propiedad exclusiva de carpetas por agente y contratos de interfaz (esquema, rutas, diseño) congelados en la primera hora.</p>
+                    </div>
+                    <div class="glass-panel p-3 rounded-xl border border-slate-800">
+                        <p class="text-solar-400 font-bold mb-1">¿Está seguro el sistema?</p>
+                        <p class="text-slate-400">Checklist OWASP Top 10:2025 firmado en cada PR. Con gusto repetimos la demo del 403 en este momento.</p>
+                    </div>
+                    <div class="glass-panel p-3 rounded-xl border border-slate-800">
+                        <p class="text-solar-400 font-bold mb-1">¿Qué es lo más original del proyecto?</p>
+                        <p class="text-slate-400">El nombre y la identidad maya-solar, y el servidor MCP que convierte a la IA en usuaria del sistema, no solo en su constructora.</p>
+                    </div>
+                    <div class="glass-panel p-3 rounded-xl border border-slate-800">
+                        <p class="text-solar-400 font-bold mb-1">¿Qué le falta al sistema?</p>
+                        <p class="text-slate-400">Autenticación de doble factor y sensores físicos reales en sitio. El Laboratorio SCADA emula la telemetría mientras tanto.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-xs text-slate-500 flex justify-between items-center pt-4 border-t border-slate-800/60">
+                <span>Orador: Andy & Carlos</span>
+                <span>Banco completo en docs/08-GUION-PRESENTACION.md</span>
+            </div>
+        </section>
+
     </main>
 
     <!-- BOTTOM BAR: KEYBOARD HINTS & NAV BUTTONS -->
@@ -848,7 +1021,7 @@
         const fullscreenBtn = document.getElementById('fullscreenBtn');
 
         // Timer Logic
-        let timerSeconds = 600; // 10 minutes
+        let timerSeconds = 720; // 12 minutes
         let timerInterval = null;
         let isRunning = false;
         const timerDisplay = document.getElementById('timerDisplay');
@@ -943,7 +1116,7 @@
         function resetTimer() {
             clearInterval(timerInterval);
             isRunning = false;
-            timerSeconds = 600;
+            timerSeconds = 720;
             timerDisplay.textContent = formatTime(timerSeconds);
             timerDisplay.className = 'font-mono font-bold text-sm text-emerald-400 tracking-wider';
             timerPlayIcon.classList.remove('hidden');
@@ -960,10 +1133,34 @@
             }
         }
 
+        // Theme toggle (claro/oscuro) — misma paleta de tokens que el sistema real
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        const themeIconMoon = document.getElementById('themeIconMoon');
+        const themeIconSun = document.getElementById('themeIconSun');
+
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            themeIconMoon.classList.toggle('hidden', theme === 'light');
+            themeIconSun.classList.toggle('hidden', theme !== 'light');
+            try { localStorage.setItem('kin-presentacion-theme', theme); } catch (e) {}
+        }
+
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+            applyTheme(current === 'light' ? 'dark' : 'light');
+        }
+
+        (function initTheme() {
+            let saved = 'dark';
+            try { saved = localStorage.getItem('kin-presentacion-theme') || 'dark'; } catch (e) {}
+            applyTheme(saved);
+        })();
+
         // Event listeners
         nextBtn.addEventListener('click', nextSlide);
         prevBtn.addEventListener('click', prevSlide);
         fullscreenBtn.addEventListener('click', toggleFullscreen);
+        themeToggleBtn.addEventListener('click', toggleTheme);
         timerToggleBtn.addEventListener('click', toggleTimer);
         timerResetBtn.addEventListener('click', resetTimer);
 

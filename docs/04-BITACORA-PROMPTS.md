@@ -1358,6 +1358,26 @@ API y el diagnóstico de la rúbrica.
 
 ---
 
+### [14:30] Claude Code (Andy) — Presentación ampliada a 13 diapositivas / 12 minutos, tema claro/oscuro real y guion mapeado a la rúbrica
+
+**Objetivo:** rediseñar la presentación oficial (`public/presentacion.html` + `docs/08-GUION-PRESENTACION.md` + `docs/11-DIAPOSITIVAS-PRESENTACION.md`) para que cubra explícitamente los seis criterios de la rúbrica oficial (`Rubrica de Evaluación.pdf`, extraída y verificada en esta sesión), no solo el criterio de Presentación: el origen y significado cultural del nombre "K'in Solar" (Originalidad, 20%), un recorrido explícito por la documentación del repositorio (Documentación, 10%), un bloque consolidado de funciones construidas más allá del alcance original (Originalidad + Uso de IA), y un tema claro/oscuro funcional construido con los tokens de color reales del sistema (`--kin-bg`, `--kin-ink`, `--kin-accent`, etc. de `resources/css/app.css`), no una paleta inventada.
+
+1. **Verificación directa contra la rúbrica oficial:** se extrajo el texto de `Rubrica de Evaluación.pdf` (fuera del repositorio, en Descargas) para confirmar la redacción exacta de cada criterio antes de mapear las diapositivas contra ella — no se confió en la paráfrasis ya existente en `docs/05-CHECKLIST-RUBRICA.md`.
+2. **3 diapositivas nuevas insertadas** en `public/presentacion.html` (de 10 a 13 diapositivas totales, de 10 a 12 minutos): "¿Por qué K'in?" (origen maya del nombre, con el logo real como pieza central), "Elementos Plus" (SCADA, campanita, tema claro/oscuro, cliente API, identidad propia) y "Ronda de Preguntas" (banco de respuestas visible en pantalla). La diapositiva de Arquitectura se amplió para incluir explícitamente la documentación del proyecto.
+3. **Tema claro/oscuro real y funcional:** botón de alternancia en la barra superior que aplica `data-theme` sobre `<html>` y una hoja de anulación CSS dirigida a las clases de Tailwind más repetidas del documento (`.text-white`, `.bg-slate-900`, `.border-slate-800`, `.glass-panel`, etc.), usando los valores hexadecimales reales del tema claro y oscuro del sistema — no aproximados. Persistido en `localStorage`. Verificado visualmente slide por slide contra un servidor Laravel local real (no solo `file://`, para que la ruta absoluta del logo se resolviera igual que en producción).
+4. Actualización de todos los `data-time`, contadores de diapositiva y el cronómetro por defecto (10:00 → 12:00) para que coincidan con el nuevo guion.
+5. Reescritura completa de `docs/08-GUION-PRESENTACION.md` (palabra por palabra, con nueva tabla de mapeo criterio-de-rúbrica → bloque) y `docs/11-DIAPOSITIVAS-PRESENTACION.md`, incluyendo una tabla explícita de qué archivos `.md` conviene tener abiertos durante la presentación y cuándo mostrarlos.
+6. Regeneración de `docs/export/presentacion-kin-solar.pdf` contra un servidor local real para que las imágenes con ruta absoluta se incluyeran correctamente en el PDF.
+
+**Prompt clave:**
+> "Quiero una buena presentación [...] quiero que detallar todo cómo está hecho el sistema [...] las mejoras que le dimos extra, los plus, la creatividad, el detalle de qué significa KIN solar [...] evalúala [contra la rúbrica] [...] Utiliza los colores [...] de tema blanco y de tema oscuro del sistema para hacer la presentación [...] Y también, luego de eso, ya puedes actualizar la presentación que está en la web."
+
+**Resultado:** presentación de 13 diapositivas / 12 minutos con tema claro/oscuro funcional, guion completo mapeado criterio por criterio contra la rúbrica oficial, y una recomendación explícita de qué documentación tener a la mano. Pendiente de despliegue a la URL pública de producción — esta sesión no tiene acceso a la instancia AWS EC2, por lo que el cambio queda listo en el repositorio para que el equipo lo despliegue con su proceso habitual.
+
+**Intervención humana:** Andy pidió explícitamente que la presentación demostrara el sistema de diseño dual (claro/oscuro) del propio producto en vez de usar solo la paleta oscura ya existente, y que se verificara contra la rúbrica oficial en PDF en vez de solo contra el checklist interno del equipo.
+
+---
+
 ## 4. Evidencia visual
 
 Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:

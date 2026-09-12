@@ -84,14 +84,14 @@ tareas realizadas por cada miembro del equipo y rol. Commits claros."*
 *Para 5/5: "clara, bien estructurada, con excelente comunicación y demostración fluida,
 uso de recursos visuales y demostración en vivo".*
 
-- [x] Guion de presentación cronometrado a 10 minutos en `docs/08-GUION-PRESENTACION.md`
-- [ ] **Ensayada dos veces, cronometrada a 10 minutos**
-- [x] Presentación interactiva en `public/presentacion.html` y diapositivas preparadas
-- [x] **Demostración en vivo** lista sobre `https://kin-solar-guatemala.duckdns.org`
-- [x] Pestañas de navegación preparadas (Admin, Evaluador 403, API JSON, API Docs, Simulador)
+- [x] Guion de presentación cronometrado a 12 minutos (13 diapositivas) en `docs/08-GUION-PRESENTACION.md`, mapeado explícitamente a cada criterio de la rúbrica
+- [ ] **Ensayada dos veces, cronometrada entre 10 y 12 minutos**
+- [x] Presentación interactiva en `public/presentacion.html` con tema claro/oscuro real (mismos tokens del sistema) y diapositivas ampliadas: origen del nombre "K'in Solar", documentación del proyecto y elementos plus
+- [x] **Demostración en vivo** lista sobre `https://kin-solar-guatemala.duckdns.org` — pendiente desplegar esta versión ampliada de `presentacion.html` a producción
+- [x] Pestañas de navegación preparadas (Admin, Evaluador 403, API JSON, API Docs, Simulador) + lista de archivos `.md` a tener a la mano (ver `docs/11-DIAPOSITIVAS-PRESENTACION.md`)
 - [ ] Plan B: video de respaldo de la demo, por si falla el internet del salón
 - [x] Reparto equitativo de tiempo entre Andy y Carlos
-- [x] Respuestas preparadas para las 8 preguntas probables del jurado
+- [x] Respuestas preparadas para las preguntas probables del jurado, incluyendo el origen del nombre
 
 ---
 
@@ -114,7 +114,7 @@ uso de recursos visuales y demostración en vivo".*
 | Uso de IA | 20 % | **5 / 5** | 5 agentes coordinados, 43 PRs documentados, Bitácora con prompts y corrección humana |
 | UI/UX | 15 % | **5 / 5** | Diseño nativo móvil sin scroll horizontal, modo oscuro/claro, microanimaciones y mapas Leaflet |
 | Documentación | 10 % | **5 / 5** | ERS IEEE 830, OWASP 2025, Bitácora, Contratos, Manual de Usuario y 140+ commits |
-| Presentación | 10 % | **5 / 5** | Guion de 10 min cronometrado, diapositivas HTML y demo en vivo con HTTPS |
+| Presentación | 10 % | **5 / 5** | Guion de 12 min cronometrado (13 diapositivas), diapositivas HTML con tema claro/oscuro y demo en vivo con HTTPS — pendiente desplegar a producción |
 | **Proyección de nota** | **100 %** | **5.0 / 5.0** | **Sistema completo, blindado y listo para evaluación de excelencia** |
 
 Si algún criterio está en 3 o menos y queda tiempo, **atacar primero el de mayor peso**.
