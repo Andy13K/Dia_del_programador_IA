@@ -12,6 +12,7 @@ use App\Policies\GenerationAlertPolicy;
 use App\Policies\SolarFarmPolicy;
 use App\Policies\SolarPanelPolicy;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -29,6 +30,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // HTTPS obligatorio en producción (OWASP A02). No afecta el entorno local.
+        if ($this->app->isProduction()) {
+            URL::forceScheme('https');
+        }
+
         Gate::policy(SolarFarm::class, SolarFarmPolicy::class);
         Gate::policy(SolarPanel::class, SolarPanelPolicy::class);
         Gate::policy(EnergyGeneration::class, EnergyGenerationPolicy::class);
