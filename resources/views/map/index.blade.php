@@ -1,5 +1,17 @@
 @extends('layouts.app', ['title' => 'Mapa Interactivo de Guatemala'])
 
+@push('styles')
+<style>
+    #guatemalaMap .leaflet-overlay-pane svg,
+    #guatemalaMap .leaflet-container svg,
+    #guatemalaMap svg {
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+    }
+</style>
+@endpush
+
 @section('content')
 <div class="space-y-6">
 
@@ -23,16 +35,33 @@
             <div class="relative">
                 <select id="departmentFilter" onchange="filterFarms()" class="pl-3 pr-8 py-2 text-xs font-semibold rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500">
                     <option value="all">Todos los Departamentos (22)</option>
-                    @if(isset($departments))
+                    @if(isset($departments) && $departments->count() > 0)
                         @foreach($departments as $dept)
-                            <option value="{{ $dept->id }}" data-lat="{{ $dept->latitude }}" data-lng="{{ $dept->longitude }}">{{ $dept->name }}</option>
+                            <option value="{{ $dept->id }}" data-name="{{ $dept->name }}" data-lat="{{ $dept->latitude }}" data-lng="{{ $dept->longitude }}">{{ $dept->name }}</option>
                         @endforeach
                     @else
-                        <option value="1">Guatemala</option>
-                        <option value="2">Quetzaltenango</option>
-                        <option value="3">Escuintla</option>
-                        <option value="4">Izabal</option>
-                        <option value="5">Petén</option>
+                        <option value="1" data-name="Guatemala" data-lat="14.6349" data-lng="-90.5069">Guatemala</option>
+                        <option value="2" data-name="Quetzaltenango" data-lat="14.8347" data-lng="-91.5181">Quetzaltenango</option>
+                        <option value="3" data-name="Escuintla" data-lat="14.3009" data-lng="-90.7850">Escuintla</option>
+                        <option value="4" data-name="Izabal" data-lat="15.7278" data-lng="-88.5944">Izabal</option>
+                        <option value="5" data-name="Petén" data-lat="16.9200" data-lng="-89.8900">Petén</option>
+                        <option value="6" data-name="Alta Verapaz" data-lat="15.4700" data-lng="-90.3700">Alta Verapaz</option>
+                        <option value="7" data-name="Baja Verapaz" data-lat="15.1000" data-lng="-90.3167">Baja Verapaz</option>
+                        <option value="8" data-name="Chimaltenango" data-lat="14.6611" data-lng="-90.8194">Chimaltenango</option>
+                        <option value="9" data-name="Chiquimula" data-lat="14.7978" data-lng="-89.5439">Chiquimula</option>
+                        <option value="10" data-name="El Progreso" data-lat="14.8653" data-lng="-90.0764">El Progreso</option>
+                        <option value="11" data-name="Huehuetenango" data-lat="15.3197" data-lng="-91.4708">Huehuetenango</option>
+                        <option value="12" data-name="Jalapa" data-lat="14.6347" data-lng="-89.9889">Jalapa</option>
+                        <option value="13" data-name="Jutiapa" data-lat="14.2817" data-lng="-89.8958">Jutiapa</option>
+                        <option value="14" data-name="Retalhuleu" data-lat="14.5361" data-lng="-91.6778">Retalhuleu</option>
+                        <option value="15" data-name="Sacatepéquez" data-lat="14.5586" data-lng="-90.7339">Sacatepéquez</option>
+                        <option value="16" data-name="San Marcos" data-lat="14.9639" data-lng="-91.7944">San Marcos</option>
+                        <option value="17" data-name="Santa Rosa" data-lat="14.2783" data-lng="-90.2989">Santa Rosa</option>
+                        <option value="18" data-name="Sololá" data-lat="14.7722" data-lng="-91.1833">Sololá</option>
+                        <option value="19" data-name="Suchitepéquez" data-lat="14.5342" data-lng="-91.5033">Suchitepéquez</option>
+                        <option value="20" data-name="Totonicapán" data-lat="14.9117" data-lng="-91.3611">Totonicapán</option>
+                        <option value="21" data-name="Zacapa" data-lat="14.9722" data-lng="-89.5306">Zacapa</option>
+                        <option value="22" data-name="Quiché" data-lat="15.0306" data-lng="-91.1494">Quiché</option>
                     @endif
                 </select>
             </div>
@@ -133,39 +162,20 @@
     };
     L.control.layers(baseMaps, null, { position: 'topright' }).addTo(map);
 
-    // Capa de Fronteras y Sombreado de la República de Guatemala (GeoJSON)
-    let gtBoundaryLayer = null;
+    // Capa de Contorno Departamental Dinámico (GeoJSON)
+    let departmentsGeoData = null;
+    let selectedDepartmentLayer = null;
 
-    fetch('/data/guatemala.geojson')
+    // Cargar los polígonos de los 22 departamentos de Guatemala
+    fetch('/data/guatemala-departments.geojson')
         .then(response => {
-            if (!response.ok) throw new Error('Error al leer GeoJSON');
+            if (!response.ok) throw new Error('Error al cargar GeoJSON de departamentos');
             return response.json();
         })
-        .then(geoData => {
-            gtBoundaryLayer = L.geoJSON(geoData, {
-                style: {
-                    color: '#f59e0b',        // Borde dorado ámbar solar
-                    weight: 3,               // Grosor definido
-                    opacity: 0.95,           // Opacidad de contorno
-                    fillColor: '#38bdf8',    // Sombreado celeste solar suave
-                    fillOpacity: 0.08,       // Translúcido para destacar el territorio nacional
-                    dashArray: '6, 4'        // Punteado elegante tipo monitoreo
-                },
-                onEachFeature: function(feature, layer) {
-                    layer.bindTooltip('<strong>República de Guatemala</strong><br><span class="text-xs">Red Nacional de Generación Solar</span>', {
-                        sticky: true,
-                        className: 'shadow-lg rounded-lg border border-amber-400/50 bg-slate-900/90 text-amber-300 font-sans text-xs px-2.5 py-1'
-                    });
-                }
-            }).addTo(map);
-
-            // Ajustar vista automáticamente a los límites exactos de Guatemala
-            map.fitBounds(gtBoundaryLayer.getBounds(), { padding: [20, 20] });
+        .then(data => {
+            departmentsGeoData = data;
         })
-        .catch(err => {
-            console.warn('GeoJSON de Guatemala no disponible localmente, usando centro por defecto:', err);
-            map.setView(GT_CENTER, GT_ZOOM);
-        });
+        .catch(err => console.warn('GeoJSON de departamentos no disponible:', err));
 
     // Datos iniciales de Granjas (se inyectan de la BD o datos representativos de los 22 departamentos)
     const rawFarmsData = @json($farmsJson ?? null);
@@ -270,35 +280,86 @@
     function filterFarms() {
         const select = document.getElementById('departmentFilter');
         const selectedDept = select.value;
+
+        // 1. Limpiar contorno previo si existía
+        if (selectedDepartmentLayer) {
+            map.removeLayer(selectedDepartmentLayer);
+            selectedDepartmentLayer = null;
+        }
+
         if (selectedDept === 'all') {
             renderMarkers(farms);
-            if (gtBoundaryLayer) {
-                map.fitBounds(gtBoundaryLayer.getBounds(), { padding: [20, 20] });
-            } else {
-                map.setView(GT_CENTER, GT_ZOOM);
+            map.setView(GT_CENTER, GT_ZOOM);
+            return;
+        }
+
+        const opt = select.options[select.selectedIndex];
+        const deptName = opt ? opt.getAttribute('data-name') : null;
+        const lat = opt ? parseFloat(opt.getAttribute('data-lat')) : NaN;
+        const lng = opt ? parseFloat(opt.getAttribute('data-lng')) : NaN;
+
+        // 2. Filtrar marcadores correspondientes
+        const filtered = farms.filter(f => String(f.dept_id) === String(selectedDept));
+        renderMarkers(filtered);
+
+        // 3. Dibujar el contorno del departamento seleccionado
+        if (departmentsGeoData && deptName) {
+            const normalize = str => str ? str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim() : '';
+            const targetNorm = normalize(deptName);
+
+            const deptFeature = departmentsGeoData.features.find(f => {
+                const fName = normalize(f.properties.name || f.properties.shapeName || '');
+                return fName === targetNorm;
+            });
+
+            if (deptFeature) {
+                selectedDepartmentLayer = L.geoJSON(deptFeature, {
+                    style: {
+                        color: '#f59e0b',        // Borde dorado ámbar solar brillante
+                        weight: 3.5,             // Grosor nítido
+                        opacity: 0.95,
+                        fillColor: '#fbbf24',    // Relleno ámbar solar suave
+                        fillOpacity: 0.22,       // Sombreado elegante del territorio
+                        dashArray: ''            // Línea continua sin cuadros
+                    }
+                }).addTo(map);
+
+                selectedDepartmentLayer.bindTooltip(`
+                    <div class="font-sans py-0.5">
+                        <div class="text-[10px] uppercase font-bold text-amber-400">Departamento</div>
+                        <div class="text-sm font-extrabold text-white">${deptFeature.properties.name}</div>
+                        <div class="text-[10px] text-slate-300 mt-0.5">${filtered.length} granjas registradas</div>
+                    </div>
+                `, {
+                    sticky: true,
+                    className: 'bg-slate-900/95 text-white text-xs px-3 py-1.5 rounded-xl border border-amber-500/50 shadow-2xl backdrop-blur-sm'
+                });
+
+                // Encuadrar la cámara suavemente al polígono del departamento
+                map.fitBounds(selectedDepartmentLayer.getBounds(), {
+                    padding: [45, 45],
+                    maxZoom: 10.5
+                });
+                return;
             }
-        } else {
-            const filtered = farms.filter(f => String(f.dept_id) === String(selectedDept));
-            renderMarkers(filtered);
-            const opt = select.options[select.selectedIndex];
-            const lat = parseFloat(opt.getAttribute('data-lat'));
-            const lng = parseFloat(opt.getAttribute('data-lng'));
-            if (!isNaN(lat) && !isNaN(lng)) {
-                map.flyTo([lat, lng], 9.5, { duration: 1.2 });
-            } else if (filtered.length > 0) {
-                map.flyTo([filtered[0].lat, filtered[0].lng], 9.5, { duration: 1.2 });
-            }
+        }
+
+        // Fallback si no ha cargado el GeoJSON
+        if (!isNaN(lat) && !isNaN(lng)) {
+            map.flyTo([lat, lng], 9.5, { duration: 1.2 });
+        } else if (filtered.length > 0) {
+            map.flyTo([filtered[0].lat, filtered[0].lng], 9.5, { duration: 1.2 });
         }
     }
 
     function resetMap() {
         document.getElementById('departmentFilter').value = 'all';
-        renderMarkers(farms);
-        if (gtBoundaryLayer) {
-            map.fitBounds(gtBoundaryLayer.getBounds(), { padding: [20, 20] });
-        } else {
-            map.setView(GT_CENTER, GT_ZOOM);
+        if (selectedDepartmentLayer) {
+            map.removeLayer(selectedDepartmentLayer);
+            selectedDepartmentLayer = null;
         }
+        renderMarkers(farms);
+        map.setView(GT_CENTER, GT_ZOOM);
     }
 
     // Render inicial
