@@ -79,6 +79,7 @@ tareas realizadas por cada miembro del equipo y rol. Commits claros."*
 - [x] ERS v2.0 conforme a IEEE 830 / ISO/IEC/IEEE 29148 en `docs/03-PLANTILLA-ERS.md`, con sección de Atributos de Calidad ISO/IEC 25010 (§5) y exportado también a PDF (`docs/export/ERS-Kin-Solar-Guatemala.pdf`)
 - [x] Documento de seguridad OWASP Top 10:2025 en `docs/02-SEGURIDAD-OWASP-2025.md`
 - [x] Bitácora de prompts completa en `docs/04-BITACORA-PROMPTS.md`
+- [x] Documento de innovación, creatividad y valor agregado en `docs/13-INNOVACION-Y-VALOR-AGREGADO.md` (SCADA IoT, Web Audio API, MCP Server, fórmulas CNEE/SMA-SF y blindaje OWASP)
 - [x] Toda la documentación enlazada desde `README.md`
 
 ## 6. Presentación del proyecto — 10 %
