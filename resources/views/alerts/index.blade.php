@@ -23,7 +23,7 @@
         <div class="flex items-center gap-2">
             <span class="px-3 py-1.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 font-bold text-xs border border-rose-200 dark:border-rose-800/60 flex items-center gap-2">
                 <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
-                <span>2 Alertas Activas</span>
+                <span>{{ $stats['active'] ?? 2 }} Alertas Activas</span>
             </span>
         </div>
     </div>
@@ -46,81 +46,129 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
-                <!-- Alerta 1 -->
-                <tr class="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition">
-                    <td class="px-6 py-4 font-mono text-slate-400">#ALT-01</td>
-                    <td class="px-6 py-4 font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                        <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-500"></i>
-                        <span>Granja Solar Guayacán</span>
-                    </td>
-                    <td class="px-6 py-4 text-slate-600 dark:text-slate-300">Petén</td>
-                    <td class="px-6 py-4 font-mono font-medium text-slate-700 dark:text-slate-300">2026-08</td>
-                    <td class="px-6 py-4 text-right font-mono text-slate-500">145,000.00</td>
-                    <td class="px-6 py-4 text-right font-mono font-bold text-rose-600 dark:text-rose-400">110,000.00</td>
-                    <td class="px-6 py-4 text-center">
-                        <span class="px-2.5 py-1 rounded-full bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 font-black text-xs border border-rose-200 dark:border-rose-800">
-                            -24.14%
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 text-center">
-                        <x-badge variant="danger">Activa</x-badge>
-                    </td>
-                    <td class="px-6 py-4 text-right">
-                        <button type="button" onclick="openResolveModal('1', 'Granja Solar Guayacán', '-24.14%')" class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs transition">
-                            Atender
-                        </button>
-                    </td>
-                </tr>
+                @if(isset($alerts) && count($alerts) > 0)
+                    @foreach($alerts as $alert)
+                        <tr class="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition {{ $alert->status === 'resolved' ? 'opacity-75' : '' }}">
+                            <td class="px-6 py-4 font-mono text-slate-400">#ALT-{{ str_pad((string)$alert->id, 2, '0', STR_PAD_LEFT) }}</td>
+                            <td class="px-6 py-4 font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                @if($alert->status === 'active')
+                                    <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-500"></i>
+                                @else
+                                    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-500"></i>
+                                @endif
+                                <a href="{{ route('alerts.show', $alert) }}" class="hover:underline">
+                                    {{ $alert->solarFarm->name ?? 'Granja #'.$alert->solar_farm_id }}
+                                </a>
+                            </td>
+                            <td class="px-6 py-4 text-slate-600 dark:text-slate-300">{{ $alert->solarFarm->department->name ?? 'Guatemala' }}</td>
+                            <td class="px-6 py-4 font-mono font-medium text-slate-700 dark:text-slate-300">{{ $alert->period }}</td>
+                            <td class="px-6 py-4 text-right font-mono text-slate-500">{{ number_format((float)$alert->estimated_kwh, 2) }}</td>
+                            <td class="px-6 py-4 text-right font-mono font-bold {{ $alert->status === 'active' ? 'text-rose-600 dark:text-rose-400' : 'text-slate-600 dark:text-slate-300' }}">{{ number_format((float)$alert->real_kwh, 2) }}</td>
+                            <td class="px-6 py-4 text-center">
+                                <span class="px-2.5 py-1 rounded-full {{ $alert->status === 'active' ? 'bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 font-black' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-bold' }} text-xs border {{ $alert->status === 'active' ? 'border-rose-200 dark:border-rose-800' : 'border-slate-200 dark:border-slate-700' }}">
+                                    -{{ $alert->deviation_percentage }}%
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                @if($alert->status === 'active')
+                                    <x-badge variant="danger">Activa</x-badge>
+                                @else
+                                    <x-badge variant="success">Resuelta</x-badge>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <div class="inline-flex items-center gap-1.5">
+                                    <a href="{{ route('alerts.show', $alert) }}" class="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white transition" title="Ver detalle">
+                                        <i data-lucide="eye" class="w-4 h-4"></i>
+                                    </a>
+                                    @if($alert->status === 'active')
+                                        @can('manage-alerts')
+                                            <button type="button" onclick="openResolveModal('{{ $alert->id }}', '{{ addslashes($alert->solarFarm->name ?? '') }}', '-{{ $alert->deviation_percentage }}%')" class="px-2.5 py-1 rounded-lg bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs transition">
+                                                Atender
+                                            </button>
+                                        @endcan
+                                    @endif
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                @else
+                    <!-- Alerta 1 -->
+                    <tr class="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition">
+                        <td class="px-6 py-4 font-mono text-slate-400">#ALT-01</td>
+                        <td class="px-6 py-4 font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                            <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-500"></i>
+                            <span>Granja Solar Guayacán</span>
+                        </td>
+                        <td class="px-6 py-4 text-slate-600 dark:text-slate-300">Petén</td>
+                        <td class="px-6 py-4 font-mono font-medium text-slate-700 dark:text-slate-300">2026-08</td>
+                        <td class="px-6 py-4 text-right font-mono text-slate-500">145,000.00</td>
+                        <td class="px-6 py-4 text-right font-mono font-bold text-rose-600 dark:text-rose-400">110,000.00</td>
+                        <td class="px-6 py-4 text-center">
+                            <span class="px-2.5 py-1 rounded-full bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 font-black text-xs border border-rose-200 dark:border-rose-800">
+                                -24.14%
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                            <x-badge variant="danger">Activa</x-badge>
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <button type="button" onclick="openResolveModal('1', 'Granja Solar Guayacán', '-24.14%')" class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs transition">
+                                Atender
+                            </button>
+                        </td>
+                    </tr>
 
-                <!-- Alerta 2 -->
-                <tr class="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition">
-                    <td class="px-6 py-4 font-mono text-slate-400">#ALT-02</td>
-                    <td class="px-6 py-4 font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                        <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-500"></i>
-                        <span>Central Solar Chiquimula Oriente</span>
-                    </td>
-                    <td class="px-6 py-4 text-slate-600 dark:text-slate-300">Chiquimula</td>
-                    <td class="px-6 py-4 font-mono font-medium text-slate-700 dark:text-slate-300">2026-08</td>
-                    <td class="px-6 py-4 text-right font-mono text-slate-500">110,000.00</td>
-                    <td class="px-6 py-4 text-right font-mono font-bold text-rose-600 dark:text-rose-400">85,000.00</td>
-                    <td class="px-6 py-4 text-center">
-                        <span class="px-2.5 py-1 rounded-full bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 font-black text-xs border border-rose-200 dark:border-rose-800">
-                            -22.73%
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 text-center">
-                        <x-badge variant="danger">Activa</x-badge>
-                    </td>
-                    <td class="px-6 py-4 text-right">
-                        <button type="button" onclick="openResolveModal('2', 'Central Solar Chiquimula Oriente', '-22.73%')" class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs transition">
-                            Atender
-                        </button>
-                    </td>
-                </tr>
+                    <!-- Alerta 2 -->
+                    <tr class="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition">
+                        <td class="px-6 py-4 font-mono text-slate-400">#ALT-02</td>
+                        <td class="px-6 py-4 font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                            <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-500"></i>
+                            <span>Central Solar Chiquimula Oriente</span>
+                        </td>
+                        <td class="px-6 py-4 text-slate-600 dark:text-slate-300">Chiquimula</td>
+                        <td class="px-6 py-4 font-mono font-medium text-slate-700 dark:text-slate-300">2026-08</td>
+                        <td class="px-6 py-4 text-right font-mono text-slate-500">110,000.00</td>
+                        <td class="px-6 py-4 text-right font-mono font-bold text-rose-600 dark:text-rose-400">85,000.00</td>
+                        <td class="px-6 py-4 text-center">
+                            <span class="px-2.5 py-1 rounded-full bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 font-black text-xs border border-rose-200 dark:border-rose-800">
+                                -22.73%
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                            <x-badge variant="danger">Activa</x-badge>
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <button type="button" onclick="openResolveModal('2', 'Central Solar Chiquimula Oriente', '-22.73%')" class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs transition">
+                                Atender
+                            </button>
+                        </td>
+                    </tr>
 
-                <!-- Alerta 3 Resuelta -->
-                <tr class="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition opacity-75">
-                    <td class="px-6 py-4 font-mono text-slate-400">#ALT-00</td>
-                    <td class="px-6 py-4 font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                        <i data-lucide="check-circle" class="w-4 h-4 text-emerald-500"></i>
-                        <span>Parque Solar Escuintla Verde</span>
-                    </td>
-                    <td class="px-6 py-4 text-slate-600 dark:text-slate-300">Escuintla</td>
-                    <td class="px-6 py-4 font-mono font-medium text-slate-700 dark:text-slate-300">2026-05</td>
-                    <td class="px-6 py-4 text-right font-mono text-slate-500">240,000.00</td>
-                    <td class="px-6 py-4 text-right font-mono text-slate-600 dark:text-slate-300">188,000.00</td>
-                    <td class="px-6 py-4 text-center">
-                        <span class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-bold text-xs">
-                            -21.67%
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 text-center">
-                        <x-badge variant="success">Resuelta</x-badge>
-                    </td>
-                    <td class="px-6 py-4 text-right text-slate-400 text-[11px]">
-                        Limpieza de inversores
-                    </td>
-                </tr>
+                    <!-- Alerta 3 Resuelta -->
+                    <tr class="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition opacity-75">
+                        <td class="px-6 py-4 font-mono text-slate-400">#ALT-00</td>
+                        <td class="px-6 py-4 font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-emerald-500"></i>
+                            <span>Parque Solar Escuintla Verde</span>
+                        </td>
+                        <td class="px-6 py-4 text-slate-600 dark:text-slate-300">Escuintla</td>
+                        <td class="px-6 py-4 font-mono font-medium text-slate-700 dark:text-slate-300">2026-05</td>
+                        <td class="px-6 py-4 text-right font-mono text-slate-500">240,000.00</td>
+                        <td class="px-6 py-4 text-right font-mono text-slate-600 dark:text-slate-300">188,000.00</td>
+                        <td class="px-6 py-4 text-center">
+                            <span class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-bold text-xs">
+                                -21.67%
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                            <x-badge variant="success">Resuelta</x-badge>
+                        </td>
+                        <td class="px-6 py-4 text-right text-slate-400 text-[11px]">
+                            Limpieza de inversores
+                        </td>
+                    </tr>
+                @endif
             </tbody>
         </x-table>
     </div>
