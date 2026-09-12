@@ -692,6 +692,31 @@ navegador antes de commitear).
 
 ---
 
+### Codex (Carlos) — Rediseño K'in Solar Guatemala y verificación adaptable
+
+**Objetivo:** renovar la interfaz de Blade con identidad K'in Solar Guatemala, navegación móvil, dashboard bento y coherencia visual, conservando los contratos del backend. Rama `feat/carlos-codex/kin-solar-ui`, worktree aislado desde `origin/master` (`e49c7d5`).
+
+**Prompts clave del humano (extractos literales):**
+> Actúa como un Ingeniero de Software Principal especializado en Arquitectura Frontend, Motion Design y UI/UX de clase mundial.
+> Tu trabajo consiste en elevar la estética, consistencia visual, jerarquía tipográfica, animaciones y ergonomía de interacción sin alterar rutas, controladores ni contratos de base de datos.
+> Esque creo que no habia echo pull, pero hazlo por mi si es necesario para ir al dia con el repositorio
+> nos quedamos en lo ultimo amigo habia alcanzado mi limite de 5 horas, prosigamos
+
+**Resultado:**
+- Marca y navegación compartidas, temas claro/oscuro, drawer con gestión de foco y barra inferior. Transiciones reducidas cuando el usuario prefiere menos movimiento.
+- Dashboard con generación y CO₂, Chart.js y ranking a partir de datos entregados por el backend. Se retiraron cifras de ejemplo de dashboard, mapa, alertas, reportes y proyecciones.
+- Tablas transformadas en tarjetas hasta 1023 px, búsqueda de granjas reactiva, mapa incrustado en la ficha y enlaces conservados mediante nombres de ruta.
+- Mapa nacional encuadrado con filtros, pines por capacidad/estado, contadores y leyendas dentro del viewport. Textos de popups escapados antes de producir HTML.
+- Login renovado, alertas con enlace a atención técnica, formulario con valor anterior y etiquetas accesibles, visualización explícita de los factores estacionales.
+- Assets Vite compilados sin paquetes nuevos. Ningún cambio en controladores, servicios, rutas, modelos ni esquema.
+
+**Correcciones del humano y decisiones verificadas:** el humano solicitó actualizar el repositorio antes de continuar y explicó las interrupciones por límite de uso. Se ejecutó fetch y se comparó contra master actualizado sin cambiar la rama compartida de otros agentes. Aunque el prompt afirmaba 24 pruebas y CRUD de usuarios existente, el repositorio contiene 19 pruebas y no contiene `resources/views/users/` ni rutas CRUD de usuarios; se documentó la diferencia, sin inventar contratos. La ruta GET de proyecciones todavía no entrega `$forecasts`: el formulario guarda correctamente y muestra éxito, pero el historial requiere integración del agente propietario del backend.
+
+**Verificación:** `php artisan test`: 19/19, 121 aserciones; `php artisan view:cache` y `npm run build` correctos. Navegador local con datos de SolarDemoSeeder: login, dashboard claro/oscuro, menú móvil, búsqueda Escuintla, mapa/filtro/popup, ficha de granja, alertas/detalle, reportes y generación de 10 proyecciones. Comprobaciones a 360, 390, 768 y 1440 px; mapa móvil sin scroll vertical del contenido y páginas revisadas sin desbordamiento horizontal del contenedor principal. Capturas en `docs/evidencias/kin-solar-*.png`.
+
+**Verificación pública pendiente del rediseño:** se abrió `https://kin-solar-guatemala.duckdns.org/` y respondió con la interfaz anterior. Esta rama no está desplegada; la validación final de su interfaz en producción queda pendiente tras integración. No se declara auditoría WCAG completa ni verificación productiva de este cambio.
+
+---
 ## 4. Evidencia visual
 
 Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:

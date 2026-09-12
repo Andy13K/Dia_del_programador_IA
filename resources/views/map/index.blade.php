@@ -48,29 +48,6 @@
                         @foreach($departments as $dept)
                             <option value="{{ $dept->id }}" data-name="{{ $dept->name }}" data-lat="{{ $dept->latitude }}" data-lng="{{ $dept->longitude }}">{{ $dept->name }}</option>
                         @endforeach
-                    @else
-                        <option value="1" data-name="Guatemala" data-lat="14.6349" data-lng="-90.5069">Guatemala</option>
-                        <option value="2" data-name="Quetzaltenango" data-lat="14.8347" data-lng="-91.5181">Quetzaltenango</option>
-                        <option value="3" data-name="Escuintla" data-lat="14.3009" data-lng="-90.7850">Escuintla</option>
-                        <option value="4" data-name="Izabal" data-lat="15.7278" data-lng="-88.5944">Izabal</option>
-                        <option value="5" data-name="Petén" data-lat="16.9200" data-lng="-89.8900">Petén</option>
-                        <option value="6" data-name="Alta Verapaz" data-lat="15.4700" data-lng="-90.3700">Alta Verapaz</option>
-                        <option value="7" data-name="Baja Verapaz" data-lat="15.1000" data-lng="-90.3167">Baja Verapaz</option>
-                        <option value="8" data-name="Chimaltenango" data-lat="14.6611" data-lng="-90.8194">Chimaltenango</option>
-                        <option value="9" data-name="Chiquimula" data-lat="14.7978" data-lng="-89.5439">Chiquimula</option>
-                        <option value="10" data-name="El Progreso" data-lat="14.8653" data-lng="-90.0764">El Progreso</option>
-                        <option value="11" data-name="Huehuetenango" data-lat="15.3197" data-lng="-91.4708">Huehuetenango</option>
-                        <option value="12" data-name="Jalapa" data-lat="14.6347" data-lng="-89.9889">Jalapa</option>
-                        <option value="13" data-name="Jutiapa" data-lat="14.2817" data-lng="-89.8958">Jutiapa</option>
-                        <option value="14" data-name="Retalhuleu" data-lat="14.5361" data-lng="-91.6778">Retalhuleu</option>
-                        <option value="15" data-name="Sacatepéquez" data-lat="14.5586" data-lng="-90.7339">Sacatepéquez</option>
-                        <option value="16" data-name="San Marcos" data-lat="14.9639" data-lng="-91.7944">San Marcos</option>
-                        <option value="17" data-name="Santa Rosa" data-lat="14.2783" data-lng="-90.2989">Santa Rosa</option>
-                        <option value="18" data-name="Sololá" data-lat="14.7722" data-lng="-91.1833">Sololá</option>
-                        <option value="19" data-name="Suchitepéquez" data-lat="14.5342" data-lng="-91.5033">Suchitepéquez</option>
-                        <option value="20" data-name="Totonicapán" data-lat="14.9117" data-lng="-91.3611">Totonicapán</option>
-                        <option value="21" data-name="Zacapa" data-lat="14.9722" data-lng="-89.5306">Zacapa</option>
-                        <option value="22" data-name="Quiché" data-lat="15.0306" data-lng="-91.1494">Quiché</option>
                     @endif
                 </select>
             </div>
@@ -317,7 +294,7 @@
 
         if (selectedDept === 'all') {
             renderMarkers(farms);
-            map.setView(GT_CENTER, GT_ZOOM);
+            map.fitBounds([[13.7, -92.3], [17.9, -88.2]], {padding: [22, 22]});
             return;
         }
 
@@ -387,7 +364,7 @@
             selectedDepartmentLayer = null;
         }
         renderMarkers(farms);
-        map.setView(GT_CENTER, GT_ZOOM);
+        map.fitBounds([[13.7, -92.3], [17.9, -88.2]], {padding: [22, 22]});
     }
 
     // Enfocar granja específica por ID, resaltar su departamento y abrir su popup
@@ -413,6 +390,7 @@
         }
     }
 
+    map.fitBounds([[13.7, -92.3], [17.9, -88.2]], {padding: [22, 22]});
     // Render inicial
     renderMarkers(farms);
 

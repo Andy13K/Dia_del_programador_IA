@@ -62,32 +62,32 @@
 
     <!-- 4 Tarjetas Métricas Rápidas (Simétricas 2 cols en móvil) -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        <x-kpi-card 
-            title="Potencia Instalada" 
-            value="{{ number_format((float)$farm->calculated_capacity_kw, 1) }} kW" 
-            subtitle="Capacidad calculada" 
-            icon="zap" 
+        <x-kpi-card
+            title="Potencia Instalada"
+            value="{{ number_format((float)$farm->calculated_capacity_kw, 1) }} kW"
+            subtitle="Capacidad calculada"
+            icon="zap"
             variant="amber"
         />
-        <x-kpi-card 
-            title="Paneles en Operación" 
-            value="{{ number_format($farm->solarPanels->sum('pivot.quantity')) }}" 
-            subtitle="Módulos asignados" 
-            icon="grid" 
+        <x-kpi-card
+            title="Paneles en Operación"
+            value="{{ number_format($farm->solarPanels->sum('pivot.quantity')) }}"
+            subtitle="Módulos asignados"
+            icon="grid"
             variant="sky"
         />
-        <x-kpi-card 
-            title="Familias Beneficiadas" 
-            value="{{ number_format($farm->benefited_families) }}" 
-            subtitle="Hogares guatemaltecos" 
-            icon="users" 
+        <x-kpi-card
+            title="Familias Beneficiadas"
+            value="{{ number_format($farm->benefited_families) }}"
+            subtitle="Hogares guatemaltecos"
+            icon="users"
             variant="indigo"
         />
-        <x-kpi-card 
-            title="Generación Acumulada" 
-            value="{{ number_format($farm->energyGenerations->sum('real_kwh') / 1000, 1) }} MWh" 
-            subtitle="{{ number_format($farm->energyGenerations->sum('co2_kg') / 1000, 2) }} Ton CO₂ evitadas" 
-            icon="leaf" 
+        <x-kpi-card
+            title="Generación Acumulada"
+            value="{{ number_format($farm->energyGenerations->sum('real_kwh') / 1000, 1) }} MWh"
+            subtitle="{{ number_format($farm->energyGenerations->sum('co2_kg') / 1000, 2) }} Ton CO₂ evitadas"
+            icon="leaf"
             variant="eco"
         />
     </div>
@@ -105,7 +105,7 @@
             <div class="flex items-center justify-between mb-4 border-b border-slate-100 dark:border-slate-800 pb-3">
                 <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
                     <i data-lucide="grid" class="w-4 h-4 text-sky-500"></i>
-                    <span>Paneles Fotovoltaicos (RF-05)</span>
+                    <span>Paneles Fotovoltaicos</span>
                 </h3>
                 <span class="text-xs text-slate-400">{{ count($farm->solarPanels) }} tipos</span>
             </div>
@@ -146,7 +146,7 @@
                 <div>
                     <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
                         <i data-lucide="activity" class="w-4 h-4 text-emerald-500"></i>
-                        <span>Historial de Mediciones Mensuales (RF-08, 09, 10)</span>
+                        <span>Historial de Mediciones Mensuales</span>
                     </h3>
                     <p class="text-[11px] text-slate-400">Emisiones calculadas automáticamente a 0.40 kg CO₂ por kWh generado.</p>
                 </div>
@@ -166,7 +166,7 @@
                         <th class="px-4 py-3 text-right">Real (kWh)</th>
                         <th class="px-4 py-3 text-right">CO₂ Evitado (Ton)</th>
                         <th class="px-4 py-3 text-center">Desviación</th>
-                        <th class="px-4 py-3 text-center">Alerta (RF-14)</th>
+                        <th class="px-4 py-3 text-center">Alerta</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-xs">

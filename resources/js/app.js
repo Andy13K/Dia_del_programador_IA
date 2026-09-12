@@ -38,7 +38,7 @@ document.addEventListener('keydown', event => {
     if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
     else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
 });
-matchMedia('(min-width:768px)').addEventListener('change', event => { if(event.matches) window.closeMobileDrawer(); });
+matchMedia('(min-width:1024px)').addEventListener('change', event => { if(event.matches) window.closeMobileDrawer(); });
 const init = () => {
     icons();
     document.querySelectorAll('table').forEach(table => {
