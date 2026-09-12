@@ -488,14 +488,26 @@ compilados, no solo con el fallback de desarrollo.
    regla 5). La causa original era que `tests/Feature/ExampleTest.php` pegaba a `/` sin
    `RefreshDatabase` contra SQLite en memoria sin tablas; se corrigió la causa real
    (se habilitó `RefreshDatabase`) en vez de tapar el síntoma en el código de producción.
+   Al hacer `git rebase` sobre `master` apareció un cuarto caso igual, agregado por el
+   PR #7 de Agente C en la ruta `/reports` (matriz departamental) con
+   `catch (\Throwable) { $deptStats = null; }`: se corrigió de la misma forma al resolver
+   el conflicto, en vez de dejarlo pasar solo porque no era mío originalmente.
 6. **Vista de login rota (regresión propia, PR #4):** al compilar los assets con
    `npm run build` para esta auditoría, la página de login quedó sin ningún estilo — su
    `<style>` de respaldo solo se cargaba cuando *no* existía `public/build/manifest.json`;
    apenas existe, el preflight de Tailwind resetea inputs/botones sin que la vista aporte
-   clases propias. Se quitó la condición.
+   clases propias. Se corrigió quitando la condición y, al hacer `git rebase` sobre
+   `master`, se encontró que el PR #7 de Agente C (Andy) había rediseñado por completo esa
+   misma vista con el sistema de diseño real (carga `@vite` sin condición, ya sin el bug) —
+   se descartó mi commit a favor del suyo, que la reemplaza por completo.
 7. **Sin páginas de error personalizadas (A10):** no existía `resources/views/errors/`, así
    que un 500 real habría mostrado el detalle de Laravel. Se agregaron 403/404/419/500,
-   autocontenidas (sin `@vite`, sin depender de sesión/BD).
+   autocontenidas (sin `@vite`, sin depender de sesión/BD). El mismo PR #7 de Agente C agregó
+   sus propias 4 vistas de error con el sistema de diseño completo (extendiendo
+   `layouts.app`); en el rebase se adoptaron las suyas —son la versión "real" que además el
+   equipo va a ver consistente con el resto de la app— y se verificó que `layouts.app` no
+   dependa de ninguna consulta a modelos que pudiera fallar en el mismo momento en que se
+   está renderizando un error.
 8. **`.env.example`:** no documentaba `SESSION_SECURE_COOKIE`/`HTTP_ONLY`/`SAME_SITE` (A02).
    Se agregó, en `false` para local (con HTTP, `true` rompe el login) y comentario para
    producción — coincide con lo que `docs/07-PLAN-DESPLIEGUE.md` ya pedía para el hosting real.
