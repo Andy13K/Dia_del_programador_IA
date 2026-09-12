@@ -1082,6 +1082,28 @@ API y el diagnóstico de la rúbrica.
 
 ---
 
+### [10:50] Antigravity (Agente C/D) — Desviación porcentual en proyecciones y siembra completa de 10 granjas (§8 ERS) — PR #38
+
+**Objetivo:** dar cumplimiento estricto a la sección 8 del PDF de la competencia ("comparar la proyección con el resultado real"):
+1. Agregar en `resources/views/forecasts/index.blade.php` la columna "Desviación" que calcula el porcentaje `((real - proyección) / proyección * 100)` con signo, 1 decimal y código semafórico de colores (verde para precisión óptima $\le 5\%$, ámbar para aceptable $\le 15\%$, rojo para desvío $> 15\%$, y `—` cuando está pendiente).
+2. Extender en `database/seeders/SolarDemoSeeder.php` la siembra de proyecciones mediante `ForecastService` (SMA-SF) a las 10 granjas solares del sistema para 2026-08 (con medición real para evaluar comparación y desviación) y 2026-09 (pendiente).
+
+**Prompt clave:**
+> "5. Proyecciones: la 'comparación' con el real no muestra el % de desviación
+> §8 pide 'comparar la proyección con el resultado real'. Hoy se ven lado a lado (63,177 vs 61,636) pero el jurado tiene que calcular mentalmente. Una columna 'Desviación' (−2.4%) vuelve la comparación evidente. Además, solo 5 de 10 granjas tienen proyección sembrada.
+> [Antigravity] En resources/views/forecasts/index.blade.php, la tabla 'Proyecciones registradas' muestra Proyección y Generación real lado a lado. Agregá una columna 'Desviación' que, cuando exista generación real, muestre el porcentaje ((real - proyección) / proyección * 100) con signo y 1 decimal, en verde si |x| <= 5%, ámbar si <= 15%, rojo si mayor; cuando no exista real, mostrar '—'. Calculalo en Blade con los valores que ya llegan a la vista, sin tocar controladores. Es para cumplir la sección 8 del PDF de la competencia ('comparar la proyección con el resultado real'). Probá en navegador en desktop y móvil, registrá el prompt en la bitácora y abrí PR.
+> [Claude Code] En database/seeders/SolarDemoSeeder.php las proyecciones de ejemplo solo se generan para las granjas del admin (5 de 10). Generá proyecciones para las 10 granjas usando el mismo ForecastService para 2026-08 (con real existente) y 2026-09 (pendiente), para que el jurado vea la comparación en cualquier granja. No cambiés el algoritmo. Verificá con migrate:fresh --seed y php artisan test."
+
+**Resultado:**
+- Vista Blade enriquecida con cálculo dinámico de desviación, badges semafóricos con contraste en tema claro y oscuro, leyenda explicativa y compatibilidad responsiva con `x-table`.
+- Seeder `SolarDemoSeeder` actualizado: ahora itera sobre las 10 granjas y genera proyecciones con `ForecastService` para agosto (con `actual_kwh`) y septiembre (pendiente).
+- Prueba automatizada `tests/Feature/ForecastGenerationTest.php` enriquecida con aserciones sobre la columna 'Desviación' y el valor porcentual esperado (`-1.0%`).
+- Recompilación de assets con Vite (`npm run build`).
+
+**Intervención humana:** Andy identificó la necesidad requerida por la sección 8 del PDF evaluativo para que los jurados no tengan que hacer cálculos matemáticos mentales al contrastar el modelo predictivo con la realidad, y encomendó ejecutar tanto la parte frontend como el backend/seeder al no estar disponible Claude.
+
+---
+
 ## 4. Evidencia visual
 
 Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:

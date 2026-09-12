@@ -110,7 +110,9 @@ class ForecastGenerationTest extends TestCase
         $response->assertOk();
         $response->assertViewHas('forecasts');
         $response->assertSee('Proyecciones registradas');
+        $response->assertSee('Desviación');
         $response->assertSee('48,500.00 kWh');
+        $response->assertSee('-1.0%');
 
         $this->assertDatabaseHas('generation_forecasts', [
             'id' => $forecast->id,
