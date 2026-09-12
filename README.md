@@ -315,6 +315,7 @@ curl -s -o /dev/null -w "%{http_code}" http://kin-solar-guatemala.duckdns.org/  
 | [`docs/08-GUION-PRESENTACION.md`](docs/08-GUION-PRESENTACION.md) | Guion cronometrado de 10 minutos |
 | [`docs/10-TAREA-MCP-SERVER-PROPIO.md`](docs/10-TAREA-MCP-SERVER-PROPIO.md) | Especificación e integración del servidor MCP propio |
 | [`docs/11-DIAPOSITIVAS-PRESENTACION.md`](docs/11-DIAPOSITIVAS-PRESENTACION.md) | Diapositivas de la defensa final |
+| [`docs/13-INNOVACION-Y-VALOR-AGREGADO.md`](docs/13-INNOVACION-Y-VALOR-AGREGADO.md) | Diferenciadores, creatividad técnica, SCADA IoT, Web Audio API y valor agregado |
 
 ---
 
