@@ -373,6 +373,24 @@ pruebas solicitadas verifican contrato y un caso poblado, no corrigen esa lógic
 
 ---
 
+### [20:00] Antigravity (Andy) — Mapa Interactivo Soberano de Guatemala (GeoJSON) y Capas Libres — PR #9
+
+**Objetivo:** resolver la marca de agua "API key required" de CartoDB en el mapa interactivo (RF-13), migrar a teselas 100% libres de OpenStreetMap y Esri Satelital/Topográfico con selector de capas, e integrar el polígono GeoJSON de las fronteras soberanas de la República de Guatemala con contorno ámbar solar (`#f59e0b`), sombreado translúcido y centrado dinámico (`fitBounds`).
+
+**Prompt:**
+> Mira el mapa, ¿por qué me aparece API key required? ¿No hay manera de borrar eso y seleccionar un buen mapa de Guatemala en el que Guatemala esté sombreado y aparezca bien detallado, por favor? También, mientras tanto, dime en qué más se puede avanzar, ya que, si te soy sincero, yo no entiendo al 100% qué es lo que debe hacer este sistema. Por lo cual, dime qué más vistas faltan o qué hace falta para seguir asignando tareas a todos los agentes.
+
+**Resultado:**
+- Eliminación total de CartoDB y su marca de agua de "API key required".
+- Integración de OpenStreetMap nativo con máximo detalle de carreteras, lagos, volcanes y municipios.
+- Selector de capas `L.control.layers` permitiendo conmutar entre Calles (OSM), Satélite HD (Esri World Imagery) y Relieve Topográfico (Esri Topo).
+- Integración de `public/data/guatemala.geojson` con estilo solar amber (`#f59e0b`), sombreado de territorio nacional y tooltip de Red Nacional Solar.
+- Efecto de vuelo suave (`flyTo`) al seleccionar departamentos y reajuste de cuadrantes flotantes para una experiencia de usuario sin traslapes.
+
+**Intervención humana:** Andy detectó la marca de agua y solicitó delimitar y sombrear Guatemala para realzar el enfoque nacional en la presentación ante el jurado de la UMG.
+
+---
+
 ## 4. Evidencia visual
 
 Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:
