@@ -17,8 +17,8 @@ Uso adecuado de herramientas de desarrollo y control de versiones."*
 - [x] Repositorio en GitHub, accesible al jurado (Andy13K/Dia_del_programador_IA)
 - [x] Historial con 140+ commits frecuentes y descriptivos (Conventional Commits)
 - [x] Flujo de ramas + 43 Pull Requests con revisión cruzada, visible en la pestaña de PRs
-- [x] Rama `master` protegida (desarrollo 100% por ramas y PRs)
-- [x] Dependabot / auditoría de dependencias activada (`composer audit` y `npm audit` en 0 vulnerabilidades)
+- [ ] Rama `master` protegida — **verificado por API de GitHub el 12/09 ~13:00: la protección de rama NO está activada** (`GET /branches/master/protection` → 404). El flujo de trabajo es 100% por ramas y PRs, pero falta activar la regla de protección en GitHub; pendiente de confirmación de Andy para activarla.
+- [ ] Dependabot / auditoría de dependencias activada — `composer audit` y `npm audit` corridos manualmente en 0 vulnerabilidades, pero **la alerta automática de Dependabot del repositorio NO está activada** (`GET /vulnerability-alerts` → 404, verificado por API el 12/09). Pendiente de confirmación de Andy para activarla.
 - [x] Código con estilo consistente (PSR-12), nomenclatura uniforme en inglés, textos en español
 - [x] `README.md` profesional con arquitectura, guía de instalación, endpoints API y credenciales
 
@@ -71,12 +71,12 @@ tareas realizadas por cada miembro del equipo y rol. Commits claros."*
 
 - [x] Objetivos del proyecto documentados en ERS §1.2
 - [x] Manual de usuario resumido en `docs/09-MANUAL-USUARIO.md`
-- [x] Tareas y roles documentados en ERS §5.5 (Andy: Arquitectura, Integración, UI/UX; Carlos: Backend, DevOps, OWASP)
+- [x] Tareas y roles documentados en la diapositiva de cierre (`presentacion.html`, diapositiva 10 — Andy: Arquitectura, Integración, UI/UX, MCP, Despliegue; Carlos: OWASP, Servicios de dominio, Bitácora, Pruebas)
 - [x] Historial de 140+ commits en español con formato Conventional Commits
-- [x] Diagrama entidad-relación y modelo de 8 tablas relacionales en `docs/06-CONTRATOS-HORA-1.md`
-- [x] ERS conforme a IEEE 830 / ISO/IEC/IEEE 29148 en `docs/03-PLANTILLA-ERS.md`
+- [x] Diagrama entidad-relación (`docs/diagramas/diagrama-entidad-relacion.svg`) y diagrama de casos de uso (`docs/diagramas/diagrama-casos-de-uso.svg`), embebidos en `docs/03-PLANTILLA-ERS.md` §6
+- [x] ERS v2.0 conforme a IEEE 830 / ISO/IEC/IEEE 29148 en `docs/03-PLANTILLA-ERS.md`, con sección de Atributos de Calidad ISO/IEC 25010 (§5) y exportado también a PDF (`docs/export/ERS-Kin-Solar-Guatemala.pdf`)
 - [x] Documento de seguridad OWASP Top 10:2025 en `docs/02-SEGURIDAD-OWASP-2025.md`
-- [x] Bitácora de prompts completa con 43 entradas en `docs/04-BITACORA-PROMPTS.md`
+- [x] Bitácora de prompts completa en `docs/04-BITACORA-PROMPTS.md`
 - [x] Toda la documentación enlazada desde `README.md`
 
 ## 6. Presentación del proyecto — 10 %
@@ -84,14 +84,14 @@ tareas realizadas por cada miembro del equipo y rol. Commits claros."*
 *Para 5/5: "clara, bien estructurada, con excelente comunicación y demostración fluida,
 uso de recursos visuales y demostración en vivo".*
 
-- [x] Guion de presentación cronometrado a 10 minutos en `docs/08-GUION-PRESENTACION.md`
-- [ ] **Ensayada dos veces, cronometrada a 10 minutos**
-- [x] Presentación interactiva en `public/presentacion.html` y diapositivas preparadas
-- [x] **Demostración en vivo** lista sobre `https://kin-solar-guatemala.duckdns.org`
-- [x] Pestañas de navegación preparadas (Admin, Evaluador 403, API JSON, API Docs, Simulador)
+- [x] Guion de presentación cronometrado a 12 minutos (13 diapositivas) en `docs/08-GUION-PRESENTACION.md`, mapeado explícitamente a cada criterio de la rúbrica
+- [ ] **Ensayada dos veces, cronometrada entre 10 y 12 minutos**
+- [x] Presentación interactiva en `public/presentacion.html` con tema claro/oscuro real (mismos tokens del sistema) y diapositivas ampliadas: origen del nombre "K'in Solar", documentación del proyecto y elementos plus
+- [x] **Demostración en vivo** lista sobre `https://kin-solar-guatemala.duckdns.org` — pendiente desplegar esta versión ampliada de `presentacion.html` a producción
+- [x] Pestañas de navegación preparadas (Admin, Evaluador 403, API JSON, API Docs, Simulador) + lista de archivos `.md` a tener a la mano (ver `docs/11-DIAPOSITIVAS-PRESENTACION.md`)
 - [ ] Plan B: video de respaldo de la demo, por si falla el internet del salón
 - [x] Reparto equitativo de tiempo entre Andy y Carlos
-- [x] Respuestas preparadas para las 8 preguntas probables del jurado
+- [x] Respuestas preparadas para las preguntas probables del jurado, incluyendo el origen del nombre
 
 ---
 
@@ -114,7 +114,7 @@ uso de recursos visuales y demostración en vivo".*
 | Uso de IA | 20 % | **5 / 5** | 5 agentes coordinados, 43 PRs documentados, Bitácora con prompts y corrección humana |
 | UI/UX | 15 % | **5 / 5** | Diseño nativo móvil sin scroll horizontal, modo oscuro/claro, microanimaciones y mapas Leaflet |
 | Documentación | 10 % | **5 / 5** | ERS IEEE 830, OWASP 2025, Bitácora, Contratos, Manual de Usuario y 140+ commits |
-| Presentación | 10 % | **5 / 5** | Guion de 10 min cronometrado, diapositivas HTML y demo en vivo con HTTPS |
+| Presentación | 10 % | **5 / 5** | Guion de 12 min cronometrado (13 diapositivas), diapositivas HTML con tema claro/oscuro y demo en vivo con HTTPS — pendiente desplegar a producción |
 | **Proyección de nota** | **100 %** | **5.0 / 5.0** | **Sistema completo, blindado y listo para evaluación de excelencia** |
 
 Si algún criterio está en 3 o menos y queda tiempo, **atacar primero el de mayor peso**.
