@@ -39,10 +39,10 @@ La página de inicio redirige automáticamente al formulario de inicio de sesió
 | Campo | Valor para el jurado |
 |---|---|
 | Correo electrónico | `evaluador@umg.edu.gt` |
-| Contraseña | `Evaluador2026!` |
+| Contraseña | *entregada por el equipo en un canal separado* (no se publica en este manual ni en el repositorio, OWASP A02/A07) |
 
 > 💡 **Para la demo completa** (incluyendo creación y edición de registros), usar el administrador:
-> `admin@solarguatemala.gob.gt` / `Solar2026!Admin`
+> `admin@solarguatemala.gob.gt` — misma indicación: la contraseña se entrega aparte.
 
 ### Paso 3 — Dashboard
 

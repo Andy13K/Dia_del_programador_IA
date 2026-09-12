@@ -26,13 +26,17 @@ La aplicación está desplegada en producción sobre **AWS EC2 (Ubuntu 24.04 LTS
 
 ## 🔑 Credenciales de Acceso por Rol
 
-| Rol | Correo | Contraseña | Acceso |
-|---|---|---|---|
-| **Administrador** | `admin@solarguatemala.gob.gt` | `Solar2026!Admin` | Control total del sistema |
-| **Operador Regional** | `operador@solarguatemala.gob.gt` | `Operador2026!` | Registro y gestión de datos |
-| **Evaluador / Visualizador** | `evaluador@umg.edu.gt` | `Evaluador2026!` | Lectura, reportes y API |
+| Rol | Correo | Acceso |
+|---|---|---|
+| **Administrador** | `admin@solarguatemala.gob.gt` | Control total del sistema |
+| **Operador Regional** | `operador@solarguatemala.gob.gt` | Registro y gestión de datos |
+| **Evaluador / Visualizador** | `evaluador@umg.edu.gt` | Lectura, reportes y API |
 
 > ⚠️ Los datos de demostración ya están precargados. No es necesario crear registros desde cero.
+> 🔒 Las contraseñas **no se publican en este repositorio** (OWASP A02/A07 — ver
+> `docs/04-BITACORA-PROMPTS.md`): se entregan al jurado y al equipo por un canal separado.
+> Cada entorno (local, demo, producción) define las suyas en variables de entorno propias
+> vía `config/seed.php` — `DatabaseSeeder` falla explícitamente si faltan.
 
 ---
 
