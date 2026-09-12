@@ -11,6 +11,7 @@ use App\Models\GenerationForecast;
 use App\Models\SolarFarm;
 use App\Models\SolarPanel;
 use App\Models\User;
+use App\Services\ForecastService;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
@@ -219,8 +220,9 @@ class SolarDemoSeeder extends Seeder
 
     /**
      * Siembra de proyecciones predictivas de demostración (RF-15).
-     * Incluye proyecciones con medición real posterior (para comparar exactitud)
-     * y proyecciones para períodos futuros/pendientes.
+     * Genera proyecciones para las 10 granjas usando ForecastService (SMA-SF):
+     * - 2026-08 (con medición real existente para comparar exactitud y calcular desviación)
+     * - 2026-09 (período futuro / pendiente para probar seguimiento)
      */
     private function seedForecasts(): void
     {
@@ -229,33 +231,19 @@ class SolarDemoSeeder extends Seeder
             return;
         }
 
-        foreach ($farms->take(5) as $farm) {
-            // Período 2026-08: proyección con medición real existente (RF-15: comparación con resultado real)
+        $forecastService = app(ForecastService::class);
+
+        foreach ($farms as $farm) {
+            // Período 2026-08: proyección con algoritmo oficial SMA-SF
+            $forecastAug = $forecastService->generateForecast($farm, '2026-08');
             $genAug = $farm->energyGenerations->where('period', '2026-08')->first();
-            $augActual = $genAug ? (float) $genAug->real_kwh : null;
-            $augForecast = $augActual ? round($augActual * 1.025, 2) : 58000.00;
+            if ($genAug) {
+                $forecastAug->actual_kwh = (float) $genAug->real_kwh;
+                $forecastAug->save();
+            }
 
-            GenerationForecast::query()->updateOrCreate(
-                ['solar_farm_id' => $farm->id, 'target_period' => '2026-08'],
-                [
-                    'forecasted_kwh' => $augForecast,
-                    'method' => 'SMA-SF (ponderado)',
-                    'actual_kwh' => $augActual,
-                    'notes' => 'Proyección calculada con SMA-SF ponderado (50/30/20) y factor estacional 0.87. Medición real confirmada.',
-                ],
-            );
-
-            // Período 2026-09: proyección para período en curso / pendiente (RF-15: proyección futura)
-            $sepForecast = round(($augActual ?? 55000.00) * 1.03, 2);
-            GenerationForecast::query()->updateOrCreate(
-                ['solar_farm_id' => $farm->id, 'target_period' => '2026-09'],
-                [
-                    'forecasted_kwh' => $sepForecast,
-                    'method' => 'SMA-SF (ponderado)',
-                    'actual_kwh' => null,
-                    'notes' => 'Proyección futura estimada mediante histórico previo y estacionalidad de Guatemala.',
-                ],
-            );
+            // Período 2026-09: proyección futura pendiente (RF-15)
+            $forecastService->generateForecast($farm, '2026-09');
         }
     }
 }

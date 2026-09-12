@@ -31,7 +31,77 @@
         <div class="mt-5 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 text-xs leading-relaxed" style="color:var(--kin-muted)">Las proyecciones son estimaciones, no garantías de producción. Su precisión se evalúa al compararlas con mediciones reales del mismo período.</div>
     </section>
     @if(isset($forecasts) && $forecasts->count())
-        <section class="kin-panel p-5"><h2 class="text-base font-semibold mb-4">Proyecciones registradas</h2><x-table><thead><tr><th>Granja</th><th>Período</th><th>Proyección</th><th>Generación real</th></tr></thead><tbody>@foreach($forecasts as $forecast)<tr><td>{{ $forecast->solarFarm?->name }}</td><td>{{ $forecast->target_period }}</td><td>{{ number_format($forecast->forecasted_kwh,2) }} kWh</td><td>{{ $forecast->actual_kwh !== null ? number_format($forecast->actual_kwh,2).' kWh' : 'Pendiente' }}</td></tr>@endforeach</tbody></x-table>{{ $forecasts->links() }}</section>
+        <section class="kin-panel p-5 sm:p-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+                <div>
+                    <h2 class="text-base font-semibold">Proyecciones registradas</h2>
+                    <p class="text-xs mt-0.5" style="color:var(--kin-muted)">Comparación directa entre el modelo predictivo SMA-SF y las mediciones reales del período (§8).</p>
+                </div>
+                <div class="flex items-center gap-3 text-[11px]" style="color:var(--kin-muted)">
+                    <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Precisión óptima (&le;5%)</span>
+                    <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-500"></span> Aceptable (&le;15%)</span>
+                    <span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-rose-500"></span> Desvío (&gt;15%)</span>
+                </div>
+            </div>
+
+            <x-table>
+                <thead>
+                    <tr>
+                        <th>Granja</th>
+                        <th>Período</th>
+                        <th class="text-right">Proyección</th>
+                        <th class="text-right">Generación real</th>
+                        <th class="text-right">Desviación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($forecasts as $forecast)
+                        @php
+                            $hasActual = $forecast->actual_kwh !== null && (float)$forecast->forecasted_kwh > 0;
+                            $badgeClass = '';
+                            $devFormatted = '—';
+                            if ($hasActual) {
+                                $dev = (((float)$forecast->actual_kwh - (float)$forecast->forecasted_kwh) / (float)$forecast->forecasted_kwh) * 100;
+                                $absDev = abs($dev);
+                                $sign = $dev > 0 ? '+' : '';
+                                $devFormatted = $sign . number_format($dev, 1) . '%';
+                                if ($absDev <= 5.0) {
+                                    $badgeClass = 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20';
+                                } elseif ($absDev <= 15.0) {
+                                    $badgeClass = 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20';
+                                } else {
+                                    $badgeClass = 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20';
+                                }
+                            }
+                        @endphp
+                        <tr>
+                            <td class="font-medium text-slate-900 dark:text-slate-100">{{ $forecast->solarFarm?->name }}</td>
+                            <td><span class="font-mono text-xs">{{ $forecast->target_period }}</span></td>
+                            <td class="text-right font-mono">{{ number_format((float)$forecast->forecasted_kwh, 2) }} kWh</td>
+                            <td class="text-right font-mono">
+                                @if($forecast->actual_kwh !== null)
+                                    <span class="font-semibold text-slate-900 dark:text-slate-100">{{ number_format((float)$forecast->actual_kwh, 2) }} kWh</span>
+                                @else
+                                    <span class="text-xs italic text-slate-400 dark:text-slate-500">Pendiente</span>
+                                @endif
+                            </td>
+                            <td class="text-right font-mono">
+                                @if($hasActual)
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold {{ $badgeClass }}">
+                                        {{ $devFormatted }}
+                                    </span>
+                                @else
+                                    <span class="text-slate-400 dark:text-slate-500 font-mono text-xs">—</span>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </x-table>
+            <div class="mt-4">
+                {{ $forecasts->links() }}
+            </div>
+        </section>
     @endif
 </div>
 @endsection
