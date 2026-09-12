@@ -1261,6 +1261,24 @@ API y el diagnóstico de la rúbrica.
 - Documentación técnica alineada al 100% con la realidad operativa del sistema.
 
 **Intervención humana:** Andy ordenó una revisión integral de aseguramiento de calidad y seguridad OWASP sobre el sistema antes de la presentación final, solicitando la actualización de toda la documentación desfasada.
+---
+
+### Claude Code (Agente A) — Botón "!" con la fórmula del CO₂ en todo el sistema y desplegables de alertas en modo oscuro
+
+**Objetivo:** dos pedidos del humano tras seguir recorriendo producción: (1) en Alertas, el desplegable de granjas "no cambiaba de blanco" en modo oscuro; (2) en todos los apartados donde se muestre CO₂ evitado, un botoncito con signo de admiración que al pulsarlo explique de dónde sale el cálculo (la fórmula y en qué se basa).
+
+**Prompts del humano (extractos literales):**
+> En el apartado de Alertas, corrige el modo oscuro en esa parte, ya que al darle en modo oscuro no cambia de blanco.
+> En todos los apartados del sistema que se muestre las emisiones de C02 evitadas agregale a la par un botoncito con simbolo de admiracion, para que al clickearlo salga una pequeña informacion de porque sale ese calculo y en que esta basado osea la formula.
+
+**Resultado:**
+1. **Alertas:** los dos `<select>` del filtro usaban `bg-transparent`; Chrome pinta la lista nativa de opciones con el fondo del select, así que caía a blanco mientras el texto heredaba el blanco del tema oscuro. Fondo explícito claro/oscuro como el resto de selects del sistema, y una regla global `select option` en `app.css` para que no se repita en otra vista. Verificado leyendo estilos computados en ambos modos.
+2. **Componente `<x-co2-info>`** (+ `co2-info-body` para reutilizar el texto desde JS): botón redondo "!" que abre un panel con la fórmula (`kg = kWh × 0.40`, `t = kg ÷ 1,000`), el cálculo concreto de esa cifra cuando la vista conoce el kWh, y la base (§14 de las bases de la competencia). Colocado en dashboard (tarjeta y ranking), ficha de granja (KPI y tabla), mediciones (listado, detalle, vista previa del formulario), reportes (cabecera, KPI y columnas `co2_*` de los 4 tipos, detectadas genéricamente sin tocar `ReportService`), simulador SCADA y el popup del mapa (HTML generado por JS que clona el cuerpo desde un `<template>`).
+3. **Decisión técnica:** las tarjetas KPI tienen `overflow-hidden` + `transform` al hover y las tablas scroll horizontal, así que un panel `absolute` quedaba recortado. El panel se mueve al `<body>` con `position:fixed` calculada desde el botón mientras está abierto (se recoloca al hacer scroll, abre hacia arriba si no cabe abajo, se clampa al viewport) y vuelve a su sitio al cerrar. Cierra con clic afuera o Escape devolviendo el foco; `aria-expanded`/`aria-controls`/`role=dialog`.
+4. **Fuente única del factor:** `CarbonOffsetService::CO2_KG_PER_KWH` (constante pública; el servicio sigue siendo PHP puro porque su test unitario no arranca Laravel — un primer intento con `config()` dentro del servicio rompió ese test) y `config/solar.php` la expone a las vistas; el mapa y las etiquetas "Factor 0.40" leen de ahí en vez de literales.
+5. **Tropiezo propio, corregido antes de commitear:** escribí `<x-co2-info>` literal en un comentario JS dentro del Blade del mapa y el compilador lo tomó como componente sin cerrar (`ParseError: expecting endif`); mismo tipo de error que el de `@js()` en un comentario documentado en el PR #24. Reformulado el comentario.
+
+**Verificación:** `php artisan test` 73/73 (433 aserciones), `config:cache` resuelve `solar.co2_kg_per_kwh`, navegador local en claro y oscuro: alertas (estilos computados de select/option), dashboard, ficha de granja, reportes (panel dentro de tabla con scroll), popup del mapa (abre hacia arriba, en `<body>`), clic afuera y Escape. Zonas de Agente B (`CarbonOffsetService`) y C (vistas/componentes) por instrucción directa del humano.
 
 ---
 
