@@ -973,6 +973,34 @@ API y el diagnóstico de la rúbrica.
 
 **Intervención humana:** Andy instruyó avanzar de manera exhaustiva y sin dejar nada a medias en los 3 puntos críticos mientras descansaba, asegurando que el proyecto alcanzara el 100% de cumplimiento funcional, estético y de evidencias ante la rúbrica de evaluación.
 
+### [06:10] Antigravity (Andy) — Sistema Integral de Reportes: Filtros por Fechas, 4 Tipos de Reportes y Exportación a Excel y PDF con Encabezado y Logo
+
+**Objetivo:** Desarrollar el sistema avanzado de reportería y auditoría energética de K'in Solar:
+1. Selección y filtrado dinámico por fechas (`start_date`, `end_date`), botones de preajustes rápidos (Agosto 2026, Septiembre 2026, Año 2026, Histórico Completo) y filtro departamental opcional.
+2. Cuatro tipos de reportes especializados con sentido funcional y ecológico:
+   - *Consolidado Departamental* (`departamental`): Matriz de los 22 departamentos con potencia kW, generación kWh, familias beneficiadas y CO₂ evitado (Ton/kg, factor CNEE 0.40).
+   - *Rendimiento por Granja Solar* (`granjas`): Desglose por instalación con generación real vs. estimada y factor de rendimiento (%).
+   - *Balance Ecológico y Mitigación* (`ambiental`): Aporte ambiental en toneladas de CO₂, árboles plantados equivalentes y galones de gasolina sustituidos.
+   - *Incidentes y Alertas Operativas* (`alertas`): Bitácora de fallas con déficit $\ge 20\%$, trazabilidad de resolución y notas técnicas.
+3. Exportación a Excel (`.xls` HTML Spreadsheet) con encabezado institucional, logo oficial, metadatos (hora de Guatemala UTC-6, usuario, rol, ámbito), tarjetas KPI resumen y estilos nativos.
+4. Exportación e impresión PDF ejecutiva (`reports/print.blade.php`) optimizada para hoja horizontal (landscape) con encabezado del Ministerio de Energía y Minas / CNEE, cuadro de parámetros, firmas de supervisión y pie de página de validez.
+5. Exportación CSV plano con BOM UTF-8 `\xEF\xBB\xBF` para apertura limpia en cualquier software de hojas de cálculo.
+
+**Prompt del humano:**
+> Necesito que los reportes se puedan seleccionar por fechas, que puedan ser varios tipos de reportes, y que el formato, cuando se descargue el reporte en PDF o en Excel, tenga un muy bonito encabezado con el logo y todo lo que ya tenemos. Necesito una buena plantilla para los reportes y que los podamos exportar en PDF y Excel. La información debe salir bien ordenada, que los reportes tengan sentido, que sean fáciles de entender, y apégate al PDF de referencia para cumplir también con eso.
+
+**Resultado:**
+- `app/Http/Requests/ReportFilterRequest.php`: FormRequest con validación estricta de tipos de reporte y fechas (`after_or_equal:start_date`).
+- `app/Services/ReportService.php`: Servicio de dominio con lógica de agregación temporal, factor normativo de CO₂ (0.40), generación de Excel enriquecido y CSV con BOM.
+- `app/Http/Controllers/ReportController.php`: Controlador delgado con métodos `index`, `exportExcel`, `exportCsv` y `printPdf`.
+- `resources/views/reports/index.blade.php`: Interfaz rediseñada con pestañas de tipos de reporte, filtros por fechas, preajustes, tarjetas de KPIs y tabla dinámica adaptable.
+- `resources/views/reports/excel.blade.php`: Plantilla XML/HTML Spreadsheet para descarga inmediata de Excel con estilos y formato corporativo.
+- `resources/views/reports/print.blade.php`: Plantilla ejecutiva con logo, encabezado formal, tarjetas KPI, firmas y `@media print`.
+- `tests/Feature/ReportFilteringAndExportTest.php`: 10 pruebas automatizadas nuevas pasando al 100% (48 aserciones).
+- **Suite Total:** 58 tests de PHPUnit pasando al 100% (334 aserciones, 0 fallos).
+
+**Intervención humana:** Andy definió la necesidad de extender los reportes para incluir filtrado por fechas, múltiples tipos de reporte y plantillas estéticas para exportación en PDF y Excel con logotipo y encabezados institucionales para elevar el impacto ante el jurado calificador.
+
 ---
 
 ## 4. Evidencia visual
@@ -996,12 +1024,12 @@ Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:
 |---|---|
 | Agentes de IA utilizados en paralelo | 5 (Claude Code ×2, Codex, Antigravity ×2) |
 | MCP Servers integrados | 4 (filesystem, mysql, github, kinsolar-server propio) |
-| Total de commits | 80+ commits incrementales |
-| Total de Pull Requests | 32 PRs con revisión cruzada |
-| Prompts documentados | 35+ sesiones detalladas |
-| Requerimientos funcionales implementados | 16 de 16 (100% completitud) |
+| Total de commits | 85+ commits incrementales |
+| Total de Pull Requests | 33 PRs con revisión cruzada |
+| Prompts documentados | 36+ sesiones detalladas |
+| Requerimientos funcionales implementados | 16 de 16 (100% completitud ampliada) |
 | Controles OWASP Top 10:2025 aplicados | 10 de 10 (100% blindaje) |
-| Pruebas automatizadas en suite | 48 de 48 pasadas (286 aserciones) |
+| Pruebas automatizadas en suite | 58 de 58 pasadas (334 aserciones) |
 
 **Frase para la exposición:**
 > "Trabajamos con cinco agentes de IA en paralelo sobre un flujo estricto de ramas y pull requests
