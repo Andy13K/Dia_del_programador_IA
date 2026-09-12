@@ -325,4 +325,4 @@ Para dar cumplimiento pleno y riguroso a la sección 8 y RF-15 del reto sin comp
 - [x] Sistema de diseño congelado — 18:00
 - [x] Alcance (principales + secundarias + fuera de alcance) congelado — 18:00
 
-**Aprobado por el equipo:** Andy Aquino · Carlos
+**Aprobado por el equipo:** Andy Fabricio Aquino Escobar (Carné 0909-22-1669) · Carlos Giovanni Martínez (Carné 0909-22-19157)

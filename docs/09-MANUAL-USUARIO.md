@@ -22,7 +22,9 @@
 9. [Proyecciones de Generación Futura](#9-proyecciones-de-generación-futura)
 10. [API REST Pública](#10-api-rest-pública)
 11. [Diferencias por Rol](#11-diferencias-por-rol)
-12. [Preguntas frecuentes del jurado](#12-preguntas-frecuentes-del-jurado)
+12. [Centro de Control y Laboratorio SCADA IoT en Tiempo Real](#12-centro-de-control-y-laboratorio-scada-iot-en-tiempo-real)
+13. [Centro de Notificaciones y Campanita Web Audio](#13-centro-de-notificaciones-y-campanita-web-audio)
+14. [Preguntas frecuentes del jurado](#14-preguntas-frecuentes-del-jurado)
 
 ---
 
@@ -402,7 +404,41 @@ La página `/api-docs` muestra la documentación interactiva con ejemplos de res
 
 ---
 
-## 12. Preguntas frecuentes del jurado
+## 12. Centro de Control y Laboratorio SCADA IoT en Tiempo Real
+
+> 💡 **Módulo de innovación y telemetría industrial de campo:** diseñado para demostrar cómo interactúa la telemetría IoT en vivo (Modbus-TCP / MQTT), el clima y la desconexión de inversores con la base de datos oficial y las alertas del sistema.
+
+### Acceso al módulo
+1. En el menú de navegación lateral, hacer clic en **"Simulador SCADA IoT"** (o desde el botón de acceso directo en el encabezado del Dashboard).
+2. Ruta directa: `https://kin-solar-guatemala.duckdns.org/simulator`.
+
+### Características y funciones interactivas:
+- **Streaming de telemetría continua (Auto-Tick 2s):** Presionar el botón **`[▶ Iniciar Flujo en Vivo]`**. El sistema muestrea paquetes cada 2 segundos, calculando en tiempo real potencia activa (kW), irradiancia ($W/m^2$), temperatura de celdas (°C) y mitigación de CO₂ (kg/h).
+- **Osciloscopio dinámico (Chart.js):** Curva continua en tiempo real que se desplaza hacia la izquierda, contrastando potencia generada vs. esperada vs. irradiancia.
+- **Interruptores individuales de inversores (4 Breakers):** Permite hacer clic sobre los breakers individuales `[ACTIVO / TRIPPED]` para desconectar inversores y observar la caída inmediata de generación y rendimiento en la planta.
+- **Control meteorológico en caliente:** Botones rápidos para alternar entre Pleno Sol (1000 $W/m^2$), Nubosidad (600 $W/m^2$), Tormenta (180 $W/m^2$) y Noche (0 $W/m^2$).
+- **Inyector de contingencias RF-14:** Botón para inducir fallas de inversores (-26.5% déficit) o tormentas severas (-48.0% déficit), persistiendo automáticamente la alerta en la bandeja oficial con trazabilidad en `audit_logs`.
+- **Botón de Restablecimiento Nominal:** Normaliza la planta a condiciones óptimas y resuelve las alertas asociadas.
+- **Consola terminal industrial:** Bitácora en vivo con protocolos industriales simulados, marcas de tiempo y conteo de paquetes.
+
+---
+
+## 13. Centro de Notificaciones y Campanita Web Audio
+
+> 💡 **Sistema de alerta temprana auditiva y visual en la barra superior (Topbar):**
+
+### Funcionamiento:
+- **Campanita fija con contador dinámico:** Ubicada en la barra superior (Topbar), muestra un badge numérico rojo (`1, 2, 3...`) con la cantidad exacta de alertas activas pendientes o no leídas. La campanita se mantiene 100% fija en su posición sin oscilaciones molestas.
+- **Aviso sonoro armónico nativo (Web Audio API):** Cuando entra una nueva alerta (por ejemplo, desde el simulador SCADA), el navegador genera un chime armónico elegante de doble tono (G5 784 Hz a C6 1046 Hz) sin requerir archivos `.mp3` ni depender de conexiones externas.
+- **Diferenciación visual estricta:**
+  - **No leídas:** Borde carmesí (`border-l-4 border-rose-500`), efecto de respiración luminosa difusa suave (`@keyframes kinSubtleDiffuseGlow`), insignia `● Nueva` y botón de alta prioridad **"Más detalles"**.
+  - **Leídas:** Borde neutro tenue, opacidad atenuada (`opacity-75`), completamente estática (sin parpadeos), badge `✓ Leída` y botón discreto `Ver detalles`.
+- **Acción "Más detalles":** Al pulsar el botón, la alerta se marca como vista/leída, el contador de la campanita se decrementa de inmediato en tiempo real y redirige a la vista completa de la anomalía (`/alerts/{id}`).
+- **Pestañas de filtrado:** Permite alternar la visualización del menú pop-up entre `Todas (X)`, `No leídas (Y)` y `Leídas (Z)`, además del botón **"Marcar todas leídas"**.
+
+---
+
+## 14. Preguntas frecuentes del jurado
 
 **¿Se puede registrar un panel desde el celular?**
 Sí. La interfaz es totalmente responsiva y funciona en resoluciones desde 360 px (móvil) hasta 1440 px (escritorio).
