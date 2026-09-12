@@ -637,6 +637,23 @@ navegador antes de commitear).
 
 ---
 
+### [22:15] Antigravity (Andy) — Menú Lateral Compacto Cero Scroll, Mapa en Una Sola Línea y Scrollbar Estético — PR #15 (Iteración 3)
+
+**Objetivo:** asegurar que la opción "Mapa de Guatemala" en el menú de navegación de escritorio se muestre en una sola línea estricta sin saltos ni desbordes, compactar el menú lateral izquierdo en computadoras/laptops reduciendo espaciados y encabezados para que todos los enlaces y el footer quepan sin requerir scroll vertical, e implementar un scrollbar personalizado y estético en toda la aplicación (Dashboard, tablas y páginas) con acento solar ámbar suave que armonice con el tema de SolarGT.
+
+**Prompt:**
+> Necesito también que en la vista web, en donde dice Mapa de Guatemala, se muestre en una sola línea, por favor, no que se muestre en dos líneas. Necesito que se muestre en una sola línea. Y lo que te decía anteriormente, si yo lo veo en mi computadora, yo en el menú lateral izquierdo tengo que deslizar. Hay un menú de navegación que no me gusta. Quiero que todo eso se muestre sin necesidad de tener que hacer scroll. Y de igual manera, el scroll que se ve en el dashboard o en toda la página, yo quiero que ese scroll pegue con la estética de la página.
+
+**Resultado:**
+- Enlace "Mapa de Guatemala" configurado con `whitespace-nowrap flex-1` y `flex-shrink-0` tanto en el icono como en la insignia `GPS`, garantizando visualización perfecta en una sola línea en cualquier resolución de pantalla.
+- Menú lateral de escritorio (`sidebar`) reestructurado con dimensiones optimizadas (altura de cabecera reducida a `h-14`, paddings de enlaces ajustados a `py-1.5 px-3`, textos en `text-xs font-semibold`, encabezados de sección a `pt-2 pb-0.5 text-[10px]` y footer a `p-2.5`), reduciendo la altura total requerida a ~439px y aplicando `overflow-hidden`, eliminando por completo la barra de desplazamiento vertical en cualquier laptop o pantalla con escalado de DPI.
+- Scrollbar estético global integrado en `<style>` de `resources/views/layouts/app.blade.php`: ancho ultradelgado de 6px, pista transparente, deslizador (thumb) en gris pizarra traslúcido y efecto `hover` con resplandor ámbar solar (`rgba(245, 158, 11, 0.65)` / `0.75`), compatible con WebKit y Firefox (`scrollbar-width: thin`), mejorando drásticamente la elegancia visual en el Dashboard y tablas de datos.
+- Recompilación exitosa de assets de producción con Vite (`npm run build`) y aprobación de las 19 pruebas de integración en PHPUnit (121 aserciones).
+
+**Intervención humana:** Andy solicitó explícitamente evitar el salto de línea en "Mapa de Guatemala", erradicar la necesidad de deslizar o hacer scroll dentro del menú lateral de escritorio en su computadora, y dotar a la barra de scroll general de la plataforma de una estética personalizada acorde con la identidad gráfica del proyecto.
+
+---
+
 ## 4. Evidencia visual
 
 Guardar en `docs/evidencias/` con nombres descriptivos. Mínimo a recolectar:

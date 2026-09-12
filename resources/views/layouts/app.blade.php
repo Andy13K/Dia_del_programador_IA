@@ -31,129 +31,159 @@
         [x-cloak] { display: none !important; }
         /* Transición suave para modo oscuro */
         * { transition: background-color 0.15s ease, border-color 0.15s ease; }
+
+        /* SCROLLBAR ESTÉTICO PERSONALIZADO SOLARGT */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.25);
+            border-radius: 9999px;
+            transition: background-color 0.2s ease;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(245, 158, 11, 0.65); /* Ámbar solar en hover */
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: rgba(100, 116, 139, 0.35);
+        }
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: rgba(245, 158, 11, 0.75);
+        }
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(148, 163, 184, 0.25) transparent;
+        }
+        .dark * {
+            scrollbar-color: rgba(100, 116, 139, 0.35) transparent;
+        }
     </style>
 </head>
 <body class="h-full flex flex-col md:flex-row overflow-hidden">
 
-    <!-- SIDEBAR DE NAVEGACIÓN (Desktop) -->
-    <aside id="sidebar" class="hidden md:flex md:w-64 bg-slate-900 text-slate-300 flex-shrink-0 flex-col z-30 border-r border-slate-800 transition-all duration-200 select-none">
+    <!-- SIDEBAR DE NAVEGACIÓN (Desktop - Compacto, cero scroll y Mapa en una sola línea) -->
+    <aside id="sidebar" class="hidden md:flex md:w-64 lg:w-72 bg-slate-900 text-slate-300 flex-shrink-0 flex-col z-30 border-r border-slate-800 transition-all duration-200 select-none">
         
         <!-- Logo / Marca -->
-        <div class="h-16 px-6 flex items-center justify-between border-b border-slate-800/80 bg-slate-950/40">
-            <a href="{{ route('home') }}" class="flex items-center gap-3 group">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 via-amber-400 to-emerald-400 p-0.5 shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform">
-                    <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
-                        <i data-lucide="sun" class="w-5 h-5 text-amber-400 animate-pulse"></i>
+        <div class="h-14 px-5 flex items-center justify-between border-b border-slate-800/80 bg-slate-950/40">
+            <a href="{{ route('home') }}" class="flex items-center gap-2.5 group">
+                <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-500 via-amber-400 to-emerald-400 p-0.5 shadow-md shadow-amber-500/20 group-hover:scale-105 transition-transform">
+                    <div class="w-full h-full bg-slate-950 rounded-[9px] flex items-center justify-center">
+                        <i data-lucide="sun" class="w-4 h-4 text-amber-400 animate-pulse"></i>
                     </div>
                 </div>
                 <div>
-                    <span class="text-base font-bold tracking-tight text-white flex items-center gap-1.5">
+                    <span class="text-sm font-bold tracking-tight text-white flex items-center gap-1.5">
                         Solar<span class="text-amber-400">GT</span>
-                        <span class="text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-semibold border border-emerald-500/30">Nube</span>
+                        <span class="text-[9px] uppercase tracking-wider px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-semibold border border-emerald-500/30">Nube</span>
                     </span>
-                    <span class="text-[11px] text-slate-400 block -mt-0.5 font-medium">Monitoreo 22 Dptos</span>
+                    <span class="text-[10px] text-slate-400 block -mt-0.5 font-medium">Monitoreo 22 Dptos</span>
                 </div>
             </a>
         </div>
 
-        <!-- Menú de Enlaces -->
-        <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+        <!-- Menú de Enlaces (Compacto para eliminar scroll en laptops) -->
+        <nav class="flex-1 px-3 py-2 space-y-0.5 overflow-hidden">
             
-            <div class="px-3 pt-2 pb-1 text-[11px] font-semibold uppercase tracking-wider text-slate-300">
+            <div class="px-3 pt-1.5 pb-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 select-none">
                 Principal
             </div>
 
             <!-- Dashboard -->
             <a href="{{ route('dashboard') }}" 
-               class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('dashboard', 'home') ? 'bg-amber-500/15 text-amber-400 font-semibold border-r-2 border-amber-400' : 'text-slate-300 hover:bg-slate-800/60 hover:text-white' }}">
-                <i data-lucide="layout-dashboard" class="w-4 h-4 text-amber-400"></i>
-                <span>Dashboard Nacional</span>
+               class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors {{ request()->routeIs('dashboard', 'home') ? 'bg-amber-500/15 text-amber-400 font-bold border-r-2 border-amber-400' : 'text-slate-300 hover:bg-slate-800/60 hover:text-white' }}">
+                <i data-lucide="layout-dashboard" class="w-4 h-4 text-amber-400 flex-shrink-0"></i>
+                <span class="whitespace-nowrap truncate">Dashboard Nacional</span>
             </a>
 
-            <!-- Mapa Interactivo (Obligatorio RF-13) -->
+            <!-- Mapa Interactivo (En una sola línea garantizada) -->
             <a href="{{ route('map.index') }}" 
-               class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('map.*') ? 'bg-amber-500/15 text-amber-400 font-semibold border-r-2 border-amber-400' : 'text-slate-300 hover:bg-slate-800/60 hover:text-white' }}">
-                <i data-lucide="map-pin" class="w-4 h-4 text-emerald-400"></i>
-                <span class="flex-1">Mapa de Guatemala</span>
-                <span class="text-[10px] bg-emerald-500/20 text-emerald-300 font-bold px-1.5 py-0.5 rounded border border-emerald-500/30">GPS</span>
+               class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors {{ request()->routeIs('map.*') ? 'bg-amber-500/15 text-amber-400 font-bold border-r-2 border-amber-400' : 'text-slate-300 hover:bg-slate-800/60 hover:text-white' }}">
+                <i data-lucide="map-pin" class="w-4 h-4 text-emerald-400 flex-shrink-0"></i>
+                <span class="flex-1 whitespace-nowrap">Mapa de Guatemala</span>
+                <span class="text-[9px] bg-emerald-500/20 text-emerald-300 font-bold px-1.5 py-0.5 rounded border border-emerald-500/30 flex-shrink-0">GPS</span>
             </a>
 
-            <div class="px-3 pt-4 pb-1 text-[11px] font-semibold uppercase tracking-wider text-slate-300">
+            <div class="px-3 pt-2 pb-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 select-none">
                 Gestión de Activos
             </div>
 
             <!-- Granjas Solares -->
             <a href="{{ route('farms.index') }}" 
-               class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('farms.*') ? 'bg-amber-500/15 text-amber-400 font-semibold border-r-2 border-amber-400' : 'text-slate-300 hover:bg-slate-800/60 hover:text-white' }}">
-                <i data-lucide="zap" class="w-4 h-4 text-amber-400"></i>
-                <span>Granjas Solares</span>
+               class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors {{ request()->routeIs('farms.*') ? 'bg-amber-500/15 text-amber-400 font-bold border-r-2 border-amber-400' : 'text-slate-300 hover:bg-slate-800/60 hover:text-white' }}">
+                <i data-lucide="zap" class="w-4 h-4 text-amber-400 flex-shrink-0"></i>
+                <span class="whitespace-nowrap truncate">Granjas Solares</span>
             </a>
 
             <!-- Catálogo de Paneles -->
             <a href="{{ route('panels.index') }}" 
-               class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('panels.*') ? 'bg-amber-500/15 text-amber-400 font-semibold border-r-2 border-amber-400' : 'text-slate-300 hover:bg-slate-800/60 hover:text-white' }}">
-                <i data-lucide="grid" class="w-4 h-4 text-sky-400"></i>
-                <span>Modelos de Panel</span>
+               class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors {{ request()->routeIs('panels.*') ? 'bg-amber-500/15 text-amber-400 font-bold border-r-2 border-amber-400' : 'text-slate-300 hover:bg-slate-800/60 hover:text-white' }}">
+                <i data-lucide="grid" class="w-4 h-4 text-sky-400 flex-shrink-0"></i>
+                <span class="whitespace-nowrap truncate">Modelos de Panel</span>
             </a>
 
             <!-- Generación Energética -->
             <a href="{{ route('generations.index') }}" 
-               class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('generations.*') ? 'bg-amber-500/15 text-amber-400 font-semibold border-r-2 border-amber-400' : 'text-slate-300 hover:bg-slate-800/60 hover:text-white' }}">
-                <i data-lucide="activity" class="w-4 h-4 text-emerald-400"></i>
-                <span>Mediciones kWh & CO₂</span>
+               class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors {{ request()->routeIs('generations.*') ? 'bg-amber-500/15 text-amber-400 font-bold border-r-2 border-amber-400' : 'text-slate-300 hover:bg-slate-800/60 hover:text-white' }}">
+                <i data-lucide="activity" class="w-4 h-4 text-emerald-400 flex-shrink-0"></i>
+                <span class="whitespace-nowrap truncate">Mediciones kWh & CO₂</span>
             </a>
 
-            <div class="px-3 pt-4 pb-1 text-[11px] font-semibold uppercase tracking-wider text-slate-300">
+            <div class="px-3 pt-2 pb-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 select-none">
                 Analítica y Monitoreo
             </div>
 
             <!-- Alertas Automáticas (RF-14) -->
             <a href="{{ route('alerts.index') }}" 
-               class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('alerts.*') ? 'bg-rose-500/15 text-rose-400 font-semibold border-r-2 border-rose-500' : 'text-slate-300 hover:bg-slate-800/60 hover:text-white' }}">
-                <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-400"></i>
-                <span class="flex-1">Alertas (Déficit ≥20%)</span>
+               class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors {{ request()->routeIs('alerts.*') ? 'bg-rose-500/15 text-rose-400 font-bold border-r-2 border-rose-500' : 'text-slate-300 hover:bg-slate-800/60 hover:text-white' }}">
+                <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-400 flex-shrink-0"></i>
+                <span class="flex-1 whitespace-nowrap truncate">Alertas (Déficit ≥20%)</span>
             </a>
 
             <!-- Reportes Departamentales (RF-12) -->
             <a href="{{ route('reports.index') }}" 
-               class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('reports.*') ? 'bg-amber-500/15 text-amber-400 font-semibold border-r-2 border-amber-400' : 'text-slate-300 hover:bg-slate-800/60 hover:text-white' }}">
-                <i data-lucide="bar-chart-3" class="w-4 h-4 text-indigo-400"></i>
-                <span>Reportes por Depto</span>
+               class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors {{ request()->routeIs('reports.*') ? 'bg-amber-500/15 text-amber-400 font-bold border-r-2 border-amber-400' : 'text-slate-300 hover:bg-slate-800/60 hover:text-white' }}">
+                <i data-lucide="bar-chart-3" class="w-4 h-4 text-indigo-400 flex-shrink-0"></i>
+                <span class="whitespace-nowrap truncate">Reportes por Depto</span>
             </a>
 
             <!-- Proyecciones Climáticas (RF-15) -->
             <a href="{{ route('forecasts.index') }}" 
-               class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('forecasts.*') ? 'bg-amber-500/15 text-amber-400 font-semibold border-r-2 border-amber-400' : 'text-slate-300 hover:bg-slate-800/60 hover:text-white' }}">
-                <i data-lucide="trending-up" class="w-4 h-4 text-teal-400"></i>
-                <span>Proyecciones Futuras</span>
+               class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors {{ request()->routeIs('forecasts.*') ? 'bg-amber-500/15 text-amber-400 font-bold border-r-2 border-amber-400' : 'text-slate-300 hover:bg-slate-800/60 hover:text-white' }}">
+                <i data-lucide="trending-up" class="w-4 h-4 text-teal-400 flex-shrink-0"></i>
+                <span class="whitespace-nowrap truncate">Proyecciones Futuras</span>
             </a>
 
-            <div class="px-3 pt-4 pb-1 text-[11px] font-semibold uppercase tracking-wider text-slate-300">
+            <div class="px-3 pt-2 pb-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 select-none">
                 Integración
             </div>
 
             <!-- API REST Documentada (RF-16) -->
             <a href="{{ route('api.docs') }}" 
-               class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('api.docs') ? 'bg-amber-500/15 text-amber-400 font-semibold border-r-2 border-amber-400' : 'text-slate-300 hover:bg-slate-800/60 hover:text-white' }}">
-                <i data-lucide="code-2" class="w-4 h-4 text-violet-400"></i>
-                <span class="flex-1">API REST v1</span>
-                <span class="text-[10px] bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded border border-slate-700">JSON</span>
+               class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors {{ request()->routeIs('api.docs') ? 'bg-amber-500/15 text-amber-400 font-bold border-r-2 border-amber-400' : 'text-slate-300 hover:bg-slate-800/60 hover:text-white' }}">
+                <i data-lucide="code-2" class="w-4 h-4 text-violet-400 flex-shrink-0"></i>
+                <span class="flex-1 whitespace-nowrap">API REST v1</span>
+                <span class="text-[9px] bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded border border-slate-700 flex-shrink-0">JSON</span>
             </a>
         </nav>
 
         <!-- Footer del Sidebar -->
-        <div class="p-3 border-t border-slate-800/80 bg-slate-950/60">
-            <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3 flex items-center justify-between">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></div>
+        <div class="p-2.5 border-t border-slate-800/80 bg-slate-950/60">
+            <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-2.5 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></div>
                     <div>
-                        <div class="text-xs font-semibold text-white">AWS EC2 Online</div>
-                        <div class="text-[10px] text-slate-300">PHP 8.3 • Nginx • MySQL</div>
+                        <div class="text-[11px] font-bold text-white leading-none">AWS EC2 Online</div>
+                        <div class="text-[9px] text-slate-400 leading-tight mt-0.5">PHP 8.3 • Nginx • MySQL</div>
                     </div>
                 </div>
-                <button type="button" onclick="toggleDarkMode()" title="Cambiar tema" class="p-1.5 text-slate-300 hover:text-amber-400 hover:bg-slate-800 rounded-lg">
-                    <i data-lucide="moon" class="w-4 h-4 hidden dark:block"></i>
-                    <i data-lucide="sun" class="w-4 h-4 block dark:hidden"></i>
+                <button type="button" onclick="toggleDarkMode()" title="Cambiar tema" class="p-1.5 text-slate-300 hover:text-amber-400 hover:bg-slate-800 rounded-lg transition">
+                    <i data-lucide="moon" class="w-3.5 h-3.5 hidden dark:block"></i>
+                    <i data-lucide="sun" class="w-3.5 h-3.5 block dark:hidden"></i>
                 </button>
             </div>
         </div>
